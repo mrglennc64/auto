@@ -1,6 +1,6 @@
 """publisher_email + notifications
 
-Revision ID: 0002_publisher_email_and_notifications
+Revision ID: 0002_publisher_email_notifs
 Revises: 0001_initial_schema
 Create Date: 2026-04-29
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects.postgresql import UUID
 
-revision: str = "0002_publisher_email_and_notifications"
+revision: str = "0002_publisher_email_notifs"
 down_revision: Union[str, None] = "0001_initial_schema"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
