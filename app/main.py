@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 
-from app.api import health
+from app.api import catalog, corrections, health, jobs
 
 app = FastAPI(title="HeyRoya Automation API")
 app.include_router(health.router, prefix="/api")
+app.include_router(catalog.router, prefix="/api")
+app.include_router(corrections.router, prefix="/api")
+app.include_router(jobs.router, prefix="/api")
