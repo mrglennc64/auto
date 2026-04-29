@@ -39,7 +39,7 @@ def upgrade() -> None:
     op.create_table(
         "jobs",
         sa.Column("id", UUID(as_uuid=True), primary_key=True),
-        sa.Column("publisher_id", sa.String(255), nullable=False, index=True),
+        sa.Column("publisher_id", sa.String(255), nullable=False),
         sa.Column("phase", JOB_PHASE, nullable=False),
         sa.Column("status", JOB_STATUS, nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
