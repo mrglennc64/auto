@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}HeyRoya Automation{% endblock %}</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background:#f4f6f5; color:#222; font-family:system-ui,-apple-system,Segoe UI,sans-serif; line-height:1.5; padding:24px; }
+.container { max-width:1080px; margin:0 auto; }
+header { display:flex; justify-content:space-between; align-items:center; padding-bottom:16px; border-bottom:1px solid #d8dcdb; margin-bottom:24px; }
+h1 { color:#0f6657; font-size:20px; font-weight:700; }
+h2 { color:#0f6657; font-size:14px; text-transform:uppercase; letter-spacing:0.06em; margin:24px 0 8px; font-weight:700; }
+h3 { font-size:13px; color:#555; text-transform:uppercase; letter-spacing:0.06em; margin:18px 0 6px; font-weight:700; }
+table { width:100%; border-collapse:collapse; background:#fff; border:1px solid #d8dcdb; border-radius:8px; overflow:hidden; font-size:13px; margin-bottom:16px; }
+th, td { text-align:left; padding:10px 14px; border-bottom:1px solid #ecefee; vertical-align:top; }
+th { background:#fafbfb; font-size:11px; color:#666; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; }
+tr:last-child td { border-bottom:0; }
+a { color:#0f6657; text-decoration:none; font-weight:600; }
+a:hover { text-decoration:underline; }
+.pill { display:inline-block; padding:2px 10px; border-radius:999px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; }
+.pill.pending { background:#fff8e1; color:#9a6a00; border:1px solid #f3d67a; }
+.pill.sent { background:#e6f4ec; color:#0f6657; border:1px solid #8fc7a8; }
+.pill.failed { background:#fce4e1; color:#9a1f1f; border:1px solid #e89c95; }
+.pill.blocking { background:#fce4e1; color:#9a1f1f; border:1px solid #e89c95; }
+.pill.resolvable { background:#fff8e1; color:#9a6a00; border:1px solid #f3d67a; }
+.pill.analysis, .pill.correction { background:#e6eef7; color:#1f5599; border:1px solid #9ab5d6; }
+.pill.awaiting_corrections { background:#fff8e1; color:#9a6a00; border:1px solid #f3d67a; }
+.pill.after_report_ready, .pill.done { background:#e6f4ec; color:#0f6657; border:1px solid #8fc7a8; }
+form { display:inline; }
+button { background:#0f6657; color:#fff; border:0; border-radius:6px; padding:6px 12px; font-weight:600; cursor:pointer; font-size:12px; }
+button:hover { background:#0c5246; }
+.muted { color:#999; }
+.empty { color:#999; padding:14px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>HeyRoya · Automation Dashboard</h1>
+    <div class="muted" style="font-size:12px;">{{ request.url.scheme }}://{{ request.url.netloc }}</div>
+  </header>
+  {% block content %}{% endblock %}
+</div>
+</body>
+</html>

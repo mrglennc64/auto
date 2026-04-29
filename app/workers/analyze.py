@@ -7,9 +7,10 @@ from uuid import UUID
 from app.engine.detect import detect_issues
 from app.engine.report import render_health_report
 from app.engine.worksheet import build_worksheet_csv
-from app.models import File, Issue, Job, Work
+from app.models import File, Issue, Job, Notification, Work
 from app.models.db import session_scope
 from app.services import storage
+from app.services.email import render_analyzed
 from app.workers.celery_app import celery_app
 
 
@@ -87,6 +88,23 @@ def _run(job_id_str: str) -> None:
         job = s.get(Job, job_uuid)
         job.phase = "awaiting_corrections"
         job.status = "done"
+
+        if job.publisher_email:
+            email = render_analyzed(
+                job_id=str(job_uuid),
+                health_report_url=storage.presigned_url(report_key),
+                worksheet_url=storage.presigned_url(worksheet_key),
+            )
+            s.add(
+                Notification(
+                    job_id=job_uuid,
+                    template="analyzed",
+                    recipient=job.publisher_email,
+                    subject=email.subject,
+                    body_html=email.body_html,
+                    status="pending",
+                )
+            )
 
 
 @celery_app.task(name="analyze_catalog")

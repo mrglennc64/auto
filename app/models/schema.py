@@ -40,6 +40,8 @@ FileRole = SAEnum(
     name="file_role",
 )
 DeclarationType = SAEnum("E", "SE", "AM", name="declaration_type")
+NotificationStatus = SAEnum("pending", "sent", "failed", name="notification_status")
+NotificationTemplate = SAEnum("analyzed", "received", "after", name="notification_template")
 
 
 def _uuid_pk() -> Mapped[uuid.UUID]:
@@ -55,6 +57,8 @@ class Job(Base):
 
     id: Mapped[uuid.UUID] = _uuid_pk()
     publisher_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    publisher_email: Mapped[str | None] = mapped_column(String(320), nullable=True)
+    catalog_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     phase: Mapped[str] = mapped_column(JobPhase, nullable=False, default="analysis")
     status: Mapped[str] = mapped_column(JobStatus, nullable=False, default="pending")
     created_at: Mapped[datetime] = mapped_column(
@@ -78,6 +82,9 @@ class Job(Base):
     reports: Mapped[list[Report]] = relationship(back_populates="job", cascade="all, delete-orphan")
     files: Mapped[list[File]] = relationship(back_populates="job", cascade="all, delete-orphan")
     agreements: Mapped[list[Agreement]] = relationship(
+        back_populates="job", cascade="all, delete-orphan"
+    )
+    notifications: Mapped[list[Notification]] = relationship(
         back_populates="job", cascade="all, delete-orphan"
     )
 
@@ -245,3 +252,24 @@ class Agreement(Base):
 
     job: Mapped[Job] = relationship(back_populates="agreements")
     work: Mapped[Work] = relationship(back_populates="agreements")
+
+
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id: Mapped[uuid.UUID] = _uuid_pk()
+    job_id: Mapped[uuid.UUID] = mapped_column(
+        PGUUID(as_uuid=True), ForeignKey("jobs.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    template: Mapped[str] = mapped_column(NotificationTemplate, nullable=False)
+    recipient: Mapped[str] = mapped_column(String(320), nullable=False)
+    subject: Mapped[str] = mapped_column(String(512), nullable=False)
+    body_html: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[str] = mapped_column(NotificationStatus, nullable=False, default="pending")
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    job: Mapped[Job] = relationship(back_populates="notifications")

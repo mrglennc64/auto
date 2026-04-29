@@ -1,0 +1,86 @@
+{% extends "_layout.html" %}
+{% block title %}Job {{ job.id[:8] }} · HeyRoya{% endblock %}
+{% block content %}
+<p><a href="/dashboard">← all jobs</a></p>
+
+<h2>Job {{ job.id }}</h2>
+<table>
+  <tbody>
+    <tr><th>Publisher ID</th><td>{{ job.publisher_id }}</td></tr>
+    <tr><th>Publisher email</th><td>{{ job.publisher_email or "—" }}</td></tr>
+    <tr><th>Catalog name</th><td>{{ job.catalog_name or "—" }}</td></tr>
+    <tr><th>Phase</th><td><span class="pill {{ job.phase }}">{{ job.phase }}</span></td></tr>
+    <tr><th>Status</th><td><span class="pill {{ job.status }}">{{ job.status }}</span></td></tr>
+    <tr><th>Created</th><td>{{ job.created_at.strftime("%Y-%m-%d %H:%M:%S UTC") }}</td></tr>
+  </tbody>
+</table>
+
+<h2>Reports + files</h2>
+{% if reports or files %}
+<table>
+  <thead><tr><th>Kind</th><th>Role / type</th><th>Link</th></tr></thead>
+  <tbody>
+    {% for r in reports %}
+      <tr><td>Report</td><td>{{ r.type }}</td><td><a href="{{ r.url }}" target="_blank">download (presigned, 7d)</a></td></tr>
+    {% endfor %}
+    {% for f in files %}
+      <tr><td>File</td><td>{{ f.role }}</td><td><a href="{{ f.url }}" target="_blank">download (presigned, 7d)</a></td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">No artifacts yet.</p>
+{% endif %}
+
+<h2>Email drafts</h2>
+{% if notifications %}
+<table>
+  <thead><tr><th>Template</th><th>Recipient</th><th>Subject</th><th>Status</th><th>Sent</th><th></th></tr></thead>
+  <tbody>
+    {% for n in notifications %}
+    <tr>
+      <td>{{ n.template }}</td>
+      <td>{{ n.recipient }}</td>
+      <td>{{ n.subject }}</td>
+      <td>
+        <span class="pill {{ n.status }}">{{ n.status }}</span>
+        {% if n.error %}<div class="muted" style="font-size:11px;margin-top:4px;">{{ n.error }}</div>{% endif %}
+      </td>
+      <td>{% if n.sent_at %}{{ n.sent_at.strftime("%Y-%m-%d %H:%M") }}{% else %}—{% endif %}</td>
+      <td>
+        {% if n.status == "pending" %}
+        <form method="post" action="/dashboard/notifications/{{ n.id }}/send">
+          <button type="submit">Send via Resend</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p class="muted" style="font-size:11px;margin-top:8px;">Drafts are NOT auto-sent. Click "Send via Resend" to dispatch each one — preview-first by design.</p>
+{% else %}
+<p class="empty">No drafts yet. They appear automatically when the analyze + apply tasks finish (only if the job has a publisher_email).</p>
+{% endif %}
+
+<h2>Issues</h2>
+{% if issues %}
+<table>
+  <thead><tr><th>ID</th><th>Field</th><th>Current</th><th>Suggested</th><th>Severity</th><th>Status</th></tr></thead>
+  <tbody>
+    {% for i in issues %}
+    <tr>
+      <td><code>{{ i.code }}</code></td>
+      <td>{{ i.field }}</td>
+      <td>{{ i.current }}</td>
+      <td>{{ i.suggested }}</td>
+      <td><span class="pill {{ i.severity }}">{{ i.severity }}</span></td>
+      <td>{{ i.status }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">Scan not yet completed.</p>
+{% endif %}
+{% endblock %}

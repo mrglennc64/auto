@@ -13,11 +13,13 @@ from app.models import (
     CorrectionJob,
     File,
     Job,
+    Notification,
     Report,
     Work,
 )
 from app.models.db import session_scope
 from app.services import storage
+from app.services.email import render_after, render_received
 from app.workers.celery_app import celery_app
 
 
@@ -42,8 +44,22 @@ def _run(correction_job_id_str: str) -> None:
             raise RuntimeError(f"Job {job_uuid} missing files for correction")
         original_key = original.s3_key
         corrections_key = corrections.s3_key
+        publisher_email = job.publisher_email
         cj.status = "running"
         job.status = "running"
+
+        if publisher_email:
+            received = render_received(job_id=str(job_uuid))
+            s.add(
+                Notification(
+                    job_id=job_uuid,
+                    template="received",
+                    recipient=publisher_email,
+                    subject=received.subject,
+                    body_html=received.body_html,
+                    status="pending",
+                )
+            )
 
     catalog_text = storage.get_object(original_key).decode("utf-8")
     worksheet_text = storage.get_object(corrections_key).decode("utf-8")
@@ -104,6 +120,23 @@ def _run(correction_job_id_str: str) -> None:
         job.phase = "after_report_ready"
         job.status = "done"
         cj_db.status = "done"
+
+        if publisher_email:
+            after = render_after(
+                job_id=str(job_uuid),
+                after_report_url=storage.presigned_url(after_key),
+                corrected_catalog_url=storage.presigned_url(cleaned_key),
+            )
+            s.add(
+                Notification(
+                    job_id=job_uuid,
+                    template="after",
+                    recipient=publisher_email,
+                    subject=after.subject,
+                    body_html=after.body_html,
+                    status="pending",
+                )
+            )
 
 
 @celery_app.task(name="apply_corrections")
