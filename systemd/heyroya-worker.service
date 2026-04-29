@@ -1,0 +1,18 @@
+[Unit]
+Description=HeyRoya Automation Celery Worker
+After=network.target redis.service postgresql.service
+Wants=redis.service postgresql.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/heyroya-automation
+EnvironmentFile=/opt/heyroya-automation/.env
+ExecStart=/opt/heyroya-automation/.venv/bin/celery -A app.workers.celery_app worker --loglevel=info --concurrency=2
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

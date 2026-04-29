@@ -1,0 +1,18 @@
+[Unit]
+Description=HeyRoya Automation API (FastAPI / Uvicorn)
+After=network.target postgresql.service redis.service
+Wants=postgresql.service redis.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/heyroya-automation
+EnvironmentFile=/opt/heyroya-automation/.env
+ExecStart=/opt/heyroya-automation/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

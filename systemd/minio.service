@@ -1,0 +1,16 @@
+[Unit]
+Description=MinIO Object Storage
+After=network.target
+
+[Service]
+Type=simple
+User=root
+EnvironmentFile=/etc/default/minio
+WorkingDirectory=/var/lib/minio
+ExecStart=/usr/local/bin/minio server /var/lib/minio --console-address ":9001"
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
