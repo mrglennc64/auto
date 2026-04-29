@@ -26,6 +26,9 @@ cmd="${1:-full}"
 
 case "$cmd" in
   full)
+    # NOTE: 'full' deliberately does NOT call 'firewall' — that step is
+    # destructive (ufw --force reset wipes existing rules). Run it
+    # separately only on a fresh VPS:  bash scripts/deploy.sh firewall
     "$0" packages
     "$0" minio
     "$0" db
@@ -34,7 +37,6 @@ case "$cmd" in
     "$0" migrate
     "$0" services
     "$0" nginx
-    "$0" firewall
     "$0" verify
     ;;
 
@@ -50,6 +52,12 @@ case "$cmd" in
 
   minio)
     step "Installing MinIO binary + service"
+    if ss -ltn 2>/dev/null | awk '{print $4}' | grep -qE ':9000$'; then
+      echo "    !! port 9000 already in use — refusing to install MinIO."
+      echo "    If another MinIO is already running, point .env at it and skip this step."
+      echo "    If you want this script to take over 9000, stop the other service first."
+      exit 1
+    fi
     if [ ! -x /usr/local/bin/minio ]; then
       curl -L https://dl.min.io/server/minio/release/linux-amd64/minio -o /usr/local/bin/minio
       chmod +x /usr/local/bin/minio
