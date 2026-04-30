@@ -100,7 +100,6 @@
     <button class="btn btn-primary" id="processBtn" disabled>Apply corrections</button>
     <button class="btn btn-secondary" id="downloadBtn" disabled>Download cleaned CSV</button>
     <button class="btn btn-secondary" id="reportBtn" disabled>Generate after-cleaning report (HTML)</button>
-    <button class="btn btn-secondary" id="cwrBtn" disabled>Generate CWR (.v21)</button>
   </div>
 
   <div class="status" id="status">Load both files to begin.</div>
@@ -358,7 +357,6 @@ $('processBtn').addEventListener('click', () => {
 
     $('downloadBtn').disabled = false;
     $('reportBtn').disabled = false;
-    $('cwrBtn').disabled = false;
 
   } catch (e) {
     status('<strong>✕ Error:</strong> ' + e.message, 'error');
@@ -518,51 +516,6 @@ header { display:flex; justify-content:space-between; align-items:center; paddin
 </div></body></html>`;
 }
 
-// CWR v2.1 packet builder — emits real records from the cleaned-catalog rows.
-// Record format follows CWR v2.1 spec: HDR, GRH, NWR (work), SPU (sub-publisher),
-// SWR (writer), PWR (writer-publisher link), GRT (group trailer), TRL (transmission trailer).
-function pad(s, n) { s = String(s == null ? '' : s); return (s + ' '.repeat(n)).slice(0, n); }
-function padNum(n, w) { let s = String(n); while (s.length < w) s = '0' + s; return s; }
-function buildCwrFromCleaned(text, submitterName) {
-  const { works, titles } = rowsToWorks(text);
-  const sub = pad((submitterName || 'PARTNER').toUpperCase(), 45);
-  const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-  const lines = [];
-  lines.push('HDR ROYA-' + stamp + '-001  ' + sub + '01.10     ' + stamp + '14:30:00');
-  lines.push('GRHNWR                                                   0000001');
-  let recSeq = 0; let workSeq = 0;
-  for (const t of titles) {
-    workSeq++;
-    const w = works[t];
-    const wn = padNum(workSeq, 8);
-    recSeq++;
-    const iswc = w.contribs[0] && w.contribs[0].iswc ? pad(w.contribs[0].iswc.replace(/[^A-Z0-9]/gi,''), 11) : pad('', 11);
-    lines.push('NWR' + wn + pad(t.toUpperCase(), 60) + iswc + '              UNC Y       ');
-    // SPU + SWR + PWR per writer/publisher pair
-    let pubSeq = 1;
-    for (const c of w.contribs) {
-      const role = (c.role || 'CA').toUpperCase();
-      const ipi = pad((c.ipi || '').replace(/\D/g,''), 11);
-      const lastName = pad((c.name || 'UNKNOWN').toUpperCase().split(/\s+/).pop(), 45);
-      const firstName = pad((c.name || '').toUpperCase().split(/\s+/).slice(0, -1).join(' '), 30);
-      const society = pad((c.society || 'STIM'), 3);
-      const sharePct = padNum(Math.round((c.share || 0) * 100), 5);
-      // SPU (publisher line — uses submitter as publisher placeholder)
-      lines.push('SPU' + wn + padNum(pubSeq, 8) + '01' + ipi + sub + society);
-      // SWR (writer line)
-      lines.push('SWR' + wn + padNum(pubSeq + 1, 8) + ipi + sharePct + lastName + firstName + ' ' + pad(role, 2) + ' ' + society);
-      // PWR (writer↔publisher link)
-      lines.push('PWR' + wn + padNum(pubSeq + 2, 8) + ipi + '  ' + sub);
-      pubSeq += 3;
-      recSeq += 3;
-    }
-  }
-  const totalRecs = recSeq + 2; // +HDR +TRL
-  lines.push('GRT' + padNum(1, 5) + padNum(workSeq, 8) + padNum(recSeq, 8));
-  lines.push('TRL' + padNum(1, 5) + padNum(workSeq, 8) + padNum(totalRecs, 8));
-  return lines.join('\n');
-}
-
 // localStorage bridge: save export metadata so portal Exportfiler can list them.
 // Content lives in localStorage too (per-tenant key), capped to most-recent 20.
 function saveExport(kind, filename, content, mime) {
@@ -590,20 +543,6 @@ $('reportBtn').addEventListener('click', () => {
   if (!w) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
   w.document.open(); w.document.write(html); w.document.close();
   saveExport('report', 'health-report-after-' + new Date().toISOString().slice(0, 10) + '.html', html, 'text/html');
-});
-
-$('cwrBtn').addEventListener('click', () => {
-  if (!cleanedCSV) return;
-  // Use the brand from the page header as the CWR HDR submitter
-  const brandEl = document.querySelector('.brand');
-  const submitter = brandEl ? brandEl.textContent.trim() : 'PARTNER';
-  const cwr = buildCwrFromCleaned(cleanedCSV, submitter);
-  const filename = 'cwr-package-' + new Date().toISOString().slice(0, 10) + '.v21';
-  const blob = new Blob([cwr], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-  URL.revokeObjectURL(url);
-  saveExport('cwr', filename, cwr, 'text/plain');
 });
 
 // Also save the cleaned CSV when downloaded, so it shows up in the Exportfiler listing
