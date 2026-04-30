@@ -9,6 +9,7 @@ from app.models.schema import (
     Job,
     Notification,
     Report,
+    Tenant,
     Work,
 )
 
@@ -23,5 +24,6 @@ __all__ = [
     "Job",
     "Notification",
     "Report",
+    "Tenant",
     "Work",
 ]

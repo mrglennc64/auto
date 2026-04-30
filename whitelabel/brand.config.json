@@ -1,0 +1,30 @@
+{
+  "_comment": "Edit these values per partner. After editing, run a literal find/replace across whitelabel/pages/*.html — there is no build step. The HTML files contain the placeholders verbatim.",
+
+  "placeholders": {
+    "PartnerBrand": "Acme Catalog Services",
+    "PartnerContact": "partner@acmecatalog.com",
+    "PartnerDomain": "acmecatalog.com"
+  },
+
+  "theme_tokens": {
+    "_comment": "These match the CSS custom properties at the top of pages/index.html. To rebrand the look, search-replace the hex values in the :root block of each HTML file (or, if you set up a build later, inject these as CSS variables).",
+    "bg": "#05070b",
+    "bg_card": "#0b0f18",
+    "border": "#1b2233",
+    "border_strong": "#2a3345",
+    "text": "#f5f7fb",
+    "muted": "#c3cad8",
+    "dim": "#8f9bb3",
+    "accent": "#1dd4b7",
+    "accent_hover": "#18bfa5",
+    "accent_soft": "rgba(29,212,183,0.12)",
+    "amber": "#f2b36a",
+    "amber_soft": "rgba(242,179,106,0.12)"
+  },
+
+  "demo_link": {
+    "_comment": "The 'Live demo →' link in the nav. Defaults to the HeyRoya demo until the partner has their own deployment. Update href in pages/index.html when ready.",
+    "default_url": "https://heyroya.se/pages/review.html?demo=1"
+  }
+}

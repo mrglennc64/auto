@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Apply Corrections — {{PartnerBrand}}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background:#05070b; color:#f5f7fb; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; padding:32px 20px 64px; }
+  a { color:#1dd4b7; text-decoration:none; }
+  .container { max-width:1080px; margin:0 auto; }
+  h1, h2, h3 { font-weight:600; }
+
+  header.top { display:flex; align-items:center; justify-content:space-between; padding:0 0 24px; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #1b2233; margin-bottom:24px; }
+  .brand { display:flex; align-items:center; gap:0.65rem; font-weight:700; color:#1dd4b7; }
+  .meta { font-size:12px; color:#8f9bb3; }
+
+  .hero h1 { font-size:1.6rem; margin-bottom:0.5rem; }
+  .hero p { color:#c3cad8; max-width:720px; margin-bottom:1.5rem; font-size:0.95rem; }
+
+  .upload-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.5rem; }
+  @media (max-width:720px){ .upload-grid { grid-template-columns:1fr; } }
+  .upload-card { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:1.5rem 1.6rem; }
+  .upload-card h3 { font-size:0.95rem; color:#1dd4b7; margin-bottom:0.5rem; }
+  .upload-card .hint { font-size:12px; color:#8f9bb3; margin-bottom:0.85rem; }
+  .upload-card input[type="file"] { width:100%; padding:8px; background:#0a0d14; border:1px dashed #2a3345; border-radius:8px; color:#c3cad8; font-size:13px; cursor:pointer; }
+  .upload-card .filename { font-family:monospace; font-size:12px; color:#1dd4b7; margin-top:6px; min-height:1.2em; }
+
+  .actions { display:flex; gap:0.75rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+  .btn { padding:0.7rem 1.4rem; border-radius:999px; font-weight:600; cursor:pointer; font-family:inherit; font-size:0.9rem; border:0; text-decoration:none; display:inline-block; }
+  .btn-primary { background:#1dd4b7; color:#020308; }
+  .btn-primary:hover { background:#18bfa5; }
+  .btn-primary:disabled { background:#1b2233; color:#5a6478; cursor:not-allowed; }
+  .btn-secondary { background:transparent; color:#f5f7fb; border:1px solid #2a3345; }
+  .btn-secondary:hover { border-color:#4b5a7a; }
+
+  .status { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:1.25rem 1.5rem; margin-bottom:1.5rem; font-size:13px; color:#c3cad8; min-height:60px; }
+  .status.error { border-color:#f87171; color:#fbbf77; }
+  .status.success { border-color:#1dd4b7; color:#86efac; }
+  .status .row { display:flex; justify-content:space-between; padding:4px 0; }
+  .status .row strong { color:#f5f7fb; }
+  .status .row.ok strong { color:#1dd4b7; }
+
+  .preview { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; overflow:hidden; }
+  .preview-header { padding:0.85rem 1.25rem; border-bottom:1px solid #1b2233; display:flex; justify-content:space-between; align-items:center; }
+  .preview-header h3 { font-size:0.85rem; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; }
+  .preview-header .count { font-size:12px; color:#1dd4b7; font-family:monospace; }
+  .preview table { width:100%; border-collapse:collapse; font-size:12px; font-family:monospace; }
+  .preview th, .preview td { text-align:left; padding:8px 14px; border-bottom:1px solid #1b2233; color:#c3cad8; }
+  .preview th { background:#0a0d14; font-size:10px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; font-family:system-ui,sans-serif; }
+  .preview .accept { color:#1dd4b7; }
+  .preview .reject { color:#f87171; }
+  .preview .edit { color:#f2b36a; }
+  .preview tr:last-child td { border-bottom:0; }
+
+  .docs { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:1.25rem 1.5rem; margin-top:1.5rem; }
+  .docs h3 { font-size:0.85rem; color:#1dd4b7; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.75rem; font-weight:700; }
+  .docs p { color:#c3cad8; font-size:13px; margin-bottom:0.5rem; }
+  .docs code { background:#0a0d14; padding:1px 6px; border-radius:4px; font-size:12px; color:#1dd4b7; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="top">
+    <div class="brand">{{PartnerBrand}}</div>
+    <div class="meta">
+      <a href="portal.html" style="color:#8f9bb3;margin-right:12px;">← back to portal</a>
+    </div>
+  </header>
+
+  <div style="background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:0.85rem 1.25rem; margin-bottom:1.5rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center; font-size:13px;">
+    <span style="color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-size:11px; font-weight:700; margin-right:0.5rem;">Workflow:</span>
+    <a href="scan-catalog.html" style="color:#8f9bb3;">1. Scan catalog</a>
+    <span style="color:#2a3345;">→</span>
+    <a href="apply-corrections.html" style="color:#1dd4b7; font-weight:700;">2. Apply corrections</a>
+  </div>
+
+  <section class="hero">
+    <h1>Apply publisher corrections to the catalog</h1>
+    <p>Load the original catalog CSV plus the publisher's filled-in <code style="background:#0b0f18;padding:1px 6px;border-radius:4px;font-size:12px;color:#1dd4b7;">corrections-worksheet.csv</code>. The tool merges their decisions and produces a cleaned catalog ready for export.</p>
+  </section>
+
+  <div class="upload-grid">
+    <div class="upload-card">
+      <h3>1. Original catalog</h3>
+      <p class="hint">CSV with columns: title, iswc, isrc, name, role, share_percent, ipi, society</p>
+      <input type="file" id="catalogFile" accept=".csv" />
+      <div class="filename" id="catalogName"></div>
+    </div>
+    <div class="upload-card">
+      <h3>2. Corrections worksheet (from publisher)</h3>
+      <p class="hint">CSV with columns: issue_id, work, field, current_value, suggested, decision, publisher_value, note</p>
+      <input type="file" id="correctionsFile" accept=".csv" />
+      <div class="filename" id="correctionsName"></div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-primary" id="processBtn" disabled>Apply corrections</button>
+    <button class="btn btn-secondary" id="downloadBtn" disabled>Download cleaned CSV</button>
+    <button class="btn btn-secondary" id="reportBtn" disabled>Generate after-cleaning report (PDF)</button>
+  </div>
+
+  <div class="status" id="status">Load both files to begin.</div>
+
+  <div class="preview" id="preview" style="display:none;">
+    <div class="preview-header">
+      <h3>Decisions applied</h3>
+      <span class="count" id="previewCount"></span>
+    </div>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Work</th><th>Field</th><th>Decision</th><th>Applied value</th></tr>
+      </thead>
+      <tbody id="previewBody"></tbody>
+    </table>
+  </div>
+
+  <div class="docs">
+    <h3>How the merge works</h3>
+    <p><strong style="color:#1dd4b7;">accept</strong> — apply the suggested value (rebalance splits to 100%, set canonical name, fill in ISWC, etc.)</p>
+    <p><strong style="color:#f87171;">reject</strong> — keep the original value. Issue is logged but not applied.</p>
+    <p><strong style="color:#f2b36a;">edit</strong> — apply the publisher's <code>publisher_value</code> instead of the suggestion.</p>
+    <p style="margin-top:0.75rem; color:#8f9bb3; font-size:12px;">Sample worksheet: <a href="/samples/corrections-worksheet-template.csv">corrections-worksheet-template.csv</a> · Sample catalog: <a href="/samples/test-20-works.csv">test-20-works.csv</a></p>
+  </div>
+
+</div>
+
+<script>
+let catalogText = null;
+let correctionsText = null;
+let cleanedCSV = null;
+
+const $ = id => document.getElementById(id);
+const status = (msg, cls) => {
+  const s = $('status');
+  s.className = 'status' + (cls ? ' ' + cls : '');
+  s.innerHTML = msg;
+};
+
+function readFile(input, target, nameTarget) {
+  input.addEventListener('change', e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    nameTarget.textContent = f.name;
+    const r = new FileReader();
+    r.onload = ev => {
+      window[target] = ev.target.result;
+      checkReady();
+    };
+    r.readAsText(f);
+  });
+}
+readFile($('catalogFile'), 'catalogText', $('catalogName'));
+readFile($('correctionsFile'), 'correctionsText', $('correctionsName'));
+
+function checkReady() {
+  if (window.catalogText && window.correctionsText) {
+    $('processBtn').disabled = false;
+    status('Both files loaded — click <strong>Apply corrections</strong> to merge.');
+  }
+}
+
+function parseCSV(text) {
+  const rows = [];
+  const lines = text.replace(/\r\n/g, '\n').split('\n');
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const cells = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (inQ) {
+        if (c === '"' && line[i+1] === '"') { cur += '"'; i++; }
+        else if (c === '"') { inQ = false; }
+        else { cur += c; }
+      } else {
+        if (c === '"') inQ = true;
+        else if (c === ',') { cells.push(cur); cur = ''; }
+        else cur += c;
+      }
+    }
+    cells.push(cur);
+    rows.push(cells);
+  }
+  return rows;
+}
+
+function csvEscape(v) {
+  v = (v == null) ? '' : String(v);
+  if (/[",\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"';
+  return v;
+}
+
+$('processBtn').addEventListener('click', () => {
+  try {
+    const catRows = parseCSV(window.catalogText);
+    const corrRows = parseCSV(window.correctionsText);
+    if (catRows.length < 2 || corrRows.length < 2) throw new Error('Both files must have a header + at least 1 row.');
+
+    const catHeader = catRows[0].map(h => h.trim().toLowerCase());
+    const corrHeader = corrRows[0].map(h => h.trim().toLowerCase());
+    const ci = name => catHeader.indexOf(name);
+    const cj = name => corrHeader.indexOf(name);
+
+    const titleIdx = ci('title');
+    const nameIdx = ci('name');
+    const shareIdx = ci('share_percent');
+    const iswcIdx = ci('iswc');
+    const roleIdx = ci('role');
+    const ipiIdx = ci('ipi');
+    const societyIdx = ci('society');
+    if (titleIdx < 0 || nameIdx < 0) throw new Error('Catalog must have title + name columns.');
+
+    const decIdx = cj('decision');
+    const fieldIdx = cj('field');
+    const workIdx = cj('work');
+    const sugIdx = cj('suggested');
+    const pubValIdx = cj('publisher_value');
+    const issueIdIdx = cj('issue_id');
+
+    // Group catalog rows by work title
+    const worksByTitle = {};
+    for (let i = 1; i < catRows.length; i++) {
+      const r = catRows[i];
+      const t = (r[titleIdx] || '').trim();
+      if (!t) continue;
+      worksByTitle[t] = worksByTitle[t] || [];
+      worksByTitle[t].push(r);
+    }
+
+    const log = [];
+    let acceptCount = 0, rejectCount = 0, editCount = 0;
+
+    // Apply each correction
+    for (let i = 1; i < corrRows.length; i++) {
+      const c = corrRows[i];
+      const issueId = (c[issueIdIdx] || '').trim();
+      const work = (c[workIdx] || '').trim();
+      const field = (c[fieldIdx] || '').trim().toLowerCase();
+      const decision = (c[decIdx] || '').trim().toLowerCase();
+      const suggested = (c[sugIdx] || '').trim();
+      const pubVal = (c[pubValIdx] || '').trim();
+      if (!work || !decision) continue;
+
+      const rows = worksByTitle[work];
+      let applied = '';
+
+      if (decision === 'reject') {
+        rejectCount++;
+        applied = '— kept original —';
+      } else if (rows && rows.length) {
+        if (field === 'split_total') {
+          // Rebalance to 100%
+          const target = decision === 'edit' && pubVal ? pubVal : 'normalize to 100%';
+          if (decision === 'edit' && /\d+\s*\/\s*\d+/.test(pubVal)) {
+            // Manual split like "60 / 40"
+            const parts = pubVal.split('/').map(p => parseFloat(p.trim()));
+            for (let j = 0; j < rows.length && j < parts.length; j++) {
+              if (shareIdx >= 0) rows[j][shareIdx] = String(parts[j]);
+            }
+            applied = pubVal + '%';
+            editCount++;
+          } else {
+            // Even normalize to 100/n
+            const each = (100 / rows.length).toFixed(2);
+            for (const row of rows) if (shareIdx >= 0) row[shareIdx] = each;
+            applied = each + '% × ' + rows.length;
+            acceptCount++;
+          }
+        } else if (field === 'iswc') {
+          const val = decision === 'edit' ? pubVal : (suggested.match(/T-[\d.]+-\d/) || [''])[0];
+          if (iswcIdx >= 0 && val) for (const row of rows) row[iswcIdx] = val;
+          applied = val || suggested;
+          if (decision === 'edit') editCount++; else acceptCount++;
+        } else if (field === 'writer_name') {
+          const val = decision === 'edit' ? pubVal : suggested.replace(/\s*\(.*\)\s*$/, '').trim();
+          if (nameIdx >= 0 && val) {
+            // Find writer to update — use suggested as canonical, replace any variant matching first letter
+            const target = (c[3] || '').toLowerCase().trim();  // current_value
+            for (const row of rows) {
+              if ((row[nameIdx] || '').toLowerCase().trim() === target) row[nameIdx] = val;
+            }
+          }
+          applied = val;
+          if (decision === 'edit') editCount++; else acceptCount++;
+        } else if (field === 'role') {
+          const val = decision === 'edit' ? pubVal : (suggested.match(/[A-Z]{1,2}/) || ['CA'])[0];
+          if (roleIdx >= 0) for (const row of rows) row[roleIdx] = val;
+          applied = val;
+          if (decision === 'edit') editCount++; else acceptCount++;
+        } else if (field === 'writer_ipi' || field === 'ipi') {
+          const val = decision === 'edit' ? pubVal : '';
+          if (val && ipiIdx >= 0) {
+            // Match by writer name in current_value
+            const writer = (c[3] || '').replace(/has no IPI.*/i, '').trim().toLowerCase();
+            for (const row of rows) {
+              if ((row[nameIdx] || '').toLowerCase().includes(writer.split(' ')[0])) {
+                row[ipiIdx] = val;
+              }
+            }
+          }
+          applied = val || '(awaiting writer)';
+          if (decision === 'edit') editCount++; else acceptCount++;
+        } else if (field === 'society') {
+          const val = decision === 'edit' ? pubVal : (suggested.match(/\b[A-Z]{2,5}\b/) || ['STIM'])[0];
+          if (societyIdx >= 0 && val) {
+            const writer = (c[3] || '').replace(/—.*$/, '').trim().toLowerCase();
+            for (const row of rows) {
+              if ((row[nameIdx] || '').toLowerCase().includes(writer.split(' ')[0])) {
+                if (societyIdx >= 0) row[societyIdx] = val;
+              }
+            }
+          }
+          applied = val;
+          if (decision === 'edit') editCount++; else acceptCount++;
+        } else if (field === 'foreign_writer') {
+          // Add E/SE/AM declaration as a note (no column to write; just log)
+          applied = 'E declaration noted';
+          acceptCount++;
+        } else {
+          applied = '(no merge rule for field "' + field + '")';
+        }
+      } else {
+        applied = '(work not found in catalog)';
+      }
+
+      log.push({ id: issueId, work, field, decision, applied });
+    }
+
+    // Re-emit cleaned CSV
+    const cleaned = [catRows[0].join(',')];
+    for (let i = 1; i < catRows.length; i++) cleaned.push(catRows[i].map(csvEscape).join(','));
+    cleanedCSV = cleaned.join('\n');
+
+    // Render preview
+    const tbody = $('previewBody');
+    tbody.innerHTML = '';
+    log.forEach((entry, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + (idx+1) + '</td>' +
+        '<td>' + entry.work + '</td>' +
+        '<td>' + entry.field + '</td>' +
+        '<td class="' + entry.decision + '">' + entry.decision.toUpperCase() + '</td>' +
+        '<td>' + entry.applied + '</td>';
+      tbody.appendChild(tr);
+    });
+    $('preview').style.display = 'block';
+    $('previewCount').textContent = log.length + ' decisions · ' + acceptCount + ' accepted · ' + rejectCount + ' rejected · ' + editCount + ' edited';
+
+    status('<div class="row ok"><span>Status</span><strong>✓ Corrections applied</strong></div>'+
+      '<div class="row"><span>Decisions processed</span><strong>'+log.length+'</strong></div>'+
+      '<div class="row"><span>Accepted</span><strong style="color:#1dd4b7;">'+acceptCount+'</strong></div>'+
+      '<div class="row"><span>Rejected</span><strong style="color:#f87171;">'+rejectCount+'</strong></div>'+
+      '<div class="row"><span>Edited</span><strong style="color:#f2b36a;">'+editCount+'</strong></div>', 'success');
+
+    $('downloadBtn').disabled = false;
+    $('reportBtn').disabled = false;
+    $('wizardBtn').disabled = false;
+
+  } catch (e) {
+    status('<strong>✕ Error:</strong> ' + e.message, 'error');
+    console.error(e);
+  }
+});
+
+$('downloadBtn').addEventListener('click', () => {
+  if (!cleanedCSV) return;
+  const blob = new Blob([cleanedCSV], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'catalog-cleaned.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+$('wizardBtn').addEventListener('click', () => {
+  if (!cleanedCSV) return;
+  // Stash in sessionStorage so review.html?demo=1&from=corrections can pick it up
+  try { sessionStorage.setItem('roya_cleaned_csv', cleanedCSV); } catch (e) {}
+  return; // wizard button removed (internal-only)
+});
+
+$('reportBtn').addEventListener('click', () => {
+  // Open the after-cleaning sample report in a new tab — user prints to PDF from there
+  return; // after-report sample removed
+});
+</script>
+</body>
+</html>

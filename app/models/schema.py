@@ -42,6 +42,7 @@ FileRole = SAEnum(
 DeclarationType = SAEnum("E", "SE", "AM", name="declaration_type")
 NotificationStatus = SAEnum("pending", "sent", "failed", name="notification_status")
 NotificationTemplate = SAEnum("analyzed", "received", "after", name="notification_template")
+TenantStatus = SAEnum("active", "suspended", "deleted", name="tenant_status")
 
 
 def _uuid_pk() -> Mapped[uuid.UUID]:
@@ -273,3 +274,19 @@ class Notification(Base):
     )
 
     job: Mapped[Job] = relationship(back_populates="notifications")
+
+
+class Tenant(Base):
+    __tablename__ = "tenants"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    slug: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
+    brand_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    contact_email: Mapped[str] = mapped_column(String(320), nullable=False)
+    custom_domain: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
+    primary_color: Mapped[str] = mapped_column(String(16), nullable=False, default="#1dd4b7")
+    status: Mapped[str] = mapped_column(TenantStatus, nullable=False, default="active", index=True)
+    api_key: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )

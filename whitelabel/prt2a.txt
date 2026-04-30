@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{PartnerBrand}} – Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f5f5f5; color: #111; }
+    .layout { display: flex; height: 100vh; }
+    .sidebar {
+      width: 240px;
+      background: #111;
+      color: #fff;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .sidebar h2 { margin: 0 0 16px; font-size: 18px; }
+    .sidebar a {
+      color: #ccc;
+      text-decoration: none;
+      padding: 8px 4px;
+      border-radius: 4px;
+      display: block;
+      font-size: 14px;
+    }
+    .sidebar a:hover { background: #222; color: #fff; }
+    .content {
+      flex: 1;
+      padding: 32px;
+      overflow-y: auto;
+      background: #fff;
+    }
+    h1, h2, h3 { margin-top: 0; }
+    img.screenshot {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      margin: 12px 0;
+    }
+  </style>
+</head>
+
+<body>
+<div class="layout">
+
+  <!-- LEFT NAV -->
+  <div class="sidebar">
+    <h2>{{PartnerBrand}}</h2>
+    <a href="#dashboard">Översikt</a>
+    <a href="#upload">Ladda upp katalog</a>
+    <a href="#workflow">HeyRoya‑flöde</a>
+    <a href="#review">Granska metadata</a>
+    <a href="#reports">Rapporter</a>
+    <a href="#worksheets">Arbetsblad</a>
+    <a href="#exports">Exportfiler</a>
+    <a href="#support">Support</a>
+    <a href="#account">Konto</a>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <section id="dashboard">
+      <h1>Översikt</h1>
+      <p>Samlad vy över katalogstatus, påverkade verk och leveranser.</p>
+
+      <h3>Exempelvy</h3>
+      <img class="screenshot" src="screenshot-dashboard-1.png" alt="Dashboard" />
+      <img class="screenshot" src="screenshot-dashboard-2.png" alt="Territorier" />
+    </section>
+
+    <!-- UPLOAD -->
+    <section id="upload">
+      <h1>Ladda upp katalog</h1>
+      <p>Format: CSV, XLSX, CWR. Ingen mall krävs.</p>
+      <p>En eller flera filer kan skickas in.</p>
+      <img class="screenshot" src="screenshot-upload.png" alt="Upload" />
+    </section>
+
+    <!-- HEYROYA WORKFLOW -->
+    <section id="workflow">
+      <h1>HeyRoya‑flöde</h1>
+      <p>Öppnar det interna arbetsflödet för metadataanalys.</p>
+      <p><a href="https://heyroya.se/pages/workflow.html" target="_blank">Öppna HeyRoya‑flöde</a></p>
+
+      <h3>Exempelvy</h3>
+      <img class="screenshot" src="screenshot-cleaning-wizard.png" alt="Cleaning Wizard" />
+    </section>
+
+    <!-- REVIEW PAGE -->
+    <section id="review">
+      <h1>Granska metadata</h1>
+      <p>Öppnar granskningsvyn för verk, roller och identifierare.</p>
+      <p><a href="https://heyroya.se/pages/review.html?demo=1" target="_blank">Öppna granskningsvy</a></p>
+
+      <h3>Exempelvy</h3>
+      <img class="screenshot" src="screenshot-review.png" alt="Review" />
+    </section>
+
+    <!-- REPORTS -->
+    <section id="reports">
+      <h1>Rapporter</h1>
+      <p>Hälsorapporter och listor över påverkade verk.</p>
+      <img class="screenshot" src="screenshot-report.png" alt="Report" />
+    </section>
+
+    <!-- WORKSHEETS -->
+    <section id="worksheets">
+      <h1>Arbetsblad</h1>
+      <p>Arbetsblad för val av korrigeringar.</p>
+      <img class="screenshot" src="screenshot-worksheet.png" alt="Worksheet" />
+    </section>
+
+    <!-- EXPORTS -->
+    <section id="exports">
+      <h1>Exportfiler</h1>
+      <p>CWR‑ och CSV‑exporter för markerade verk.</p>
+      <img class="screenshot" src="screenshot-exports.png" alt="Exports" />
+    </section>
+
+    <!-- SUPPORT -->
+    <section id="support">
+      <h1>Support</h1>
+      <p>E‑post: {{PartnerContact}}</p>
+      <p>Svarstid: 1–2 arbetsdagar.</p>
+    </section>
+
+    <!-- ACCOUNT -->
+    <section id="account">
+      <h1>Konto</h1>
+      <p>Hantera licens, användare och inställningar.</p>
+    </section>
+
+  </div>
+</div>
+</body>
+</html>

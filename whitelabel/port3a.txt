@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Systemöversikt: Metadataadministration</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 2rem auto; }
+        h1, h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; }
+        section { margin-bottom: 2rem; }
+        ul { list-style-type: square; }
+    </style>
+</head>
+<body>
+
+    <h1>Systemöversikt: Metadataadministration</h1>
+
+    <section>
+        <h2>Operativa Moduler</h2>
+        <ul>
+            <li><strong>Katalogvalidering:</strong> Identifiering av avvikelser i inlästa CSV-filer rörande ISRC, ISWC och ägarandelar.</li>
+            <li><strong>Territoriell Granskning:</strong> Kontroll av registrerad metadata mot inlästa royaltyunderlag för att identifiera saknad täckning per territorium.</li>
+            <li><strong>Dokumentförberedelse:</strong> Strukturering av data för export till CWR-format, PDF-revisioner och Letter of Direction (LOD).</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Datahantering och Arbetsflöde</h2>
+        <p>Systemet hanterar metadata genom följande steg:</p>
+        <ol>
+            <li><strong>Inläsning:</strong> CSV-underlag importeras för teknisk analys.</li>
+            <li><strong>Analys:</strong> Identifiering av metadata-brister, såsom felaktiga splits eller saknade identifikationskoder.</li>
+            <li><strong>Korrigering:</strong> Generering av arbetsblad för manuell granskning och efterföljande sammanslagning av validerad data.</li>
+            <li><strong>Export:</strong> Förberedelse av strukturerade filer för extern distribution.</li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Tekniska Definitioner</h2>
+        <ul>
+            <li><strong>Metadata Health Score:</strong> Procentuell representation av kompletta kontra ofullständiga datapunkter i katalogen.</li>
+            <li><strong>Global Leakage:</strong> Beräknat värde av identifierade metadata-glapp baserat på tillgänglig royaltydata.</li>
+            <li><strong>Unclaimed/Gap:</strong> Statusmarkeringar för territorier där metadata-matchning saknas eller kräver ytterligare validering.</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p><em>Notera: Systemet utför teknisk strukturering av metadata. Inga finansiella transaktioner eller automatiserade rättighetsanspråk genomförs direkt i portalen.</em></p>
+    </footer>
+
+</body>
+</html>

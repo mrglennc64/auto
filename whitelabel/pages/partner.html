@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="title">{{PartnerBrand}} — Become a partner</title>
+<meta name="description" data-i18n-attr="content" data-i18n="meta_desc" content="Onboarding path, materials needed, and the first-case timeline.">
+<style>
+  :root {
+    --bg: #05070b; --bg-card: #0b0f18; --border: #1b2233; --border-strong: #2a3345;
+    --text: #f5f7fb; --muted: #c3cad8; --dim: #8f9bb3;
+    --accent: #1dd4b7; --accent-hover: #18bfa5; --accent-soft: rgba(29,212,183,0.12);
+    --amber: #f2b36a; --amber-soft: rgba(242,179,106,0.12);
+    --radius-card: 14px; --radius-pill: 999px; --max-width: 1080px;
+    --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 { font-weight: 600; line-height: 1.25; }
+  ul { list-style: none; }
+
+  header.topnav { max-width: 1120px; margin: 0 auto; padding: 1.4rem 1.5rem 0.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .brand { display: flex; align-items: center; gap: 0.65rem; }
+  .brand-mark { width: 28px; height: 28px; border-radius: var(--radius-pill); background: radial-gradient(circle at 30% 20%, #b0fbe9 0, var(--accent) 40%, #0f6657 100%); }
+  .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: var(--dim); }
+  nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: var(--dim); }
+  nav.primary a:hover, nav.primary a.active { color: var(--accent); }
+  nav.primary a.demo { background: var(--amber-soft); color: var(--amber); border: 1px solid rgba(242,179,106,0.4); padding: 6px 12px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 700; }
+  .lang-toggle { display: inline-flex; gap: 4px; padding: 4px; border-radius: var(--radius-pill); border: 1px solid rgba(143,155,179,0.35); }
+  .lang-toggle button { background: transparent; color: var(--dim); border: 0; padding: 3px 9px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 0.04em; }
+  .lang-toggle button.active { background: var(--accent); color: #020308; }
+  .lang-toggle button:hover:not(.active) { color: var(--text); }
+
+  .hero { padding: 3rem 1.5rem 1.5rem; max-width: 880px; margin: 0 auto; text-align: center; }
+  .hero h1 { font-size: 2.2rem; margin-bottom: 0.8rem; letter-spacing: -0.01em; }
+  .hero p.lede { color: var(--muted); max-width: 720px; margin: 0 auto; font-size: 1.05rem; }
+
+  .section { margin: 2.5rem auto; max-width: var(--max-width); padding: 0 1.5rem; }
+  .section h2 { font-size: 1.5rem; margin-bottom: 0.65rem; }
+  .section .lede { color: var(--muted); max-width: 720px; margin-bottom: 1.5rem; font-size: 0.95rem; }
+
+  .timeline { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.5rem 1.7rem; }
+  .timeline-row { display: grid; grid-template-columns: 90px 1fr; gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
+  .timeline-row:last-child { border-bottom: 0; }
+  .timeline-day { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); font-weight: 700; padding-top: 2px; }
+  .timeline-row h3 { font-size: 1rem; margin-bottom: 0.25rem; }
+  .timeline-row p { color: var(--muted); font-size: 0.9rem; }
+
+  .checklist { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.5rem 1.7rem; }
+  .checklist ul li { color: var(--muted); font-size: 0.95rem; padding: 8px 0 8px 24px; position: relative; border-bottom: 1px solid var(--border); }
+  .checklist ul li:last-child { border-bottom: 0; }
+  .checklist ul li::before { content: '☐'; color: var(--accent); position: absolute; left: 0; font-size: 1.1rem; line-height: 1; }
+  .checklist ul li strong { color: var(--text); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.5rem 1.7rem; }
+  .card h3 { font-size: 1.05rem; color: var(--accent); margin-bottom: 0.6rem; }
+  .card p { color: var(--muted); font-size: 0.92rem; }
+  .card ul { margin-top: 0.6rem; }
+  .card li { color: var(--muted); font-size: 0.9rem; padding: 4px 0 4px 16px; position: relative; }
+  .card li::before { content: '·'; color: var(--accent); position: absolute; left: 4px; font-weight: 700; }
+
+  .cta { text-align: center; padding: 3rem 1.5rem 4rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+  .cta h2 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .cta p { color: var(--muted); max-width: 580px; margin: 0 auto 1.2rem; }
+  .btn-primary { display: inline-block; background: var(--accent); color: #020308; padding: 0.8rem 1.7rem; border-radius: var(--radius-pill); font-weight: 600; font-size: 0.95rem; transition: 0.15s ease; }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+  footer { color: var(--dim); font-size: 12px; text-align: center; padding: 2rem 1.5rem 3rem; border-top: 1px solid var(--border); }
+  footer p { margin: 0.3rem 0; }
+  footer a { color: var(--dim); }
+  footer a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <a href="index.html"><span class="brand-text" data-i18n="brand_label">{{PartnerBrand}}</span></a>
+  </div>
+  <nav class="primary">
+    <a href="how-it-works.html" data-i18n="nav_how">How it works</a>
+    <a href="pricing.html" data-i18n="nav_pricing">Pricing</a>
+    <a href="partner.html" class="active" data-i18n="nav_partner">Become a partner</a>
+    <a href="faq.html" data-i18n="nav_faq">FAQ</a>
+    <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    <a href="portal.html" class="demo" data-i18n="nav_portal">Portal →</a>
+    <div class="lang-toggle">
+      <button data-lang="en" class="active">EN</button>
+      <button data-lang="sv">SV</button>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1 data-i18n="hero_h1">Become a {{PartnerBrand}} partner</h1>
+  <p class="lede" data-i18n="hero_lede">Five business days from agreement to your first live partner case. The path below is the same for every new partner.</p>
+</section>
+
+<section class="section">
+  <h2 data-i18n="timeline_h2">Onboarding timeline</h2>
+  <p class="lede" data-i18n="timeline_lede">Each row is one calendar day. Day 0 starts when both sides sign the partner agreement.</p>
+  <div class="timeline">
+    <div class="timeline-row">
+      <div class="timeline-day" data-i18n="d0">Day 0</div>
+      <div>
+        <h3 data-i18n="d0_h">Agreement signed · brand assets requested</h3>
+        <p data-i18n="d0_p">{{PartnerBrand}} sends a one-page intake form asking for logo, primary color, contact email, and the legal name to use on deliverables.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-day" data-i18n="d1">Day 1</div>
+      <div>
+        <h3 data-i18n="d1_h">Brand assets returned · onboarding kit prepared</h3>
+        <p data-i18n="d1_p">Partner returns the intake form. {{PartnerBrand}} prepares a partner-specific onboarding kit with sample files and a checklist.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-day" data-i18n="d2">Day 2</div>
+      <div>
+        <h3 data-i18n="d2_h">Onboarding kit delivered</h3>
+        <p data-i18n="d2_p">Onboarding kit delivered as a single zip. Partner walks through three sample cases internally — one CSV, one XLSX, one CWR — without sending real client data.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-day" data-i18n="d3">Day 3</div>
+      <div>
+        <h3 data-i18n="d3_h">Sample cases reviewed together</h3>
+        <p data-i18n="d3_p">30-minute call to walk through any questions on the sample outputs. Partner confirms the brand styling on the deliverables looks right.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-day" data-i18n="d4">Day 4</div>
+      <div>
+        <h3 data-i18n="d4_h">First real case submitted</h3>
+        <p data-i18n="d4_p">Partner forwards their first real end-client catalog. {{PartnerBrand}} processes as a normal case but flags it as "first" internally for extra review before delivery.</p>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-day" data-i18n="d5">Day 5</div>
+      <div>
+        <h3 data-i18n="d5_h">First case delivered · partner is live</h3>
+        <p data-i18n="d5_p">First case delivered to the partner. From this point on, every case follows the standard timing on the <a href="how-it-works.html#timing">how it works</a> page.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 data-i18n="materials_h2">Materials needed from the partner</h2>
+  <p class="lede" data-i18n="materials_lede">All collected on the Day 0 intake form. Nothing else is required.</p>
+  <div class="checklist">
+    <ul>
+      <li data-i18n="m1"><strong>Brand name</strong> — exact display form to use on every deliverable.</li>
+      <li data-i18n="m2"><strong>Logo</strong> — SVG preferred, PNG accepted. Light and dark variants if available.</li>
+      <li data-i18n="m3"><strong>Primary brand color</strong> — hex code. Used as the accent on Health Reports and Worksheets.</li>
+      <li data-i18n="m4"><strong>Partner contact email</strong> — the address shown to end-clients on every deliverable.</li>
+      <li data-i18n="m5"><strong>Support email</strong> — for ongoing case follow-up. Can be the same as the contact email.</li>
+      <li data-i18n="m6"><strong>Legal entity name + jurisdiction</strong> — for the wholesale invoice and the partner agreement.</li>
+      <li data-i18n="m7"><strong>Preferred language</strong> — English, Swedish, or both. Adds 1–2 days if a third language is required.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <h2 data-i18n="first_h2">First-case checklist</h2>
+  <p class="lede" data-i18n="first_lede">Walk through this internally before sending the first real client catalog.</p>
+  <div class="grid-2">
+    <div class="card">
+      <h3 data-i18n="fc1_h">Before sending</h3>
+      <ul>
+        <li data-i18n="fc1_1">All three sample cases (CSV, XLSX, CWR) processed end-to-end internally.</li>
+        <li data-i18n="fc1_2">Brand styling on sample Health Report confirmed against the partner brand guide.</li>
+        <li data-i18n="fc1_3">Partner-safe disclaimer text reviewed by the partner's legal contact.</li>
+        <li data-i18n="fc1_4">End-client has agreed in writing to share the catalog file.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 data-i18n="fc2_h">After delivery</h3>
+      <ul>
+        <li data-i18n="fc2_1">Forward the Health Report and Worksheet to the end-client unchanged.</li>
+        <li data-i18n="fc2_2">Schedule a 30-minute review call with the end-client before they fill in the Worksheet.</li>
+        <li data-i18n="fc2_3">Wait for the completed Worksheet before initiating Part 2.</li>
+        <li data-i18n="fc2_4">Log the case in the partner's own CRM for billing reconciliation.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 data-i18n="cta_h2">Start the partner conversation</h2>
+  <p data-i18n="cta_p">Send a short note describing the kind of end-clients you serve. {{PartnerBrand}} responds with a draft partner agreement within one business day.</p>
+  <a href="mailto:{{PartnerContact}}?subject=Partner%20inquiry" class="btn-primary" data-i18n="cta_btn">Email {{PartnerContact}}</a>
+</section>
+
+<footer>
+  <p data-i18n="footer_brand">{{PartnerBrand}} · Catalog metadata validation, file-based</p>
+  <p><a href="mailto:{{PartnerContact}}">{{PartnerContact}}</a> · {{PartnerDomain}}</p>
+  <p data-i18n="footer_copy">© 2026 {{PartnerBrand}} · All rights reserved</p>
+</footer>
+
+<script>
+window.TRANSLATIONS = {
+  en: {
+    title: "{{PartnerBrand}} — Become a partner",
+    meta_desc: "Onboarding path, materials needed, and the first-case timeline.",
+    brand_label: "{{PartnerBrand}}",
+    nav_how: "How it works", nav_pricing: "Pricing", nav_partner: "Become a partner", nav_faq: "FAQ", nav_contact: "Contact", nav_portal: "Portal →",
+    hero_h1: "Become a {{PartnerBrand}} partner",
+    hero_lede: "Five business days from agreement to your first live partner case. The path below is the same for every new partner.",
+    timeline_h2: "Onboarding timeline",
+    timeline_lede: "Each row is one calendar day. Day 0 starts when both sides sign the partner agreement.",
+    d0: "Day 0", d1: "Day 1", d2: "Day 2", d3: "Day 3", d4: "Day 4", d5: "Day 5",
+    d0_h: "Agreement signed · brand assets requested",
+    d0_p: "{{PartnerBrand}} sends a one-page intake form asking for logo, primary color, contact email, and the legal name to use on deliverables.",
+    d1_h: "Brand assets returned · onboarding kit prepared",
+    d1_p: "Partner returns the intake form. {{PartnerBrand}} prepares a partner-specific onboarding kit with sample files and a checklist.",
+    d2_h: "Onboarding kit delivered",
+    d2_p: "Onboarding kit delivered as a single zip. Partner walks through three sample cases internally — one CSV, one XLSX, one CWR — without sending real client data.",
+    d3_h: "Sample cases reviewed together",
+    d3_p: "30-minute call to walk through any questions on the sample outputs. Partner confirms the brand styling on the deliverables looks right.",
+    d4_h: "First real case submitted",
+    d4_p: "Partner forwards their first real end-client catalog. {{PartnerBrand}} processes as a normal case but flags it as 'first' internally for extra review before delivery.",
+    d5_h: "First case delivered · partner is live",
+    d5_p: "First case delivered to the partner. From this point on, every case follows the standard timing on the how-it-works page.",
+    materials_h2: "Materials needed from the partner",
+    materials_lede: "All collected on the Day 0 intake form. Nothing else is required.",
+    m1: "Brand name — exact display form to use on every deliverable.",
+    m2: "Logo — SVG preferred, PNG accepted. Light and dark variants if available.",
+    m3: "Primary brand color — hex code. Used as the accent on Health Reports and Worksheets.",
+    m4: "Partner contact email — the address shown to end-clients on every deliverable.",
+    m5: "Support email — for ongoing case follow-up. Can be the same as the contact email.",
+    m6: "Legal entity name + jurisdiction — for the wholesale invoice and the partner agreement.",
+    m7: "Preferred language — English, Swedish, or both. Adds 1–2 days if a third language is required.",
+    first_h2: "First-case checklist",
+    first_lede: "Walk through this internally before sending the first real client catalog.",
+    fc1_h: "Before sending",
+    fc1_1: "All three sample cases (CSV, XLSX, CWR) processed end-to-end internally.",
+    fc1_2: "Brand styling on sample Health Report confirmed against the partner brand guide.",
+    fc1_3: "Partner-safe disclaimer text reviewed by the partner's legal contact.",
+    fc1_4: "End-client has agreed in writing to share the catalog file.",
+    fc2_h: "After delivery",
+    fc2_1: "Forward the Health Report and Worksheet to the end-client unchanged.",
+    fc2_2: "Schedule a 30-minute review call with the end-client before they fill in the Worksheet.",
+    fc2_3: "Wait for the completed Worksheet before initiating Part 2.",
+    fc2_4: "Log the case in the partner's own CRM for billing reconciliation.",
+    cta_h2: "Start the partner conversation",
+    cta_p: "Send a short note describing the kind of end-clients you serve. {{PartnerBrand}} responds with a draft partner agreement within one business day.",
+    cta_btn: "Email {{PartnerContact}}",
+    footer_brand: "{{PartnerBrand}} · Catalog metadata validation, file-based",
+    footer_copy: "© 2026 {{PartnerBrand}} · All rights reserved"
+  },
+  sv: {
+    title: "{{PartnerBrand}} — Bli partner",
+    meta_desc: "Onboarding-väg, material som behövs och tidsplan för första fallet.",
+    brand_label: "{{PartnerBrand}}",
+    nav_how: "Så fungerar det", nav_pricing: "Priser", nav_partner: "Bli partner", nav_faq: "Vanliga frågor", nav_contact: "Kontakt", nav_portal: "Portal →",
+    hero_h1: "Bli partner till {{PartnerBrand}}",
+    hero_lede: "Fem arbetsdagar från avtal till första live-fall. Vägen nedan är densamma för varje ny partner.",
+    timeline_h2: "Onboarding-tidsplan",
+    timeline_lede: "Varje rad är en kalenderdag. Dag 0 börjar när båda parter signerar partneravtalet.",
+    d0: "Dag 0", d1: "Dag 1", d2: "Dag 2", d3: "Dag 3", d4: "Dag 4", d5: "Dag 5",
+    d0_h: "Avtal signerat · varumärkesmaterial begärt",
+    d0_p: "{{PartnerBrand}} skickar ett ensidigt intagsformulär som efterfrågar logo, primärfärg, kontaktadress och det juridiska namn som ska användas på leveranser.",
+    d1_h: "Varumärkesmaterial returnerat · onboarding-paket förbereds",
+    d1_p: "Partnern returnerar intagsformuläret. {{PartnerBrand}} förbereder ett partnerspecifikt onboarding-paket med exempelfiler och en checklista.",
+    d2_h: "Onboarding-paket levererat",
+    d2_p: "Onboarding-paketet levereras som en enda zip-fil. Partnern går igenom tre exempelfall internt — en CSV, en XLSX och en CWR — utan att skicka verklig kunddata.",
+    d3_h: "Exempelfall granskas gemensamt",
+    d3_p: "30 minuters samtal för att gå igenom eventuella frågor om exempelutfallen. Partnern bekräftar att varumärkesutformningen på leveranserna ser rätt ut.",
+    d4_h: "Första riktiga fall skickas in",
+    d4_p: "Partnern vidarebefordrar sin första riktiga slutkundskatalog. {{PartnerBrand}} hanterar den som ett vanligt fall men markerar internt som 'första' för extra granskning före leverans.",
+    d5_h: "Första fallet levererat · partnern är live",
+    d5_p: "Första fallet levererat till partnern. Från och med nu följer varje fall standardtiderna på sidan Så fungerar det.",
+    materials_h2: "Material som behövs från partnern",
+    materials_lede: "Allt samlas in via Dag 0-intagsformuläret. Inget annat krävs.",
+    m1: "Varumärkesnamn — exakt visningsform att använda på varje leverans.",
+    m2: "Logo — SVG föredras, PNG accepteras. Ljus och mörk variant om sådana finns.",
+    m3: "Primär varumärkesfärg — hex-kod. Används som accent på hälsorapporter och arbetsblad.",
+    m4: "Partnerns kontaktadress — adressen som visas för slutkunderna på varje leverans.",
+    m5: "Supportadress — för löpande fallsuppföljning. Kan vara samma som kontaktadressen.",
+    m6: "Juridiskt enhetsnamn + jurisdiktion — för grossistfaktura och partneravtal.",
+    m7: "Önskat språk — engelska, svenska eller båda. Tillkommer 1–2 dagar om ett tredje språk krävs.",
+    first_h2: "Checklista för första fallet",
+    first_lede: "Gå igenom denna internt innan den första riktiga klientkatalogen skickas.",
+    fc1_h: "Före utskick",
+    fc1_1: "Alla tre exempelfall (CSV, XLSX, CWR) hanterade från början till slut internt.",
+    fc1_2: "Varumärkesutformning på exempelhälsorapport bekräftad mot partnerns varumärkesguide.",
+    fc1_3: "Partnerslip-friskrivningstext granskad av partnerns juridiska kontakt.",
+    fc1_4: "Slutkunden har gått med på skriftligen att dela katalogfilen.",
+    fc2_h: "Efter leverans",
+    fc2_1: "Vidarebefordra hälsorapport och arbetsblad till slutkunden oförändrade.",
+    fc2_2: "Boka ett 30 minuters granskningssamtal med slutkunden innan de fyller i arbetsbladet.",
+    fc2_3: "Vänta på det ifyllda arbetsbladet innan del 2 inleds.",
+    fc2_4: "Logga fallet i partnerns eget CRM för fakturaavstämning.",
+    cta_h2: "Inled partnerdialogen",
+    cta_p: "Skicka en kort beskrivning av vilken typ av slutkunder ni betjänar. {{PartnerBrand}} svarar med ett utkast till partneravtal inom en arbetsdag.",
+    cta_btn: "E-posta {{PartnerContact}}",
+    footer_brand: "{{PartnerBrand}} · Validering av katalogmetadata, filbaserat",
+    footer_copy: "© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna"
+  }
+};
+(function(){function apply(lang){var d=window.TRANSLATIONS[lang]||window.TRANSLATIONS.en;document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');var a=el.getAttribute('data-i18n-attr');if(d[k]===undefined)return;if(a)el.setAttribute(a,d[k]);else el.textContent=d[k];});document.querySelectorAll('.lang-toggle button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-lang')===lang);});try{localStorage.setItem('wl_lang',lang);}catch(e){}}var s=null;try{s=localStorage.getItem('wl_lang');}catch(e){}apply(s||'en');document.querySelectorAll('.lang-toggle button').forEach(function(b){b.addEventListener('click',function(){apply(b.getAttribute('data-lang'));});});})();
+</script>
+</body>
+</html>

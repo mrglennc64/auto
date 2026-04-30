@@ -1,0 +1,62 @@
+You are building a white‑label metadata analysis system based on the HeyRoya model. 
+The system must be file‑based, metadata‑only, and zero‑trust. 
+No system access, no ingestion access, no API access, no PRO access, no royalty language.
+
+GOAL:
+Create a complete white‑label version of HeyRoya that partners can license or resell under their own brand. 
+The backend remains hidden. Partners only see branded outputs.
+
+REQUIREMENTS:
+1. File‑based workflow only.
+2. No exposure of backend logic, automation, or infrastructure.
+3. No references to STIM/ICE/MLC system access.
+4. No claims of royalty recovery or financial outcomes.
+5. All deliverables must be brand‑neutral and partner‑safe.
+
+DELIVERABLES TO GENERATE:
+1. White‑label Health Report template (HTML + text)
+2. White‑label Affected Works List (CSV + HTML)
+3. White‑label Worksheet (XLSX structure + CSV fallback)
+4. White‑label CWR export template
+5. White‑label CSV export template
+6. White‑label partner instructions (PDF‑style text)
+7. White‑label onboarding kit (text)
+8. White‑label reseller documentation (text)
+9. White‑label pricing tiers (wholesale model)
+10. White‑label brand‑neutral disclaimers
+
+STRUCTURE:
+- All outputs must be modular.
+- All text must follow Scandinavian enterprise tone: short, factual, operational, metadata‑only, zero‑trust, no hype.
+- No metaphors, no emotional framing, no marketing adjectives.
+- No system‑access implications.
+- No references to internal automation or agent systems.
+
+WHITE‑LABEL BRANDING RULES:
+- Replace “HeyRoya” with placeholder: {{PartnerBrand}}
+- Replace “Ken Neptune” with placeholder: {{PartnerContact}}
+- Replace domain references with placeholder: {{PartnerDomain}}
+
+WORKFLOW TO IMPLEMENT:
+1. Partner uploads catalog file (CSV/XLSX/CWR).
+2. System performs Part 1 scan (identifier checks, role/share checks, duplicates, conflicts).
+3. System generates white‑label Health Report + Worksheet.
+4. Partner returns Worksheet with selected works.
+5. System performs Part 2 corrections.
+6. System generates white‑label corrected Health Report + CWR/CSV exports.
+
+BOUNDARIES:
+- No dashboards.
+- No live system access.
+- No API endpoints.
+- No ingestion pipelines.
+- No partner access to backend.
+- Deliverables only via file exchange.
+
+OUTPUT FORMAT:
+Generate all templates, structures, and text blocks in clean, copy‑paste‑ready format.
+Use neutral HTML/CSS for report templates.
+Use CSV structures for lists.
+Use XLSX column definitions for worksheets.
+
+START NOW.

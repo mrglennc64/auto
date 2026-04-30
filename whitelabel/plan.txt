@@ -1,0 +1,43 @@
+I want to build a whitelabel version of an existing static-HTML product I have. Don't touch the existing files — work in a separate directory.
+
+## What the existing product is
+
+HeyRoya is a metadata compliance service for Nordic music publishers (heyroya.se). It's a static HTML site hosted on a Hostinger VPS — no build step, no framework. Repo: https://github.com/mrglennc64/heyroya — most of it lives in 
+
+It has:
+- Public pages: landing, how-it-works, cleaning-wizard, sample-health-report, pricing (two-part model: fixed scan + per-work corrections), FAQ (accordion), publisher, contact, terms
+- Two internal tools (password-gated, 100% client-side JS): scan-catalog.html (parses CSV → detects metadata issues → generates xlsx worksheet + Health Report PDF) and apply-corrections.html (merges filled worksheet back into catalog)
+- Full backend implementation spec at `roya-demo/docs/internal-tools-spec.md` if you want to port the internal tools to a server
+
+## Key technical patterns I want preserved
+
+- Single-file static HTML — each page is self-contained with inline CSS + JS, no build, no bundler
+- Bilingual via `data-i18n="key"` attributes + a TRANSLATIONS dict per page + setLang() that swaps text and persists to localStorage
+- Theme tokens: dark+teal — bg `#05070b`, accent `#1dd4b7`, amber `#f2b36a`, body text `#c3cad8`
+- Internal tools run entirely in browser (FileReader, ExcelJS for xlsx, browser print for PDF) — no backend
+- Voice: Scandinavian enterprise clarity, metadata-only, no marketing/financial claims, prefer validate/identify/confirm
+
+## What I want (the whitelabel)
+
+A brand-agnostic generic version of the same architecture so it can be rebranded for other industries / clients (not just music publishers):
+- No "HeyRoya", no music-specific terms (STIM/ICE/MLC, ISWC/ISRC/IPI) — replace with generic placeholders
+- Theme tokens parameterized so a client can swap colors with one search-replace
+- Translations structured so the dict can be swapped wholesale
+- Internal tools generalized: instead of music-metadata-specific rules, accept a configurable rules file
+- Same page set + two-part pricing template, but with placeholder copy
+
+## STRICT working rules
+
+- DO NOT modify `roya-demo/frontend/` — that's the live HeyRoya site
+- DO NOT modify `roya-demo/docs/` — those are HeyRoya's spec docs
+- Work in a NEW directory only — I suggest `whitelabel/` at project root
+- Don't deploy or push to GitHub without my explicit OK
+
+## How to start
+
+1. Pull a few key HeyRoya files from GitHub to study the patterns (no need to clone the whole repo locally)
+2. Propose a directory structure for the whitelabel
+3. Build ONE page first (landing) and show me before generalizing the rest
+4. Wait for my OK before scaffolding the full set
+
+Start with a plan. Don't scaffold everything at once.

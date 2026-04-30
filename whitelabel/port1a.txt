@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{PartnerBrand}} – Metadataanalys</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; padding: 0; color: #111; background: #fafafa; }
+    header, section, footer { max-width: 1040px; margin: 0 auto; padding: 24px 16px; }
+    header { border-bottom: 1px solid #ddd; background: #fff; }
+    h1, h2, h3 { margin: 0 0 12px; font-weight: 600; }
+    p { margin: 0 0 8px; }
+    .section { border-bottom: 1px solid #eee; padding-bottom: 24px; margin-bottom: 24px; background: #fff; }
+    ul { margin: 0 0 8px 18px; padding: 0; }
+    ol { margin: 0 0 8px 18px; padding: 0; }
+    nav { display: flex; gap: 16px; font-size: 14px; }
+    nav a { text-decoration: none; color: #333; }
+    nav a:hover { text-decoration: underline; }
+    .grid { display: grid; gap: 16px; }
+    @media (min-width: 768px) { .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 11px; background: #eee; margin-right: 4px; }
+    img.screenshot { width: 100%; max-width: 100%; border-radius: 6px; border: 1px solid #ddd; margin: 8px 0; }
+    table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 14px; }
+    th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
+    small { color: #555; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>{{PartnerBrand}} – Metadataanalys</h1>
+  <p>Filbaserad metadataanalys för musikverk. Inga systemåtkomster. Inga royalty‑ eller juridiklöften. Endast strukturerad metadata.</p>
+  <nav>
+    <a href="#start">Start</a>
+    <a href="#how">Så fungerar det</a>
+    <a href="#pricing">Priser</a>
+    <a href="#portal">Partnerportal</a>
+    <a href="#faq">FAQ</a>
+    <a href="#support">Support</a>
+  </nav>
+</header>
+
+<!-- STARTSIDA -->
+<section id="start" class="section">
+  <h2>Start</h2>
+  <p>{{PartnerBrand}} erbjuder filbaserad metadataanalys för kataloger. Tjänsten identifierar avvikelser i verkdata och producerar rapporter, arbetsblad och exportfiler.</p>
+
+  <div class="grid grid-2">
+    <div>
+      <h3>Vad tjänsten gör</h3>
+      <ul>
+        <li>kontrollerar identifierare (ISWC, ISRC, IPI m.m.)</li>
+        <li>kontrollerar roller och andelar</li>
+        <li>upptäcker dubbletter och namnvarianter</li>
+        <li>identifierar saknad eller motstridig metadata</li>
+        <li>riskklassificerar verk</li>
+        <li>producerar CWR‑ och CSV‑underlag</li>
+      </ul>
+      <p><span class="tag">Filbaserat</span><span class="tag">Metadata‑endast</span><span class="tag">Zero‑trust</span></p>
+    </div>
+    <div>
+      <h3>Exempelvy – katalog & territorier</h3>
+      <p>Här kan partnern visa egna skärmdumpar från sitt system, t.ex. kataloglista eller territoriell översikt.</p>
+      <img class="screenshot" src="screenshot-dashboard-1.png" alt="Exempel på översikt över territorier och intäkter" />
+      <img class="screenshot" src="screenshot-catalog-1.png" alt="Exempel på kataloglista med verk, upphovspersoner och förlag" />
+    </div>
+  </div>
+</section>
+
+<!-- SÅ FUNGERAR DET -->
+<section id="how" class="section">
+  <h2>Så fungerar det</h2>
+
+  <div class="grid grid-2">
+    <div>
+      <h3>Del 1 – Katalogskanning</h3>
+      <p>En strukturerad genomgång av katalogen. Inga korrigeringar utförs i denna fas.</p>
+      <ul>
+        <li>kontroll av identifierare</li>
+        <li>kontroll av roller och andelar</li>
+        <li>upptäckt av dubbletter och namnvarianter</li>
+        <li>identifiering av saknad eller motstridig data</li>
+        <li>riskklassificering per verk</li>
+      </ul>
+      <p>Leverans: Hälsorapport, lista över påverkade verk, arbetsblad.</p>
+    </div>
+    <div>
+      <h3>Del 2 – Korrigeringar</h3>
+      <p>Utförs endast för verk som partnern markerar i arbetsbladet.</p>
+      <ul>
+        <li>korrigering av identifierare</li>
+        <li>normalisering av roller och andelar</li>
+        <li>CWR‑kompatibla korrigeringsfiler</li>
+        <li>CSV‑exporter</li>
+        <li>dokumentation för PRO/MLC‑inskick</li>
+        <li>mänsklig validering och zero‑trust‑bekräftelse</li>
+      </ul>
+      <p>Leverans: uppdaterad Hälsorapport, CWR, CSV.</p>
+    </div>
+  </div>
+
+  <h3>Arbetsflöde</h3>
+  <ol>
+    <li>Partnern skickar in katalogfil (CSV/XLSX/CWR).</li>
+    <li>{{PartnerBrand}} genomför Del 1 och levererar rapport + arbetsblad.</li>
+    <li>Partnern markerar verk för korrigering i arbetsbladet.</li>
+    <li>{{PartnerBrand}} genomför Del 2 för markerade verk.</li>
+    <li>Partnern får uppdaterade rapporter och exportfiler.</li>
+  </ol>
+
+  <p><small>All analys baseras på inlämnade filer. Ingen systemåtkomst används.</small></p>
+</section>
+
+<!-- PRISER -->
+<section id="pricing" class="section">
+  <h2>Priser – White‑label</h2>
+  <p>Priserna nedan avser wholesale‑nivå för partner. Partner sätter egna slutkundspriser.</p>
+
+  <h3>Månadslincens</h3>
+  <p>Licens för att använda {{PartnerBrand}} som white‑label‑motor.</p>
+  <ul>
+    <li>Baslicens: 2 000–5 000 SEK/månad (beroende på volym och avtal)</li>
+    <li>Inkluderar: white‑label‑branding, partnerstöd, drift</li>
+  </ul>
+
+  <h3>Del 1 – Katalogskanning (wholesale)</h3>
+  <table>
+    <tr><th>Nivå</th><th>Verk</th><th>Wholesale (SEK)</th></tr>
+    <tr><td>Lite</td><td>upp till 100</td><td>800</td></tr>
+    <tr><td>Pro</td><td>upp till 1 000</td><td>2 000</td></tr>
+    <tr><td>Enterprise</td><td>1 001–5 000</td><td>6 500</td></tr>
+    <tr><td>Custom</td><td>5 001+</td><td>Offert</td></tr>
+  </table>
+
+  <h3>Del 2 – Korrigeringar (wholesale)</h3>
+  <table>
+    <tr><th>Service</th><th>Wholesale (SEK)</th></tr>
+    <tr><td>Per verk som korrigeras</td><td>250</td></tr>
+    <tr><td>Minimifaktura (5 verk)</td><td>1 250</td></tr>
+    <tr><td>Express (5 arbetsdagar)</td><td>+40%</td></tr>
+    <tr><td>Akut (48 timmar)</td><td>+80%</td></tr>
+  </table>
+
+  <p><small>Partner kan t.ex. ta 350–500 SEK per verk mot slutkund. Licensgivaren har ingen andel i partnerns marginal.</small></p>
+</section>
+
+<!-- PARTNERPORTAL -->
+<section id="portal" class="section">
+  <h2>Partnerportal</h2>
+  <p>Partnerportalen används för filinlämning, status och leveranser. Backend, metoder och logik är inte åtkomliga.</p>
+
+  <div class="grid grid-2">
+    <div>
+      <h3>Filinlämning</h3>
+      <ul>
+        <li>format: CSV, XLSX, CWR</li>
+        <li>en eller flera filer per katalog</li>
+        <li>ingen specifik mall krävs</li>
+      </ul>
+
+      <h3>Status</h3>
+      <ul>
+        <li>bekräftelse när filer mottagits</li>
+        <li>notifiering när analys startar</li>
+        <li>leverans vid slutförd analys</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Exempelvyer</h3>
+      <p>Partnern kan visa egna skärmdumpar, t.ex.:</p>
+      <ul>
+        <li>översikt över territorier och status (Collecting/Gap/Unclaimed)</li>
+        <li>kataloglista med verk, upphovspersoner och förlagsandelar</li>
+        <li>metadatahälsa och risknivåer</li>
+      </ul>
+      <img class="screenshot" src="screenshot-dashboard-2.png" alt="Exempel på operations‑ eller revenue‑vy" />
+      <img class="screenshot" src="screenshot-catalog-2.png" alt="Exempel på katalogvy med verk och förlag" />
+    </div>
+  </div>
+
+  <h3>Begränsningar</h3>
+  <ul>
+    <li>ingen direktåtkomst till STIM/ICE/MLC eller andra PRO‑system</li>
+    <li>ingen API‑åtkomst</li>
+    <li>ingen ingestion eller direktinskick</li>
+    <li>ingen royalty‑ eller juridikfunktion</li>
+  </ul>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section">
+  <h2>FAQ</h2>
+
+  <h3>Är detta en royaltytjänst?</h3>
+  <p>Nej. {{PartnerBrand}} hanterar endast metadata baserat på inlämnade filer.</p>
+
+  <h3>Har ni åtkomst till PRO‑system?</h3>
+  <p>Nej. Ingen systemåtkomst används. All analys baseras på filer.</p>
+
+  <h3>Kan ni skicka in metadata åt oss?</h3>
+  <p>Nej. Tjänsten producerar underlag som kan användas för inskick, men skickar inte in data.</p>
+
+  <h3>Hur många verk brukar vara påverkade?</h3>
+  <p>Vanligt intervall i nordiska kataloger är 10–15 %, men andelen varierar med datakvalitet.</p>
+
+  <h3>Kan vi använda egna priser mot slutkund?</h3>
+  <p>Ja. Ni betalar wholesale‑pris till licensgivaren och sätter egna slutkundspriser.</p>
+
+  <h3>Raderar ni material efter analys?</h3>
+  <p>Ja, enligt överenskommen rutin.</p>
+</section>
+
+<!-- SUPPORT -->
+<section id="support" class="section">
+  <h2>Support</h2>
+  <p>Support avser filinlämning, statusfrågor och leveranser.</p>
+
+  <h3>Kontakt</h3>
+  <p>E‑post: {{PartnerContact}}</p>
+  <p>Svarstid: 1–2 arbetsdagar.</p>
+
+  <h3>Supportområden</h3>
+  <ul>
+    <li>frågor om filformat och inlämning</li>
+    <li>status på pågående analyser</li>
+    <li>frågor om rapporter och arbetsblad</li>
+    <li>frågor om CWR‑ och CSV‑exporter</li>
+  </ul>
+
+  <h3>Eskaleringsnivåer</h3>
+  <p>Ärenden kan markeras som <span class="pill">Prioritet</span> vid tidskritiska fall. Express och akut kan erbjudas enligt prislista.</p>
+
+  <h3>Servicefönster</h3>
+  <p>Måndag–fredag, 09:00–17:00 CET.</p>
+</section>
+
+<footer>
+  <p><small>© 2026 {{PartnerBrand}} · Filbaserad metadataanalys · White‑label för förlag och rättighetsbolag</small></p>
+  <p><small>Analys baseras endast på inlämnade filer. Ingen systemåtkomst. Inga royalty‑ eller juridiklöften.</small></p>
+</footer>
+
+</body>
+</html>

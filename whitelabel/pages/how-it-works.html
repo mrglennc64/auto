@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="title">{{PartnerBrand}} — How it works</title>
+<meta name="description" data-i18n-attr="content" data-i18n="meta_desc" content="The six-step file-based workflow that runs under your brand.">
+<style>
+  :root {
+    --bg: #05070b; --bg-card: #0b0f18; --border: #1b2233; --border-strong: #2a3345;
+    --text: #f5f7fb; --muted: #c3cad8; --dim: #8f9bb3;
+    --accent: #1dd4b7; --accent-hover: #18bfa5; --accent-soft: rgba(29,212,183,0.12);
+    --amber: #f2b36a; --amber-soft: rgba(242,179,106,0.12);
+    --radius-card: 14px; --radius-pill: 999px; --max-width: 1080px;
+    --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 { font-weight: 600; line-height: 1.25; }
+  ul { list-style: none; }
+  .container { max-width: var(--max-width); margin: 0 auto; padding: 0 1.5rem; }
+
+  header.topnav { max-width: 1120px; margin: 0 auto; padding: 1.4rem 1.5rem 0.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .brand { display: flex; align-items: center; gap: 0.65rem; }
+  .brand-mark { width: 28px; height: 28px; border-radius: var(--radius-pill); background: radial-gradient(circle at 30% 20%, #b0fbe9 0, var(--accent) 40%, #0f6657 100%); }
+  .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: var(--dim); }
+  nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: var(--dim); }
+  nav.primary a:hover, nav.primary a.active { color: var(--accent); }
+  nav.primary a.demo { background: var(--amber-soft); color: var(--amber); border: 1px solid rgba(242,179,106,0.4); padding: 6px 12px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 700; }
+  .lang-toggle { display: inline-flex; gap: 4px; padding: 4px; border-radius: var(--radius-pill); border: 1px solid rgba(143,155,179,0.35); }
+  .lang-toggle button { background: transparent; color: var(--dim); border: 0; padding: 3px 9px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 0.04em; }
+  .lang-toggle button.active { background: var(--accent); color: #020308; }
+  .lang-toggle button:hover:not(.active) { color: var(--text); }
+
+  .hero { padding: 3rem 1.5rem 1.5rem; max-width: 880px; margin: 0 auto; text-align: center; }
+  .hero h1 { font-size: 2.2rem; margin-bottom: 0.8rem; letter-spacing: -0.01em; }
+  .hero p.lede { color: var(--muted); max-width: 720px; margin: 0 auto; font-size: 1.05rem; }
+
+  .section { margin: 3rem auto; max-width: var(--max-width); padding: 0 1.5rem; }
+  .section h2 { font-size: 1.5rem; margin-bottom: 0.65rem; }
+  .section .lede { color: var(--muted); max-width: 720px; margin-bottom: 1.5rem; font-size: 0.95rem; }
+
+  .step-detail { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.6rem 1.8rem; margin-bottom: 1rem; }
+  .step-detail .header-row { display: flex; gap: 1rem; align-items: center; margin-bottom: 0.8rem; }
+  .step-num { width: 36px; height: 36px; background: var(--accent-soft); color: var(--accent); border: 1px solid rgba(29,212,183,0.4); border-radius: var(--radius-pill); display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+  .step-detail h3 { font-size: 1.15rem; }
+  .step-detail .meta { font-size: 0.78rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+  .step-detail p { color: var(--muted); font-size: 0.95rem; margin-top: 0.5rem; }
+  .step-detail .roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 1rem; }
+  @media (max-width: 720px) { .step-detail .roles { grid-template-columns: 1fr; } }
+  .role-box { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem 1rem; }
+  .role-box h4 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 0.35rem; font-weight: 700; }
+  .role-box p { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+  .formats { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.5rem 1.7rem; }
+  .formats table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 0.5rem; }
+  .formats th, .formats td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .formats th { color: var(--dim); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+  .formats td { color: var(--muted); }
+  .formats td code { background: var(--bg); padding: 2px 6px; border-radius: 4px; color: var(--accent); font-size: 0.85rem; }
+
+  .timing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  @media (max-width: 720px) { .timing { grid-template-columns: 1fr; } }
+  .timing-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.4rem 1.6rem; }
+  .timing-card .num { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+  .timing-card .label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dim); margin-top: 0.4rem; }
+  .timing-card p { color: var(--muted); font-size: 0.85rem; margin-top: 0.5rem; }
+
+  .cta { text-align: center; padding: 3rem 1.5rem 4rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+  .cta h2 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .cta p { color: var(--muted); max-width: 580px; margin: 0 auto 1.2rem; }
+  .btn-primary { display: inline-block; background: var(--accent); color: #020308; padding: 0.8rem 1.7rem; border-radius: var(--radius-pill); font-weight: 600; font-size: 0.95rem; transition: 0.15s ease; }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+  footer { color: var(--dim); font-size: 12px; text-align: center; padding: 2rem 1.5rem 3rem; border-top: 1px solid var(--border); }
+  footer p { margin: 0.3rem 0; }
+  footer a { color: var(--dim); }
+  footer a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <a href="index.html"><span class="brand-text" data-i18n="brand_label">{{PartnerBrand}}</span></a>
+  </div>
+  <nav class="primary">
+    <a href="how-it-works.html" class="active" data-i18n="nav_how">How it works</a>
+    <a href="pricing.html" data-i18n="nav_pricing">Pricing</a>
+    <a href="faq.html" data-i18n="nav_faq">FAQ</a>
+    <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    <a href="portal.html" class="demo" data-i18n="nav_portal">Portal →</a>
+    <div class="lang-toggle">
+      <button data-lang="en" class="active">EN</button>
+      <button data-lang="sv">SV</button>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1 data-i18n="hero_h1">How {{PartnerBrand}} runs a partner case</h1>
+  <p class="lede" data-i18n="hero_lede">Six steps, all file-based. The partner stays in control. End-clients only ever see {{PartnerBrand}}.</p>
+</section>
+
+<section class="section">
+  <div class="step-detail">
+    <div class="header-row">
+      <div class="step-num">1</div>
+      <div>
+        <h3 data-i18n="s1_h">Partner receives a catalog file</h3>
+        <div class="meta" data-i18n="s1_meta">Inbound · file exchange</div>
+      </div>
+    </div>
+    <p data-i18n="s1_p">The end-client sends a catalog file to the partner using whatever channel the partner prefers (email, secure share, sftp). The partner forwards the file to {{PartnerBrand}} for scanning. No system access is granted on either side.</p>
+    <div class="roles">
+      <div class="role-box"><h4 data-i18n="s1_r1_h">End-client does</h4><p data-i18n="s1_r1_p">Sends one catalog file in CSV, XLSX, or CWR format.</p></div>
+      <div class="role-box"><h4 data-i18n="s1_r2_h">Partner does</h4><p data-i18n="s1_r2_p">Forwards the file to the {{PartnerBrand}} intake address.</p></div>
+      <div class="role-box"><h4 data-i18n="s1_r3_h">{{PartnerBrand}} does</h4><p data-i18n="s1_r3_p">Acknowledges receipt within one business day.</p></div>
+    </div>
+  </div>
+
+  <div class="step-detail">
+    <div class="header-row">
+      <div class="step-num">2</div>
+      <div>
+        <h3 data-i18n="s2_h">Part 1 scan</h3>
+        <div class="meta" data-i18n="s2_meta">Identifier · role · share · duplicate · conflict checks</div>
+      </div>
+    </div>
+    <p data-i18n="s2_p">Each row is checked for required identifiers, valid roles, share totals, duplicate works, and ownership conflicts. No corrections are applied at this stage — the scan is read-only.</p>
+  </div>
+
+  <div class="step-detail">
+    <div class="header-row">
+      <div class="step-num">3</div>
+      <div>
+        <h3 data-i18n="s3_h">Branded report and worksheet returned</h3>
+        <div class="meta" data-i18n="s3_meta">Outbound · file exchange</div>
+      </div>
+    </div>
+    <p data-i18n="s3_p">The partner receives two files, both formatted under {{PartnerBrand}}: a Health Report (HTML) showing all findings, and a Worksheet (XLSX, CSV fallback) listing every row that needs a decision.</p>
+    <div class="roles">
+      <div class="role-box"><h4 data-i18n="s3_r1_h">Partner does</h4><p data-i18n="s3_r1_p">Forwards both files to the end-client for review.</p></div>
+      <div class="role-box"><h4 data-i18n="s3_r2_h">End-client does</h4><p data-i18n="s3_r2_p">Reviews the Health Report. Marks each row in the Worksheet: Accept, Edit, or Reject.</p></div>
+      <div class="role-box"><h4 data-i18n="s3_r3_h">{{PartnerBrand}} does</h4><p data-i18n="s3_r3_p">Waits. No follow-up automation. The end-client decides if and when to return the Worksheet.</p></div>
+    </div>
+  </div>
+
+  <div class="step-detail">
+    <div class="header-row">
+      <div class="step-num">4</div>
+      <div>
+        <h3 data-i18n="s4_h">Partner returns the completed Worksheet</h3>
+        <div class="meta" data-i18n="s4_meta">Inbound · file exchange</div>
+      </div>
+    </div>
+    <p data-i18n="s4_p">Once the end-client has confirmed each row, the partner forwards the completed Worksheet back to {{PartnerBrand}}. Only rows the end-client explicitly approved will be applied.</p>
+  </div>
+
+  <div class="step-detail">
+    <div class="header-row">
+      <div class="step-num">5</div>
+      <div>
+        <h3 data-i18n="s5_h">Part 2 corrections applied</h3>
+        <div class="meta" data-i18n="s5_meta">Catalog rebuild from approved rows</div>
+      </div>
+    </div>
+    <p data-i18n="s5_p">{{PartnerBrand}} rebuilds a corrected version of the catalog using only the rows marked Accept or Edit. Rejected rows remain untouched. A second scan runs against the corrected catalog to confirm the fix.</p>
+  </div>
+
+  <div class="step-detail">
+    <div class="header-row">
+      <div class="step-num">6</div>
+      <div>
+        <h3 data-i18n="s6_h">Branded corrected report and exports</h3>
+        <div class="meta" data-i18n="s6_meta">Final delivery</div>
+      </div>
+    </div>
+    <p data-i18n="s6_p">The partner receives four files, all under {{PartnerBrand}}: a second Health Report showing the residual issues, the corrected catalog, a CWR-format export template, and a CSV export template. The case closes.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2 data-i18n="formats_h2">Accepted file formats</h2>
+  <p class="lede" data-i18n="formats_lede">{{PartnerBrand}} accepts the formats below for catalog intake. Partners may agree on a fixed format with each end-client.</p>
+  <div class="formats">
+    <table>
+      <thead><tr><th data-i18n="fmt_col1">Format</th><th data-i18n="fmt_col2">Extension</th><th data-i18n="fmt_col3">Notes</th></tr></thead>
+      <tbody>
+        <tr><td data-i18n="fmt_csv_n">CSV</td><td><code>.csv</code></td><td data-i18n="fmt_csv_d">UTF-8, comma or semicolon separated. One row per writer.</td></tr>
+        <tr><td data-i18n="fmt_xlsx_n">Excel</td><td><code>.xlsx</code></td><td data-i18n="fmt_xlsx_d">First worksheet only. First row treated as header.</td></tr>
+        <tr><td data-i18n="fmt_cwr_n">CWR</td><td><code>.cwr</code> · <code>.v21</code> · <code>.v22</code></td><td data-i18n="fmt_cwr_d">CWR v2.1 and v2.2 supported.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section">
+  <h2 data-i18n="timing_h2">Typical timing</h2>
+  <p class="lede" data-i18n="timing_lede">Per case. Volume partners on the Standard tier can compress these.</p>
+  <div class="timing">
+    <div class="timing-card">
+      <div class="num">1</div>
+      <div class="label" data-i18n="t1_l">Business day</div>
+      <p data-i18n="t1_p">From file receipt to acknowledgement.</p>
+    </div>
+    <div class="timing-card">
+      <div class="num">2–3</div>
+      <div class="label" data-i18n="t2_l">Business days</div>
+      <p data-i18n="t2_p">From acknowledgement to Part 1 delivery (Health Report + Worksheet).</p>
+    </div>
+    <div class="timing-card">
+      <div class="num">1–2</div>
+      <div class="label" data-i18n="t3_l">Business days</div>
+      <p data-i18n="t3_p">From completed Worksheet receipt to Part 2 delivery (corrected report + exports).</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 data-i18n="cta_h2">Walk through a sample case</h2>
+  <p data-i18n="cta_p">A 30-minute call covering one sample catalog end-to-end, under {{PartnerBrand}}.</p>
+  <a href="mailto:{{PartnerContact}}" class="btn-primary" data-i18n="cta_btn">Contact {{PartnerContact}}</a>
+</section>
+
+<footer>
+  <p data-i18n="footer_brand">{{PartnerBrand}} · Catalog metadata validation, file-based</p>
+  <p><a href="mailto:{{PartnerContact}}">{{PartnerContact}}</a> · {{PartnerDomain}}</p>
+  <p data-i18n="footer_copy">© 2026 {{PartnerBrand}} · All rights reserved</p>
+</footer>
+
+<script>
+window.TRANSLATIONS = {
+  en: {
+    title: "{{PartnerBrand}} — How it works",
+    meta_desc: "The six-step file-based workflow that runs under your brand.",
+    brand_label: "{{PartnerBrand}}",
+    nav_how: "How it works", nav_pricing: "Pricing", nav_faq: "FAQ", nav_contact: "Contact", nav_portal: "Portal →",
+    hero_h1: "How {{PartnerBrand}} runs a partner case",
+    hero_lede: "Six steps, all file-based. The partner stays in control. End-clients only ever see {{PartnerBrand}}.",
+    s1_h: "Partner receives a catalog file", s1_meta: "Inbound · file exchange",
+    s1_p: "The end-client sends a catalog file to the partner using whatever channel the partner prefers (email, secure share, sftp). The partner forwards the file to {{PartnerBrand}} for scanning. No system access is granted on either side.",
+    s1_r1_h: "End-client does", s1_r1_p: "Sends one catalog file in CSV, XLSX, or CWR format.",
+    s1_r2_h: "Partner does", s1_r2_p: "Forwards the file to the {{PartnerBrand}} intake address.",
+    s1_r3_h: "{{PartnerBrand}} does", s1_r3_p: "Acknowledges receipt within one business day.",
+    s2_h: "Part 1 scan", s2_meta: "Identifier · role · share · duplicate · conflict checks",
+    s2_p: "Each row is checked for required identifiers, valid roles, share totals, duplicate works, and ownership conflicts. No corrections are applied at this stage — the scan is read-only.",
+    s3_h: "Branded report and worksheet returned", s3_meta: "Outbound · file exchange",
+    s3_p: "The partner receives two files, both formatted under {{PartnerBrand}}: a Health Report (HTML) showing all findings, and a Worksheet (XLSX, CSV fallback) listing every row that needs a decision.",
+    s3_r1_h: "Partner does", s3_r1_p: "Forwards both files to the end-client for review.",
+    s3_r2_h: "End-client does", s3_r2_p: "Reviews the Health Report. Marks each row in the Worksheet: Accept, Edit, or Reject.",
+    s3_r3_h: "{{PartnerBrand}} does", s3_r3_p: "Waits. No follow-up automation. The end-client decides if and when to return the Worksheet.",
+    s4_h: "Partner returns the completed Worksheet", s4_meta: "Inbound · file exchange",
+    s4_p: "Once the end-client has confirmed each row, the partner forwards the completed Worksheet back to {{PartnerBrand}}. Only rows the end-client explicitly approved will be applied.",
+    s5_h: "Part 2 corrections applied", s5_meta: "Catalog rebuild from approved rows",
+    s5_p: "{{PartnerBrand}} rebuilds a corrected version of the catalog using only the rows marked Accept or Edit. Rejected rows remain untouched. A second scan runs against the corrected catalog to confirm the fix.",
+    s6_h: "Branded corrected report and exports", s6_meta: "Final delivery",
+    s6_p: "The partner receives four files, all under {{PartnerBrand}}: a second Health Report showing the residual issues, the corrected catalog, a CWR-format export template, and a CSV export template. The case closes.",
+    formats_h2: "Accepted file formats",
+    formats_lede: "{{PartnerBrand}} accepts the formats below for catalog intake. Partners may agree on a fixed format with each end-client.",
+    fmt_col1: "Format", fmt_col2: "Extension", fmt_col3: "Notes",
+    fmt_csv_n: "CSV", fmt_csv_d: "UTF-8, comma or semicolon separated. One row per writer.",
+    fmt_xlsx_n: "Excel", fmt_xlsx_d: "First worksheet only. First row treated as header.",
+    fmt_cwr_n: "CWR", fmt_cwr_d: "CWR v2.1 and v2.2 supported.",
+    timing_h2: "Typical timing",
+    timing_lede: "Per case. Volume partners on the Standard tier can compress these.",
+    t1_l: "Business day", t1_p: "From file receipt to acknowledgement.",
+    t2_l: "Business days", t2_p: "From acknowledgement to Part 1 delivery (Health Report + Worksheet).",
+    t3_l: "Business days", t3_p: "From completed Worksheet receipt to Part 2 delivery (corrected report + exports).",
+    cta_h2: "Walk through a sample case",
+    cta_p: "A 30-minute call covering one sample catalog end-to-end, under {{PartnerBrand}}.",
+    cta_btn: "Contact {{PartnerContact}}",
+    footer_brand: "{{PartnerBrand}} · Catalog metadata validation, file-based",
+    footer_copy: "© 2026 {{PartnerBrand}} · All rights reserved"
+  },
+  sv: {
+    title: "{{PartnerBrand}} — Så fungerar det",
+    meta_desc: "Det filbaserade sex-stegs-flödet som körs under er varumärke.",
+    brand_label: "{{PartnerBrand}}",
+    nav_how: "Så fungerar det", nav_pricing: "Priser", nav_faq: "Vanliga frågor", nav_contact: "Kontakt", nav_portal: "Portal →",
+    hero_h1: "Så hanterar {{PartnerBrand}} ett partnerfall",
+    hero_lede: "Sex steg, alla filbaserade. Partnern har kontroll. Slutkunderna ser endast {{PartnerBrand}}.",
+    s1_h: "Partnern tar emot en katalogfil", s1_meta: "Inkommande · filutbyte",
+    s1_p: "Slutkunden skickar en katalogfil till partnern via valfri kanal (e-post, säker fildelning, sftp). Partnern vidarebefordrar filen till {{PartnerBrand}} för skanning. Ingen systemåtkomst beviljas på någondera sida.",
+    s1_r1_h: "Slutkunden gör", s1_r1_p: "Skickar en katalogfil i CSV-, XLSX- eller CWR-format.",
+    s1_r2_h: "Partnern gör", s1_r2_p: "Vidarebefordrar filen till {{PartnerBrand}}s intagsadress.",
+    s1_r3_h: "{{PartnerBrand}} gör", s1_r3_p: "Bekräftar mottagandet inom en arbetsdag.",
+    s2_h: "Skanning – del 1", s2_meta: "Identifierar- · roll- · andels- · dubblett- · konfliktkontroll",
+    s2_p: "Varje rad kontrolleras för obligatoriska identifierare, giltiga roller, andelssummor, dubbletter och ägarkonflikter. Inga korrigeringar tillämpas i detta steg — skanningen är skrivskyddad.",
+    s3_h: "Varumärkt rapport och arbetsblad returneras", s3_meta: "Utgående · filutbyte",
+    s3_p: "Partnern får två filer, båda formaterade under {{PartnerBrand}}: en hälsorapport (HTML) med alla fynd, och ett arbetsblad (XLSX, CSV som reserv) som listar varje rad som kräver beslut.",
+    s3_r1_h: "Partnern gör", s3_r1_p: "Vidarebefordrar båda filerna till slutkunden för granskning.",
+    s3_r2_h: "Slutkunden gör", s3_r2_p: "Granskar hälsorapporten. Markerar varje rad i arbetsbladet: Godkänn, Ändra eller Avvisa.",
+    s3_r3_h: "{{PartnerBrand}} gör", s3_r3_p: "Väntar. Ingen uppföljningsautomation. Slutkunden bestämmer om och när arbetsbladet returneras.",
+    s4_h: "Partnern returnerar det ifyllda arbetsbladet", s4_meta: "Inkommande · filutbyte",
+    s4_p: "När slutkunden har bekräftat varje rad vidarebefordrar partnern det ifyllda arbetsbladet till {{PartnerBrand}}. Endast rader som slutkunden uttryckligen godkänt tillämpas.",
+    s5_h: "Korrigeringar tillämpas – del 2", s5_meta: "Katalogombyggnad från godkända rader",
+    s5_p: "{{PartnerBrand}} bygger om en korrigerad version av katalogen med endast de rader som markerats Godkänn eller Ändra. Avvisade rader förblir oförändrade. En andra skanning körs mot den korrigerade katalogen för att bekräfta resultatet.",
+    s6_h: "Varumärkt korrigerad rapport och exporter", s6_meta: "Slutleverans",
+    s6_p: "Partnern får fyra filer, alla under {{PartnerBrand}}: en andra hälsorapport som visar kvarvarande avvikelser, den korrigerade katalogen, en CWR-exportmall och en CSV-exportmall. Fallet avslutas.",
+    formats_h2: "Filformat som accepteras",
+    formats_lede: "{{PartnerBrand}} accepterar formaten nedan för katalogintag. Partners kan komma överens om ett fast format med varje slutkund.",
+    fmt_col1: "Format", fmt_col2: "Filändelse", fmt_col3: "Noteringar",
+    fmt_csv_n: "CSV", fmt_csv_d: "UTF-8, komma- eller semikolonseparerad. En rad per upphovsperson.",
+    fmt_xlsx_n: "Excel", fmt_xlsx_d: "Endast första arbetsbladet. Första raden behandlas som rubrik.",
+    fmt_cwr_n: "CWR", fmt_cwr_d: "CWR v2.1 och v2.2 stöds.",
+    timing_h2: "Typisk tidsåtgång",
+    timing_lede: "Per fall. Volympartners på Standard-nivån kan komprimera dessa.",
+    t1_l: "Arbetsdag", t1_p: "Från filmottagning till bekräftelse.",
+    t2_l: "Arbetsdagar", t2_p: "Från bekräftelse till leverans av del 1 (hälsorapport + arbetsblad).",
+    t3_l: "Arbetsdagar", t3_p: "Från mottaget arbetsblad till leverans av del 2 (korrigerad rapport + exporter).",
+    cta_h2: "Gå igenom ett exempelfall",
+    cta_p: "Ett 30 minuters samtal som täcker en exempelkatalog från början till slut, under {{PartnerBrand}}.",
+    cta_btn: "Kontakta {{PartnerContact}}",
+    footer_brand: "{{PartnerBrand}} · Validering av katalogmetadata, filbaserat",
+    footer_copy: "© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna"
+  }
+};
+(function(){function apply(lang){var d=window.TRANSLATIONS[lang]||window.TRANSLATIONS.en;document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');var a=el.getAttribute('data-i18n-attr');if(d[k]===undefined)return;if(a)el.setAttribute(a,d[k]);else el.textContent=d[k];});document.querySelectorAll('.lang-toggle button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-lang')===lang);});try{localStorage.setItem('wl_lang',lang);}catch(e){}}var s=null;try{s=localStorage.getItem('wl_lang');}catch(e){}apply(s||'en');document.querySelectorAll('.lang-toggle button').forEach(function(b){b.addEventListener('click',function(){apply(b.getAttribute('data-lang'));});});})();
+</script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="title">{{PartnerBrand}} — Pricing</title>
+<meta name="description" data-i18n-attr="content" data-i18n="meta_desc" content="Wholesale pricing for partners. Partner sets the retail price.">
+<style>
+  :root {
+    --bg: #05070b; --bg-card: #0b0f18; --border: #1b2233; --border-strong: #2a3345;
+    --text: #f5f7fb; --muted: #c3cad8; --dim: #8f9bb3;
+    --accent: #1dd4b7; --accent-hover: #18bfa5; --accent-soft: rgba(29,212,183,0.12);
+    --amber: #f2b36a; --amber-soft: rgba(242,179,106,0.12);
+    --radius-card: 14px; --radius-pill: 999px; --max-width: 1080px;
+    --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 { font-weight: 600; line-height: 1.25; }
+  ul { list-style: none; }
+
+  header.topnav { max-width: 1120px; margin: 0 auto; padding: 1.4rem 1.5rem 0.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .brand { display: flex; align-items: center; gap: 0.65rem; }
+  .brand-mark { width: 28px; height: 28px; border-radius: var(--radius-pill); background: radial-gradient(circle at 30% 20%, #b0fbe9 0, var(--accent) 40%, #0f6657 100%); }
+  .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: var(--dim); }
+  nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: var(--dim); }
+  nav.primary a:hover, nav.primary a.active { color: var(--accent); }
+  nav.primary a.demo { background: var(--amber-soft); color: var(--amber); border: 1px solid rgba(242,179,106,0.4); padding: 6px 12px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 700; }
+  .lang-toggle { display: inline-flex; gap: 4px; padding: 4px; border-radius: var(--radius-pill); border: 1px solid rgba(143,155,179,0.35); }
+  .lang-toggle button { background: transparent; color: var(--dim); border: 0; padding: 3px 9px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 0.04em; }
+  .lang-toggle button.active { background: var(--accent); color: #020308; }
+  .lang-toggle button:hover:not(.active) { color: var(--text); }
+
+  .hero { padding: 3rem 1.5rem 1rem; max-width: 880px; margin: 0 auto; text-align: center; }
+  .hero h1 { font-size: 2.2rem; margin-bottom: 0.8rem; letter-spacing: -0.01em; }
+  .hero p.lede { color: var(--muted); max-width: 720px; margin: 0 auto; font-size: 1.05rem; }
+
+  .section { margin: 2.5rem auto; max-width: var(--max-width); padding: 0 1.5rem; }
+  .section h2 { font-size: 1.5rem; margin-bottom: 0.65rem; }
+  .section .lede { color: var(--muted); max-width: 720px; margin-bottom: 1.5rem; font-size: 0.95rem; }
+
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  @media (max-width: 760px) { .pricing-grid { grid-template-columns: 1fr; } }
+  .tier { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.75rem 1.7rem; }
+  .tier.featured { border-color: var(--accent); position: relative; }
+  .tier.featured::before { content: attr(data-badge); position: absolute; top: -10px; left: 1.5rem; background: var(--accent); color: #020308; font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: var(--radius-pill); text-transform: uppercase; letter-spacing: 0.06em; }
+  .tier-name { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 700; margin-bottom: 0.5rem; }
+  .tier-price { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.2rem; }
+  .tier-price .unit { font-size: 0.8rem; color: var(--dim); font-weight: 400; margin-left: 4px; }
+  .tier-meta { color: var(--dim); font-size: 0.85rem; margin-bottom: 1.2rem; }
+  .tier ul li { color: var(--muted); font-size: 0.9rem; padding: 6px 0 6px 18px; position: relative; }
+  .tier ul li::before { content: '✓'; color: var(--accent); position: absolute; left: 0; font-weight: 700; }
+
+  .compare-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); overflow: hidden; font-size: 0.92rem; }
+  .compare-table th, .compare-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+  .compare-table thead th { background: rgba(29,212,183,0.06); color: var(--accent); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+  .compare-table tbody tr:last-child td { border-bottom: 0; }
+  .compare-table td.feature-name { color: var(--text); font-weight: 500; }
+  .compare-table td.check { text-align: center; color: var(--accent); font-weight: 700; }
+  .compare-table td.dash { text-align: center; color: var(--dim); }
+
+  .definition-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  @media (max-width: 720px) { .definition-grid { grid-template-columns: 1fr; } }
+  .definition { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.4rem 1.6rem; }
+  .definition h3 { font-size: 0.95rem; color: var(--accent); margin-bottom: 0.5rem; }
+  .definition p { color: var(--muted); font-size: 0.88rem; }
+
+  .terms-list { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.5rem 1.7rem; }
+  .terms-list dl { display: grid; grid-template-columns: 200px 1fr; gap: 0.8rem 1.5rem; }
+  @media (max-width: 720px) { .terms-list dl { grid-template-columns: 1fr; gap: 0.4rem; } }
+  .terms-list dt { color: var(--accent); font-weight: 600; font-size: 0.88rem; }
+  .terms-list dd { color: var(--muted); font-size: 0.92rem; }
+
+  .cta { text-align: center; padding: 3rem 1.5rem 4rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+  .cta h2 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .cta p { color: var(--muted); max-width: 580px; margin: 0 auto 1.2rem; }
+  .btn-primary { display: inline-block; background: var(--accent); color: #020308; padding: 0.8rem 1.7rem; border-radius: var(--radius-pill); font-weight: 600; font-size: 0.95rem; transition: 0.15s ease; }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+  footer { color: var(--dim); font-size: 12px; text-align: center; padding: 2rem 1.5rem 3rem; border-top: 1px solid var(--border); }
+  footer p { margin: 0.3rem 0; }
+  footer a { color: var(--dim); }
+  footer a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <a href="index.html"><span class="brand-text" data-i18n="brand_label">{{PartnerBrand}}</span></a>
+  </div>
+  <nav class="primary">
+    <a href="how-it-works.html" data-i18n="nav_how">How it works</a>
+    <a href="pricing.html" class="active" data-i18n="nav_pricing">Pricing</a>
+    <a href="faq.html" data-i18n="nav_faq">FAQ</a>
+    <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    <a href="portal.html" class="demo" data-i18n="nav_portal">Portal →</a>
+    <div class="lang-toggle">
+      <button data-lang="en" class="active">EN</button>
+      <button data-lang="sv">SV</button>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1 data-i18n="hero_h1">Wholesale pricing for partners</h1>
+  <p class="lede" data-i18n="hero_lede">{{PartnerBrand}} bills the partner. The partner sets the retail price to their own end-clients. No revenue-share, no per-case markup, no surprise fees.</p>
+</section>
+
+<section class="section">
+  <div class="pricing-grid">
+    <div class="tier">
+      <div class="tier-name" data-i18n="tier1_name">Starter</div>
+      <div class="tier-price">€<span data-i18n="tier1_price">[wholesale]</span><span class="unit" data-i18n="tier1_unit">/scan</span></div>
+      <div class="tier-meta" data-i18n="tier1_meta">Single-catalog engagements</div>
+      <ul>
+        <li data-i18n="tier1_b1">Branded health report</li>
+        <li data-i18n="tier1_b2">Branded worksheet (XLSX + CSV)</li>
+        <li data-i18n="tier1_b3">CSV / CWR export templates</li>
+        <li data-i18n="tier1_b4">Email support, 5 business days</li>
+      </ul>
+    </div>
+    <div class="tier featured" data-badge="MOST CHOSEN">
+      <div class="tier-name" data-i18n="tier2_name">Standard</div>
+      <div class="tier-price">€<span data-i18n="tier2_price">[wholesale]</span><span class="unit" data-i18n="tier2_unit">/month</span></div>
+      <div class="tier-meta" data-i18n="tier2_meta">Recurring monthly volume</div>
+      <ul>
+        <li data-i18n="tier2_b1">Everything in Starter</li>
+        <li data-i18n="tier2_b2">Onboarding kit + sample files</li>
+        <li data-i18n="tier2_b3">Reseller documentation</li>
+        <li data-i18n="tier2_b4">Partner-safe disclaimer pack</li>
+        <li data-i18n="tier2_b5">Priority queue (24h scan turnaround)</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="tier-name" data-i18n="tier3_name">Volume</div>
+      <div class="tier-price"><span data-i18n="tier3_price">Custom</span></div>
+      <div class="tier-meta" data-i18n="tier3_meta">High-volume / multi-region partners</div>
+      <ul>
+        <li data-i18n="tier3_b1">Everything in Standard</li>
+        <li data-i18n="tier3_b2">Custom export schemas</li>
+        <li data-i18n="tier3_b3">Dedicated partner contact</li>
+        <li data-i18n="tier3_b4">Quarterly volume reconciliation</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 data-i18n="compare_h2">Detailed comparison</h2>
+  <p class="lede" data-i18n="compare_lede">Per-case deliverables and partner-facing extras.</p>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th data-i18n="cmp_col1">Included</th>
+        <th data-i18n="cmp_col2">Starter</th>
+        <th data-i18n="cmp_col3">Standard</th>
+        <th data-i18n="cmp_col4">Volume</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="feature-name" data-i18n="cmp_r1">Branded health report (HTML)</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name" data-i18n="cmp_r2">Branded worksheet (XLSX + CSV)</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name" data-i18n="cmp_r3">CSV export template</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name" data-i18n="cmp_r4">CWR export template</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name" data-i18n="cmp_r5">Onboarding kit + samples</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name" data-i18n="cmp_r6">Reseller documentation</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name" data-i18n="cmp_r7">Partner-safe disclaimer pack</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name" data-i18n="cmp_r8">Priority queue (24h scan)</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name" data-i18n="cmp_r9">Custom export schemas</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
+      <tr><td class="feature-name" data-i18n="cmp_r10">Dedicated partner contact</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="section">
+  <h2 data-i18n="def_h2">What counts as a scan, a work, a case</h2>
+  <p class="lede" data-i18n="def_lede">Pricing units defined precisely so there are no billing surprises.</p>
+  <div class="definition-grid">
+    <div class="definition">
+      <h3 data-i18n="d1_h">Scan</h3>
+      <p data-i18n="d1_p">One Part 1 + Part 2 round-trip on a single catalog file. Re-scans of a re-submitted catalog within 30 days are not billed.</p>
+    </div>
+    <div class="definition">
+      <h3 data-i18n="d2_h">Work</h3>
+      <p data-i18n="d2_p">One distinct musical or rights-bearing entry in the catalog. Multiple writers on the same work count as one work, not many.</p>
+    </div>
+    <div class="definition">
+      <h3 data-i18n="d3_h">Case</h3>
+      <p data-i18n="d3_p">A single end-client engagement. One case may include multiple scans if the partner submits separate catalogs from the same client.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 data-i18n="terms_h2">Billing terms</h2>
+  <div class="terms-list">
+    <dl>
+      <dt data-i18n="t_currency_l">Currency</dt><dd data-i18n="t_currency_v">EUR. SEK or USD available on request for Standard and Volume tiers.</dd>
+      <dt data-i18n="t_invoice_l">Invoicing</dt><dd data-i18n="t_invoice_v">Monthly in arrears. Net 30. Direct to the partner — never to the end-client.</dd>
+      <dt data-i18n="t_minimum_l">Minimum commitment</dt><dd data-i18n="t_minimum_v">None on Starter. Standard and Volume require a 3-month initial term, then month-to-month.</dd>
+      <dt data-i18n="t_volume_l">Volume discounts</dt><dd data-i18n="t_volume_v">Apply automatically on Standard at 25 / 50 / 100 scans per month thresholds.</dd>
+      <dt data-i18n="t_retail_l">Retail markup</dt><dd data-i18n="t_retail_v">Set entirely by the partner. {{PartnerBrand}} does not see, set, or audit the retail price.</dd>
+      <dt data-i18n="t_payments_l">Payment methods</dt><dd data-i18n="t_payments_v">Bank transfer (IBAN). Card and SEPA on request.</dd>
+    </dl>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 data-i18n="cta_h2">Get the wholesale rate sheet</h2>
+  <p data-i18n="cta_p">Partner-only pricing details, sent on request. Confidential.</p>
+  <a href="mailto:{{PartnerContact}}?subject=Wholesale%20rate%20sheet" class="btn-primary" data-i18n="cta_btn">Request rate sheet</a>
+</section>
+
+<footer>
+  <p data-i18n="footer_brand">{{PartnerBrand}} · Catalog metadata validation, file-based</p>
+  <p><a href="mailto:{{PartnerContact}}">{{PartnerContact}}</a> · {{PartnerDomain}}</p>
+  <p data-i18n="footer_copy">© 2026 {{PartnerBrand}} · All rights reserved</p>
+</footer>
+
+<script>
+window.TRANSLATIONS = {
+  en: {
+    title: "{{PartnerBrand}} — Pricing",
+    meta_desc: "Wholesale pricing for partners. Partner sets the retail price.",
+    brand_label: "{{PartnerBrand}}",
+    nav_how: "How it works", nav_pricing: "Pricing", nav_faq: "FAQ", nav_contact: "Contact", nav_portal: "Portal →",
+    hero_h1: "Wholesale pricing for partners",
+    hero_lede: "{{PartnerBrand}} bills the partner. The partner sets the retail price to their own end-clients. No revenue-share, no per-case markup, no surprise fees.",
+    tier1_name: "Starter", tier1_price: "[wholesale]", tier1_unit: "/scan",
+    tier1_meta: "Single-catalog engagements",
+    tier1_b1: "Branded health report", tier1_b2: "Branded worksheet (XLSX + CSV)", tier1_b3: "CSV / CWR export templates", tier1_b4: "Email support, 5 business days",
+    tier2_name: "Standard", tier2_price: "[wholesale]", tier2_unit: "/month",
+    tier2_meta: "Recurring monthly volume",
+    tier2_b1: "Everything in Starter", tier2_b2: "Onboarding kit + sample files", tier2_b3: "Reseller documentation", tier2_b4: "Partner-safe disclaimer pack", tier2_b5: "Priority queue (24h scan turnaround)",
+    tier3_name: "Volume", tier3_price: "Custom", tier3_meta: "High-volume / multi-region partners",
+    tier3_b1: "Everything in Standard", tier3_b2: "Custom export schemas", tier3_b3: "Dedicated partner contact", tier3_b4: "Quarterly volume reconciliation",
+    compare_h2: "Detailed comparison",
+    compare_lede: "Per-case deliverables and partner-facing extras.",
+    cmp_col1: "Included", cmp_col2: "Starter", cmp_col3: "Standard", cmp_col4: "Volume",
+    cmp_r1: "Branded health report (HTML)",
+    cmp_r2: "Branded worksheet (XLSX + CSV)",
+    cmp_r3: "CSV export template",
+    cmp_r4: "CWR export template",
+    cmp_r5: "Onboarding kit + samples",
+    cmp_r6: "Reseller documentation",
+    cmp_r7: "Partner-safe disclaimer pack",
+    cmp_r8: "Priority queue (24h scan)",
+    cmp_r9: "Custom export schemas",
+    cmp_r10: "Dedicated partner contact",
+    def_h2: "What counts as a scan, a work, a case",
+    def_lede: "Pricing units defined precisely so there are no billing surprises.",
+    d1_h: "Scan", d1_p: "One Part 1 + Part 2 round-trip on a single catalog file. Re-scans of a re-submitted catalog within 30 days are not billed.",
+    d2_h: "Work", d2_p: "One distinct musical or rights-bearing entry in the catalog. Multiple writers on the same work count as one work, not many.",
+    d3_h: "Case", d3_p: "A single end-client engagement. One case may include multiple scans if the partner submits separate catalogs from the same client.",
+    terms_h2: "Billing terms",
+    t_currency_l: "Currency", t_currency_v: "EUR. SEK or USD available on request for Standard and Volume tiers.",
+    t_invoice_l: "Invoicing", t_invoice_v: "Monthly in arrears. Net 30. Direct to the partner — never to the end-client.",
+    t_minimum_l: "Minimum commitment", t_minimum_v: "None on Starter. Standard and Volume require a 3-month initial term, then month-to-month.",
+    t_volume_l: "Volume discounts", t_volume_v: "Apply automatically on Standard at 25 / 50 / 100 scans per month thresholds.",
+    t_retail_l: "Retail markup", t_retail_v: "Set entirely by the partner. {{PartnerBrand}} does not see, set, or audit the retail price.",
+    t_payments_l: "Payment methods", t_payments_v: "Bank transfer (IBAN). Card and SEPA on request.",
+    cta_h2: "Get the wholesale rate sheet",
+    cta_p: "Partner-only pricing details, sent on request. Confidential.",
+    cta_btn: "Request rate sheet",
+    footer_brand: "{{PartnerBrand}} · Catalog metadata validation, file-based",
+    footer_copy: "© 2026 {{PartnerBrand}} · All rights reserved"
+  },
+  sv: {
+    title: "{{PartnerBrand}} — Priser",
+    meta_desc: "Grossistpriser för partners. Partnern bestämmer slutkundspriset.",
+    brand_label: "{{PartnerBrand}}",
+    nav_how: "Så fungerar det", nav_pricing: "Priser", nav_faq: "Vanliga frågor", nav_contact: "Kontakt", nav_portal: "Portal →",
+    hero_h1: "Grossistpriser för partners",
+    hero_lede: "{{PartnerBrand}} fakturerar partnern. Partnern bestämmer slutkundspriset. Ingen intäktsdelning, inga pålägg per fall, inga oväntade avgifter.",
+    tier1_name: "Bas", tier1_price: "[grossist]", tier1_unit: "/skanning",
+    tier1_meta: "Enskilda kataloguppdrag",
+    tier1_b1: "Varumärkt hälsorapport", tier1_b2: "Varumärkt arbetsblad (XLSX + CSV)", tier1_b3: "CSV/CWR-exportmallar", tier1_b4: "E-postsupport, 5 arbetsdagar",
+    tier2_name: "Standard", tier2_price: "[grossist]", tier2_unit: "/månad",
+    tier2_meta: "Återkommande månadsvolym",
+    tier2_b1: "Allt i Bas", tier2_b2: "Onboarding-paket + exempelfiler", tier2_b3: "Återförsäljardokumentation", tier2_b4: "Partnerslip-friskrivningar", tier2_b5: "Prioriterad kö (24 h leveranstid)",
+    tier3_name: "Volym", tier3_price: "Offert", tier3_meta: "Högvolyms- och multi-regionspartners",
+    tier3_b1: "Allt i Standard", tier3_b2: "Anpassade exportscheman", tier3_b3: "Dedikerad partnerkontakt", tier3_b4: "Kvartalsvis volymavstämning",
+    compare_h2: "Detaljerad jämförelse",
+    compare_lede: "Leveranser per fall och tillägg för partnern.",
+    cmp_col1: "Ingår", cmp_col2: "Bas", cmp_col3: "Standard", cmp_col4: "Volym",
+    cmp_r1: "Varumärkt hälsorapport (HTML)",
+    cmp_r2: "Varumärkt arbetsblad (XLSX + CSV)",
+    cmp_r3: "CSV-exportmall",
+    cmp_r4: "CWR-exportmall",
+    cmp_r5: "Onboarding-paket + exempel",
+    cmp_r6: "Återförsäljardokumentation",
+    cmp_r7: "Partnerslip-friskrivningar",
+    cmp_r8: "Prioriterad kö (24 h)",
+    cmp_r9: "Anpassade exportscheman",
+    cmp_r10: "Dedikerad partnerkontakt",
+    def_h2: "Vad räknas som en skanning, ett verk, ett fall",
+    def_lede: "Prisenheter exakt definierade så att fakturering aldrig överraskar.",
+    d1_h: "Skanning", d1_p: "En del 1 + del 2 tur och retur på en enskild katalogfil. Om en omarbetad katalog skickas in igen inom 30 dagar debiteras ingen ny skanning.",
+    d2_h: "Verk", d2_p: "En distinkt musikalisk eller rättighetsbärande post i katalogen. Flera upphovspersoner på samma verk räknas som ett verk, inte flera.",
+    d3_h: "Fall", d3_p: "Ett enda slutkundsuppdrag. Ett fall kan omfatta flera skanningar om partnern skickar in separata kataloger från samma kund.",
+    terms_h2: "Faktureringsvillkor",
+    t_currency_l: "Valuta", t_currency_v: "EUR. SEK eller USD på begäran för Standard- och Volym-nivåerna.",
+    t_invoice_l: "Fakturering", t_invoice_v: "Månadsvis i efterskott. 30 dagar netto. Direkt till partnern — aldrig till slutkunden.",
+    t_minimum_l: "Minsta åtagande", t_minimum_v: "Inget på Bas. Standard och Volym kräver en initial period på 3 månader, därefter månad-för-månad.",
+    t_volume_l: "Volymrabatter", t_volume_v: "Tillämpas automatiskt på Standard vid trösklarna 25 / 50 / 100 skanningar per månad.",
+    t_retail_l: "Slutkundspålägg", t_retail_v: "Bestäms helt av partnern. {{PartnerBrand}} ser inte, sätter inte och granskar inte slutkundspriset.",
+    t_payments_l: "Betalningssätt", t_payments_v: "Banköverföring (IBAN). Kort och SEPA på begäran.",
+    cta_h2: "Beställ grossistprislistan",
+    cta_p: "Endast för partners. Skickas på begäran. Konfidentiellt.",
+    cta_btn: "Beställ prislista",
+    footer_brand: "{{PartnerBrand}} · Validering av katalogmetadata, filbaserat",
+    footer_copy: "© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna"
+  }
+};
+(function(){function apply(lang){var d=window.TRANSLATIONS[lang]||window.TRANSLATIONS.en;document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');var a=el.getAttribute('data-i18n-attr');if(d[k]===undefined)return;if(a)el.setAttribute(a,d[k]);else el.textContent=d[k];});document.querySelectorAll('.lang-toggle button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-lang')===lang);});try{localStorage.setItem('wl_lang',lang);}catch(e){}}var s=null;try{s=localStorage.getItem('wl_lang');}catch(e){}apply(s||'en');document.querySelectorAll('.lang-toggle button').forEach(function(b){b.addEventListener('click',function(){apply(b.getAttribute('data-lang'));});});})();
+</script>
+</body>
+</html>

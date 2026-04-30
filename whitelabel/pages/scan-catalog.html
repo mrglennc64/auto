@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Scan Catalog → Worksheet — {{PartnerBrand}}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:#05070b; color:#f5f7fb; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; padding:32px 20px 64px; }
+  a { color:#1dd4b7; text-decoration:none; }
+  .container { max-width:1080px; margin:0 auto; }
+  h1, h2, h3 { font-weight:600; }
+
+  header.top { display:flex; align-items:center; justify-content:space-between; padding:0 0 24px; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #1b2233; margin-bottom:24px; }
+  .brand { display:flex; align-items:center; gap:0.65rem; font-weight:700; color:#1dd4b7; }
+  .meta { font-size:12px; color:#8f9bb3; }
+  .meta a { color:#1dd4b7; }
+
+  .hero h1 { font-size:1.6rem; margin-bottom:0.5rem; }
+  .hero p { color:#c3cad8; max-width:760px; margin-bottom:1.5rem; font-size:0.95rem; }
+
+  .upload-card { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:1.5rem 1.6rem; margin-bottom:1.5rem; }
+  .upload-card h3 { font-size:0.95rem; color:#1dd4b7; margin-bottom:0.5rem; }
+  .upload-card .hint { font-size:12px; color:#8f9bb3; margin-bottom:0.85rem; }
+  .upload-card input[type="file"] { width:100%; padding:8px; background:#0a0d14; border:1px dashed #2a3345; border-radius:8px; color:#c3cad8; font-size:13px; cursor:pointer; }
+  .upload-card .filename { font-family:monospace; font-size:12px; color:#1dd4b7; margin-top:6px; min-height:1.2em; }
+
+  .actions { display:flex; gap:0.75rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+  .btn { padding:0.7rem 1.4rem; border-radius:999px; font-weight:600; cursor:pointer; font-family:inherit; font-size:0.9rem; border:0; text-decoration:none; display:inline-block; }
+  .btn-primary { background:#1dd4b7; color:#020308; }
+  .btn-primary:hover { background:#18bfa5; }
+  .btn-primary:disabled { background:#1b2233; color:#5a6478; cursor:not-allowed; }
+  .btn-secondary { background:transparent; color:#f5f7fb; border:1px solid #2a3345; }
+  .btn-secondary:hover { border-color:#4b5a7a; }
+
+  .status { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:1.25rem 1.5rem; margin-bottom:1.5rem; font-size:13px; color:#c3cad8; min-height:60px; }
+  .status.error { border-color:#f87171; color:#fbbf77; }
+  .status.success { border-color:#1dd4b7; color:#86efac; }
+  .status .row { display:flex; justify-content:space-between; padding:4px 0; }
+  .status .row strong { color:#f5f7fb; }
+  .status .row.ok strong { color:#1dd4b7; }
+
+  .summary-cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:1.5rem; }
+  .summary-card { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:14px 18px; }
+  .summary-card .label { font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+  .summary-card .value { font-size:24px; font-weight:700; color:#f5f7fb; }
+  .summary-card.red .value { color:#f87171; }
+  .summary-card.amber .value { color:#f2b36a; }
+  .summary-card.green .value { color:#1dd4b7; }
+
+  .preview { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; overflow:hidden; }
+  .preview-header { padding:0.85rem 1.25rem; border-bottom:1px solid #1b2233; display:flex; justify-content:space-between; align-items:center; }
+  .preview-header h3 { font-size:0.85rem; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; }
+  .preview-header .count { font-size:12px; color:#1dd4b7; font-family:monospace; }
+  .preview table { width:100%; border-collapse:collapse; font-size:12px; }
+  .preview th, .preview td { text-align:left; padding:8px 14px; border-bottom:1px solid #1b2233; color:#c3cad8; }
+  .preview th { background:#0a0d14; font-size:10px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; }
+  .preview .field { color:#1dd4b7; font-family:monospace; font-size:11px; }
+  .preview .severity { font-family:monospace; font-size:10px; padding:1px 8px; border-radius:999px; font-weight:700; }
+  .preview .blocking { background:rgba(248,113,113,0.12); color:#f87171; border:1px solid rgba(248,113,113,0.3); }
+  .preview .resolvable { background:rgba(242,179,106,0.12); color:#f2b36a; border:1px solid rgba(242,179,106,0.3); }
+
+  .docs { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:1.25rem 1.5rem; margin-top:1.5rem; }
+  .docs h3 { font-size:0.85rem; color:#1dd4b7; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.75rem; font-weight:700; }
+  .docs p { color:#c3cad8; font-size:13px; margin-bottom:0.5rem; }
+  .docs ol { margin-left:1.5rem; color:#c3cad8; font-size:13px; }
+  .docs li { margin-bottom:0.4rem; }
+  .docs code { background:#0a0d14; padding:1px 6px; border-radius:4px; font-size:12px; color:#1dd4b7; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="top">
+    <div class="brand">{{PartnerBrand}}</div>
+    <div class="meta">
+      <a href="portal.html" style="color:#8f9bb3;margin-right:12px;">← back to portal</a>
+    </div>
+  </header>
+
+  <div style="background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:0.85rem 1.25rem; margin-bottom:1.5rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center; font-size:13px;">
+    <span style="color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-size:11px; font-weight:700; margin-right:0.5rem;">Workflow:</span>
+    <a href="scan-catalog.html" style="color:#1dd4b7; font-weight:700;">1. Scan catalog</a>
+    <span style="color:#2a3345;">→</span>
+    <a href="apply-corrections.html" style="color:#8f9bb3;">2. Apply corrections</a>
+  </div>
+
+  <section class="hero">
+    <h1>Generate corrections worksheet from a catalog</h1>
+    <p>Upload the publisher's catalog CSV. The tool runs the standard scan, identifies metadata issues, and outputs a <code style="background:#0b0f18;padding:1px 6px;border-radius:4px;font-size:12px;color:#1dd4b7;">corrections-worksheet.csv</code> ready to email to the publisher for their decisions.</p>
+  </section>
+
+  <div class="upload-card">
+    <h3>Catalog CSV</h3>
+    <p class="hint">Columns: title, iswc, isrc, name, role, share_percent, ipi, society</p>
+    <input type="file" id="catalogFile" accept=".csv" />
+    <div class="filename" id="catalogName"></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-primary" id="scanBtn" disabled>Run scan</button>
+    <button class="btn btn-secondary" id="downloadWorksheetBtn" disabled>Download worksheet (Excel)</button>
+    <button class="btn btn-secondary" id="downloadInstructionsBtn" disabled>Download instructions.txt</button>
+    <button class="btn btn-secondary" id="generateReportBtn" disabled>Generate Health Report (HTML/PDF)</button>
+  </div>
+
+  <div class="status" id="status">Load a catalog CSV to begin.</div>
+
+  <div class="summary-cards" id="summaryCards" style="display:none;">
+    <div class="summary-card"><div class="label">Works analyzed</div><div class="value" id="cWorks">0</div></div>
+    <div class="summary-card amber"><div class="label">Issues found</div><div class="value" id="cIssues">0</div></div>
+    <div class="summary-card red"><div class="label">Blocking</div><div class="value" id="cBlocking">0</div></div>
+    <div class="summary-card amber"><div class="label">Resolvable</div><div class="value" id="cResolvable">0</div></div>
+    <div class="summary-card"><div class="label">Health score</div><div class="value" id="cScore">—</div></div>
+  </div>
+
+  <div class="preview" id="preview" style="display:none;">
+    <div class="preview-header">
+      <h3>Detected issues (worksheet preview)</h3>
+      <span class="count" id="previewCount"></span>
+    </div>
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Work</th><th>Field</th><th>Current</th><th>Suggested</th><th>Severity</th></tr>
+      </thead>
+      <tbody id="previewBody"></tbody>
+    </table>
+  </div>
+
+  <div class="docs">
+    <h3>Workflow</h3>
+    <ol>
+      <li>Upload publisher's catalog → click <strong>Run scan</strong></li>
+      <li><strong>Download worksheet CSV</strong> + <strong>Download instructions.txt</strong></li>
+      <li>Email both attachments to the publisher</li>
+      <li>When they reply with the filled-in worksheet, head to <a href="apply-corrections.html">apply-corrections</a> to merge it back into the catalog</li>
+    </ol>
+    <p style="margin-top:0.75rem;">Sample catalog for testing: <a href="/samples/test-20-works.csv">/samples/test-20-works.csv</a></p>
+  </div>
+
+</div>
+
+<script>
+let catalogText = null;
+let worksheetCSV = null;
+let instructionsText = null;
+let lastScan = null; // { titles, issues, blocking, resolvable, score, totalContribs }
+const $ = id => document.getElementById(id);
+const status = (msg, cls) => { const s = $('status'); s.className = 'status' + (cls ? ' ' + cls : ''); s.innerHTML = msg; };
+
+$('catalogFile').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  $('catalogName').textContent = f.name;
+  const r = new FileReader();
+  r.onload = ev => { catalogText = ev.target.result; $('scanBtn').disabled = false; status('File loaded — click <strong>Run scan</strong>.'); };
+  r.readAsText(f);
+});
+
+function parseCSV(text) {
+  const rows = [];
+  const lines = text.replace(/\r\n/g, '\n').split('\n');
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const cells = []; let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (inQ) {
+        if (c === '"' && line[i+1] === '"') { cur += '"'; i++; }
+        else if (c === '"') inQ = false; else cur += c;
+      } else {
+        if (c === '"') inQ = true;
+        else if (c === ',') { cells.push(cur); cur = ''; }
+        else cur += c;
+      }
+    }
+    cells.push(cur); rows.push(cells);
+  }
+  return rows;
+}
+function csvEscape(v) { v = (v == null) ? '' : String(v); if (/[",\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"'; return v; }
+
+const VALID_ROLES = new Set(['CA','C','A','AR','AD','SR','SA','TR','PA','E','SE','AM']);
+const HOME_SOCIETY = 'STIM';
+const FOREIGN_SOCIETIES = new Set(['TONO','GEMA','SACEM','PRS','BMI','ASCAP','SOCAN','ICE','MLC','SIAE','BUMA','SUISA','ZAIKS','AKM','AUSTRO','SABAM','SACM','SADAIC','SUISA','APRA','JASRAC']);
+
+$('scanBtn').addEventListener('click', () => {
+  try {
+    const rows = parseCSV(catalogText);
+    if (rows.length < 2) throw new Error('CSV must have a header + at least 1 row.');
+    const h = rows[0].map(x => x.trim().toLowerCase());
+    const idx = name => h.indexOf(name);
+    const ti = idx('title'), iswc = idx('iswc'), isrc = idx('isrc');
+    const ni = idx('name'), ri = idx('role'), si = idx('share_percent'), ii = idx('ipi'), soi = idx('society');
+    if (ti < 0 || ni < 0) throw new Error('Catalog must have title + name columns.');
+
+    // Group by title
+    const works = {};
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i]; const t = (r[ti] || '').trim(); if (!t) continue;
+      works[t] = works[t] || { contribs: [] };
+      works[t].contribs.push({
+        name: (r[ni] || '').trim(),
+        role: (r[ri] || '').trim(),
+        share: parseFloat((r[si] || '0').replace(',', '.').replace('%','').trim()) || 0,
+        ipi: (r[ii] || '').trim(),
+        society: (r[soi] || '').trim(),
+        iswc: (r[iswc] || '').trim(),
+        isrc: (r[isrc] || '').trim(),
+      });
+    }
+
+    const titles = Object.keys(works);
+    const issues = [];
+    let id = 1;
+    const nextId = () => 'HR-' + String(id++).padStart(3, '0');
+
+    // Build a name canonicalization candidate set
+    const allNames = new Set();
+    for (const t of titles) for (const c of works[t].contribs) if (c.name) allNames.add(c.name);
+
+    // Pass 1: per-work checks
+    for (const t of titles) {
+      const w = works[t];
+      const c0 = w.contribs[0] || {};
+      // ISWC
+      if (!c0.iswc) issues.push({ id: nextId(), work: t, field: 'iswc', current: 'missing', suggested: 'external lookup match', severity: 'resolvable' });
+      // Split total
+      const sum = w.contribs.reduce((s, c) => s + (c.share || 0), 0);
+      if (Math.abs(sum - 100) > 0.5) {
+        issues.push({ id: nextId(), work: t, field: 'split_total', current: sum.toFixed(2) + '%', suggested: 'normalize to 100%', severity: 'blocking' });
+      }
+    }
+
+    // Pass 2: per-contributor checks
+    for (const t of titles) {
+      for (const c of works[t].contribs) {
+        // IPI missing
+        if (c.name && !c.ipi) {
+          issues.push({ id: nextId(), work: t, field: 'writer_ipi', current: c.name + ' has no IPI', suggested: 'publisher to provide', severity: 'blocking' });
+        }
+        // Society missing
+        if (c.name && !c.society) {
+          issues.push({ id: nextId(), work: t, field: 'society', current: c.name + ' — missing society', suggested: 'publisher to confirm', severity: 'resolvable' });
+        }
+        // Foreign society without E/SE/AM
+        if (c.society && FOREIGN_SOCIETIES.has(c.society.toUpperCase())) {
+          // Check if there's already an E/SE/AM role in the work — heuristic
+          const hasDeclaration = works[t].contribs.some(x => ['E','SE','AM'].includes((x.role || '').toUpperCase()));
+          if (!hasDeclaration) {
+            issues.push({ id: nextId(), work: t, field: 'foreign_writer', current: c.name + ' (' + c.society + ') — no E/SE/AM declaration', suggested: 'add E declaration', severity: 'blocking' });
+          }
+        }
+        // Invalid role
+        if (c.role && !VALID_ROLES.has(c.role.toUpperCase())) {
+          issues.push({ id: nextId(), work: t, field: 'role', current: c.role + ' (' + c.name + ')', suggested: 'change to CA (CWR-valid)', severity: 'blocking' });
+        }
+        // Name variant — flag if name has a single-letter initial that matches another full name
+        if (c.name && /^[A-ZÅÄÖ]\.?\s+[A-Za-zÅÄÖåäö]+$/.test(c.name.trim())) {
+          const initial = c.name.trim().charAt(0).toLowerCase();
+          const surname = c.name.trim().split(/\s+/).slice(-1)[0].toLowerCase();
+          for (const other of allNames) {
+            if (other === c.name) continue;
+            const otherParts = other.toLowerCase().split(/\s+/);
+            if (otherParts.length >= 2 && otherParts[0].charAt(0) === initial && otherParts[otherParts.length - 1] === surname) {
+              issues.push({ id: nextId(), work: t, field: 'writer_name', current: c.name, suggested: other + ' (canonical)', severity: 'resolvable' });
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    // Score: 100 - 6*blocking - 1*resolvable, floored at 0
+    const blocking = issues.filter(i => i.severity === 'blocking').length;
+    const resolvable = issues.filter(i => i.severity === 'resolvable').length;
+    const score = Math.max(0, Math.min(100, 100 - 6 * blocking - 1 * resolvable));
+
+    // Build worksheet CSV
+    const worksheetRows = ['issue_id,work,field,current_value,suggested,decision,publisher_value,note'];
+    for (const i of issues) {
+      worksheetRows.push([i.id, i.work, i.field, i.current, i.suggested, '', '', ''].map(csvEscape).join(','));
+    }
+    worksheetCSV = worksheetRows.join('\n');
+
+    // Build instructions
+    instructionsText = [
+      'HEYROYA · CORRECTIONS WORKSHEET — INSTRUCTIONS',
+      '================================================',
+      '',
+      'Attached: corrections-worksheet.csv (' + issues.length + ' issues)',
+      '',
+      'For each row, fill in the "decision" column with one of three values:',
+      '',
+      '  accept   — apply the suggested fix as-is',
+      '  reject   — keep the original value',
+      '  edit     — apply your own value (fill in "publisher_value" too)',
+      '',
+      'For split_total edits, format as "60 / 40" or "33 / 33 / 34".',
+      'External metadata is used only as a suggestion — nothing is applied without your confirmation.',
+      'Return the filled CSV by reply email.',
+      '',
+      'Catalog scanned: ' + titles.length + ' works · ' + issues.length + ' issues found · health score ' + score + '/100',
+      '',
+      'Questions? {{PartnerContact}}'
+    ].join('\n');
+
+    // Render preview + summary
+    $('cWorks').textContent = titles.length;
+    $('cIssues').textContent = issues.length;
+    $('cBlocking').textContent = blocking;
+    $('cResolvable').textContent = resolvable;
+    $('cScore').textContent = score + '/100';
+    const scoreCard = $('cScore').parentElement;
+    scoreCard.classList.remove('green','amber','red');
+    scoreCard.classList.add(score >= 80 ? 'green' : score >= 50 ? 'amber' : 'red');
+    $('summaryCards').style.display = 'grid';
+
+    const tbody = $('previewBody'); tbody.innerHTML = '';
+    issues.forEach(i => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td><code style="color:#1dd4b7;font-family:monospace;">'+i.id+'</code></td>'
+        + '<td>' + i.work + '</td>'
+        + '<td class="field">' + i.field + '</td>'
+        + '<td>' + i.current + '</td>'
+        + '<td>' + i.suggested + '</td>'
+        + '<td><span class="severity ' + i.severity + '">' + i.severity + '</span></td>';
+      tbody.appendChild(tr);
+    });
+    $('preview').style.display = 'block';
+    $('previewCount').textContent = issues.length + ' issues · ' + blocking + ' blocking · ' + resolvable + ' resolvable';
+
+    status('<div class="row ok"><span>Status</span><strong>✓ Scan complete</strong></div>'+
+      '<div class="row"><span>Works analyzed</span><strong>'+titles.length+'</strong></div>'+
+      '<div class="row"><span>Issues identified</span><strong>'+issues.length+'</strong></div>'+
+      '<div class="row"><span>Health score</span><strong>'+score+' / 100</strong></div>'+
+      '<div class="row"><span>Worksheet ready</span><strong style="color:#1dd4b7;">click "Download worksheet CSV"</strong></div>', 'success');
+
+    // Save for report generation
+    const totalContribs = Object.values(works).reduce((s, w) => s + w.contribs.length, 0);
+    const scanDate = new Date().toISOString().slice(0, 10);
+    const scanId = 'HR-' + scanDate.replace(/-/g, '') + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+    lastScan = { titles, issues, blocking, resolvable, score, totalContribs, scanId, scanDate };
+
+    $('downloadWorksheetBtn').disabled = false;
+    $('downloadInstructionsBtn').disabled = false;
+    $('generateReportBtn').disabled = false;
+
+  } catch (e) {
+    status('<strong>✕ Error:</strong> ' + e.message, 'error');
+    console.error(e);
+  }
+});
+
+function downloadFile(content, filename, mime) {
+  const blob = new Blob([content], { type: mime + ';charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+let _exceljsPromise = null;
+function loadExcelJS() {
+  if (!_exceljsPromise) {
+    _exceljsPromise = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
+      s.onload = () => resolve(window.ExcelJS);
+      s.onerror = () => reject(new Error('Failed to load ExcelJS library'));
+      document.head.appendChild(s);
+    });
+  }
+  return _exceljsPromise;
+}
+
+async function buildWorksheetXLSX(scan) {
+  await loadExcelJS();
+  const wb = new ExcelJS.Workbook();
+  wb.creator = '{{PartnerBrand}}';
+  wb.created = new Date();
+  const ws = wb.addWorksheet('Corrections', {
+    views: [{ state: 'frozen', xSplit: 0, ySplit: 7 }]
+  });
+
+  ws.columns = [
+    { width: 11 },  // A: issue_id
+    { width: 26 },  // B: Work
+    { width: 18 },  // C: Field
+    { width: 36 },  // D: Current value
+    { width: 30 },  // E: Suggested fix
+    { width: 24 },  // F: Decision
+    { width: 28 },  // G: Your value
+    { width: 26 },  // H: Note
+  ];
+
+  // Row 1: title
+  ws.mergeCells('A1:H1');
+  const t = ws.getCell('A1');
+  t.value = '{{PartnerBrand}} · Corrections Worksheet';
+  t.font = { name: 'Calibri', size: 16, bold: true, color: { argb: 'FF0F6657' } };
+  t.alignment = { vertical: 'middle', horizontal: 'left' };
+  ws.getRow(1).height = 28;
+
+  // Row 2: scan info
+  ws.mergeCells('A2:H2');
+  const info = ws.getCell('A2');
+  info.value = `Scan ID: ${scan.scanId}    ·    Generated: ${scan.scanDate}    ·    Works analyzed: ${scan.titles.length}    ·    Issues found: ${scan.issues.length}`;
+  info.font = { size: 10, color: { argb: 'FF555555' } };
+  ws.getRow(2).height = 16;
+
+  // Row 4: instructions
+  ws.mergeCells('A4:H4');
+  const instr = ws.getCell('A4');
+  instr.value = 'For each row below, fill in the Decision column (accept / reject / edit). If you choose "edit", also enter your value in "Your value (if edit)". Add an optional Note. Save the file and reply by email to {{PartnerContact}}. Nothing is applied to your catalog without your confirmation.';
+  instr.font = { size: 10, italic: true, color: { argb: 'FF333333' } };
+  instr.alignment = { wrapText: true, vertical: 'middle' };
+  ws.getRow(4).height = 42;
+
+  // Row 6: column-group labels
+  ws.mergeCells('A6:E6');
+  const lbl1 = ws.getCell('A6');
+  lbl1.value = 'IDENTIFIED BY HEYROYA SCAN';
+  lbl1.font = { bold: true, size: 9, color: { argb: 'FF666666' } };
+  ws.mergeCells('F6:H6');
+  const lbl2 = ws.getCell('F6');
+  lbl2.value = 'PUBLISHER FILLS IN';
+  lbl2.font = { bold: true, size: 9, color: { argb: 'FF0F6657' } };
+
+  // Row 7: column headers
+  const hdr = ws.getRow(7);
+  hdr.values = ['Issue ID', 'Work', 'Field', 'Current value', 'Suggested fix', 'Decision (accept / reject / edit)', 'Your value (if edit)', 'Note'];
+  hdr.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 11 };
+  hdr.alignment = { vertical: 'middle', wrapText: true, horizontal: 'left' };
+  hdr.height = 34;
+  for (let c = 1; c <= 8; c++) {
+    hdr.getCell(c).fill = {
+      type: 'pattern', pattern: 'solid',
+      fgColor: { argb: c >= 6 ? 'FF0F6657' : 'FF2A3345' }
+    };
+    hdr.getCell(c).border = { bottom: { style: 'medium', color: { argb: 'FF1DD4B7' } } };
+  }
+
+  // Data rows
+  scan.issues.forEach((issue, i) => {
+    const r = ws.getRow(8 + i);
+    r.values = [issue.id, issue.work, issue.field, issue.current, issue.suggested, '', '', ''];
+    r.alignment = { vertical: 'top', wrapText: true };
+    r.height = 22;
+    // Highlight publisher-fill columns
+    for (let c = 6; c <= 8; c++) {
+      r.getCell(c).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF8E1' } };
+      r.getCell(c).border = {
+        top: { style: 'thin', color: { argb: 'FFEEDDB0' } },
+        bottom: { style: 'thin', color: { argb: 'FFEEDDB0' } },
+        left: { style: 'thin', color: { argb: 'FFEEDDB0' } },
+        right: { style: 'thin', color: { argb: 'FFEEDDB0' } }
+      };
+    }
+    // Subtle row separator
+    for (let c = 1; c <= 5; c++) {
+      r.getCell(c).border = { bottom: { style: 'hair', color: { argb: 'FFCCCCCC' } } };
+    }
+  });
+
+  // Data validation dropdown on Decision column
+  const lastRow = 7 + scan.issues.length;
+  if (scan.issues.length > 0) {
+    for (let row = 8; row <= lastRow; row++) {
+      ws.getCell(`F${row}`).dataValidation = {
+        type: 'list',
+        allowBlank: true,
+        formulae: ['"accept,reject,edit"'],
+        showErrorMessage: true,
+        errorStyle: 'warning',
+        errorTitle: 'Invalid value',
+        error: 'Please choose accept, reject, or edit from the dropdown.'
+      };
+    }
+  }
+
+  const buf = await wb.xlsx.writeBuffer();
+  return new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+}
+
+$('downloadWorksheetBtn').addEventListener('click', async () => {
+  if (!lastScan) return;
+  const btn = $('downloadWorksheetBtn');
+  const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Building Excel file…';
+  try {
+    const blob = await buildWorksheetXLSX(lastScan);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '{{PartnerBrand}}-Corrections-Worksheet-' + lastScan.scanId + '.xlsx';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    alert('Failed to generate Excel file: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.disabled = false; btn.textContent = orig;
+  }
+});
+$('downloadInstructionsBtn').addEventListener('click', () => { if (instructionsText) downloadFile(instructionsText, 'corrections-worksheet-instructions.txt', 'text/plain'); });
+$('generateReportBtn').addEventListener('click', () => {
+  if (!lastScan) return;
+  const html = buildHealthReport(lastScan);
+  const w = window.open('', '_blank');
+  if (!w) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+});
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function buildHealthReport(scan) {
+  const { titles, issues, blocking, resolvable, score, totalContribs } = scan;
+  const date = scan.scanDate || new Date().toISOString().slice(0, 10);
+  const scanId = scan.scanId || 'HR-' + date.replace(/-/g, '') + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+  const total = issues.length;
+
+  // Adaptive tone based on score
+  const tone = score >= 80 ? 'good' : score >= 50 ? 'warn' : 'bad';
+  const heroBg = tone === 'good'
+    ? 'linear-gradient(135deg, #0d3a2a 0%, #0f5d3f 100%)'
+    : tone === 'warn'
+      ? 'linear-gradient(135deg, #3a2810 0%, #5d4220 100%)'
+      : 'linear-gradient(135deg, #2a1810 0%, #4a2820 100%)';
+  const heroBorder = tone === 'good' ? '#1f7a4a' : tone === 'warn' ? '#7a5a30' : '#6b3a30';
+  const heroAccent = tone === 'good' ? '#86efac' : tone === 'warn' ? '#fbbf77' : '#fbbf77';
+  const tagBg = tone === 'good' ? 'rgba(29,212,183,0.18)' : 'rgba(248,113,113,0.18)';
+  const tagColor = tone === 'good' ? '#1dd4b7' : tone === 'warn' ? '#f2b36a' : '#f87171';
+  const sectionH2Color = tone === 'good' ? '#1dd4b7' : tone === 'warn' ? '#f2b36a' : '#f87171';
+  const scoreColor = tone === 'good' ? '#1dd4b7' : tone === 'warn' ? '#f2b36a' : '#f87171';
+  const tagText = tone === 'good' ? '✓ Pre-cleaning scan' : '⚠ Before cleaning';
+  const heroH1 = tone === 'good'
+    ? 'Catalog largely CWR-ready'
+    : tone === 'warn'
+      ? 'Resolvable issues identified'
+      : 'Major Fixes Required — Catalog Not CWR-Ready';
+
+  // Group issues per work
+  const byWork = {};
+  for (const i of issues) {
+    if (!byWork[i.work]) byWork[i.work] = [];
+    byWork[i.work].push(i);
+  }
+
+  // Group issues by field for the breakdown sections
+  const byField = {};
+  for (const i of issues) {
+    if (!byField[i.field]) byField[i.field] = [];
+    byField[i.field].push(i);
+  }
+
+  const fieldLabel = {
+    iswc: 'Missing ISWC',
+    isrc: 'Missing ISRC',
+    split_total: 'Incorrect split sums',
+    writer_ipi: 'Missing writer IPI',
+    society: 'Missing society',
+    foreign_writer: 'Foreign writer — no agreement declared',
+    role: 'Invalid role',
+    writer_name: 'Writer name variants',
+  };
+
+  // Per-work table rows
+  const workRows = titles.map(t => {
+    const workIssues = byWork[t] || [];
+    const status = workIssues.length === 0 ? 'Clean' : 'Major fixes';
+    const keyIssues = workIssues.map(i => {
+      if (i.field === 'split_total') return `splits ${i.current}`;
+      if (i.field === 'iswc') return 'missing ISWC';
+      if (i.field === 'isrc') return 'missing ISRC';
+      if (i.field === 'writer_ipi') return 'missing IPI';
+      if (i.field === 'society') return 'missing society';
+      if (i.field === 'foreign_writer') return 'no E/SE/AM declaration';
+      if (i.field === 'role') return 'invalid role';
+      if (i.field === 'writer_name') return 'name variant';
+      return i.field;
+    }).join(', ') || '—';
+    const pillClass = workIssues.length === 0 ? 'pill clean' : 'pill major';
+    return `<tr><td class="title">${escapeHtml(t)}</td><td><span class="${pillClass}">${escapeHtml(status)}</span></td><td>${escapeHtml(keyIssues)}</td></tr>`;
+  }).join('');
+
+  // Most common problems list
+  const mostCommon = Object.entries(byField)
+    .sort((a, b) => b[1].length - a[1].length)
+    .slice(0, 8)
+    .map(([f, list]) => `<li><strong>${escapeHtml(fieldLabel[f] || f)}:</strong> ${list.length} ${list.length === 1 ? 'work' : 'works'}</li>`)
+    .join('');
+
+  // ISWC coverage
+  const iswcMissing = (byField.iswc || []).length;
+  const iswcCovered = titles.length - iswcMissing;
+
+  // ISRC coverage
+  const isrcMissing = (byField.isrc || []).length;
+  const isrcCovered = titles.length - isrcMissing;
+
+  // Split issues list
+  const splitIssues = (byField.split_total || []).map(i =>
+    `<li>${escapeHtml(i.work)} → <strong>${escapeHtml(i.current)}</strong></li>`
+  ).join('');
+
+  // IPI issues list
+  const ipiIssues = (byField.writer_ipi || []).map(i =>
+    `<li>${escapeHtml(i.current)}</li>`
+  ).join('');
+
+  // Society issues
+  const societyIssues = (byField.society || []).map(i =>
+    `<li class="amber">${escapeHtml(i.current)}</li>`
+  ).join('');
+
+  // Role issues
+  const roleIssues = (byField.role || []).map(i =>
+    `<li>${escapeHtml(i.current)} → not CWR-valid</li>`
+  ).join('');
+
+  // Name variants
+  const nameVariants = (byField.writer_name || []).map(i =>
+    `<li class="amber">"${escapeHtml(i.current)}" → ${escapeHtml(i.suggested)}</li>`
+  ).join('');
+
+  // Foreign writer agreements
+  const foreignWriter = (byField.foreign_writer || []).map(i =>
+    `<li>${escapeHtml(i.current)} → STIM will reject packet</li>`
+  ).join('');
+
+  // Sequential section numbering (skip conditional sections)
+  let sectionN = 1;
+  const sSummary = sectionN++;
+  const sCoverage = sectionN++;
+  const sSplit = splitIssues ? sectionN++ : null;
+  const sRoleWriter = (roleIssues || nameVariants || foreignWriter) ? sectionN++ : null;
+  const sPerWork = sectionN++;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Metadata Health Report (Before Cleaning) — {{PartnerBrand}}</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background:#05070b; color:#f5f7fb; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; -webkit-font-smoothing:antialiased; padding:32px 20px 64px; }
+.container { max-width:1080px; margin:0 auto; }
+h1, h2, h3 { font-weight:600; }
+header.topnav { display:flex; align-items:center; justify-content:space-between; padding:0 0 24px; flex-wrap:wrap; gap:1rem; border-bottom:1px solid rgba(27,34,51,0.8); margin-bottom:28px; }
+.brand { display:flex; align-items:center; gap:0.65rem; font-weight:700; color:#1dd4b7; }
+.meta { font-size:12px; color:#8f9bb3; text-align:right; }
+.print-btn { background:#1dd4b7; color:#020308; border:0; border-radius:999px; padding:8px 16px; font-weight:700; cursor:pointer; font-size:12px; font-family:inherit; }
+.hero { background:${heroBg}; border:1px solid ${heroBorder}; border-radius:18px; padding:28px 32px; margin-bottom:24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:24px; }
+.hero-left h1 { font-size:24px; font-weight:800; margin-bottom:6px; color:#fff; }
+.hero-left p { color:${heroAccent}; font-size:14px; }
+.pre-tag { display:inline-block; background:${tagBg}; color:${tagColor}; border:1px solid ${tagColor}; border-radius:999px; padding:3px 12px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; }
+.score-circle { width:100px; height:100px; border-radius:999px; background:rgba(0,0,0,0.3); border:4px solid ${scoreColor}; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.score-num { font-size:32px; font-weight:800; color:${scoreColor}; line-height:1; }
+.score-label { font-size:10px; color:${heroAccent}; margin-top:4px; text-transform:uppercase; letter-spacing:0.06em; }
+.summary-row { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:24px; }
+.summary-card { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:16px 18px; }
+.summary-card .label { font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
+.summary-card .value { font-size:26px; font-weight:700; color:#f5f7fb; }
+.summary-card .sub { font-size:12px; color:#c3cad8; margin-top:2px; }
+.summary-card.red .value { color:#f87171; }
+.summary-card.amber .value { color:#f2b36a; }
+.summary-card.gray .value { color:#8f9bb3; }
+.section { margin-bottom:28px; }
+.section h2 { font-size:14px; font-weight:700; color:${sectionH2Color}; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; }
+.section .lede { color:#c3cad8; font-size:14px; margin-bottom:12px; }
+.panel { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:18px 22px; }
+.panel ul { list-style:none; padding:0; margin:0; }
+.panel li { color:#c3cad8; font-size:14px; padding:6px 0 6px 24px; position:relative; }
+.panel li::before { content:'✕'; color:#f87171; font-weight:700; position:absolute; left:0; }
+.panel li.amber::before { content:'!'; color:#f2b36a; }
+.panel li.green::before { content:'✓'; color:#1dd4b7; }
+.panel li strong { color:#f5f7fb; }
+.panel .group-h { font-weight:700; color:#f5f7fb; margin-top:12px; margin-bottom:6px; font-size:13px; }
+.panel .group-h:first-child { margin-top:0; }
+.impact-note { color:#fbbf77; font-size:13px; margin-top:12px; padding-top:10px; border-top:1px solid rgba(242,179,106,0.2); font-style:italic; }
+.works-table { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; overflow:hidden; }
+.works-table table { width:100%; border-collapse:collapse; font-size:13px; }
+.works-table th { text-align:left; padding:12px 16px; font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; background:#0a0d14; border-bottom:1px solid #1b2233; }
+.works-table td { padding:12px 16px; border-bottom:1px solid #1b2233; color:#c3cad8; vertical-align:top; }
+.works-table tr:last-child td { border-bottom:0; }
+.works-table .title { color:#f5f7fb; font-weight:500; }
+.pill { display:inline-block; padding:2px 10px; border-radius:999px; font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; white-space:nowrap; }
+.pill.major { background:rgba(248,113,113,0.12); color:#f87171; border:1px solid rgba(248,113,113,0.4); }
+.pill.clean { background:rgba(29,212,183,0.12); color:#1dd4b7; border:1px solid rgba(29,212,183,0.4); }
+.disclaimer { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:18px 22px; margin-top:16px; }
+.disclaimer .label { font-size:12px; font-weight:700; color:#1dd4b7; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
+.disclaimer p { color:#c3cad8; font-size:13px; margin:0; }
+@media print {
+  body { background:#fff; color:#000; padding:20px; }
+  header.topnav, .print-btn { display:none; }
+  .hero, .panel, .summary-card, .works-table, .disclaimer { background:#fff !important; border:1px solid #ccc !important; color:#000 !important; }
+  .hero-left h1, .summary-card .value, .panel li strong, .panel .group-h, .works-table .title { color:#000 !important; }
+  .hero-left p, .summary-card .label, .summary-card .sub, .panel li, .works-table td, .works-table th, .disclaimer p { color:#444 !important; }
+  .score-circle { background:#fff !important; }
+  .pre-tag { background:#fff !important; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="topnav">
+    <div class="brand">{{PartnerBrand}} · Metadata Health Report</div>
+    <div>
+      <div class="meta">Catalog: ${escapeHtml(titles.length)} works · ${escapeHtml(totalContribs)} contributor entries</div>
+      <div class="meta">Scan ID: ${escapeHtml(scanId)} · Generated ${escapeHtml(date)}</div>
+      <button class="print-btn" onclick="window.print()" style="margin-top:8px;">🖨 Print / Save as PDF</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-left">
+      <span class="pre-tag">${tagText}</span>
+      <h1>${heroH1}</h1>
+      <p>${titles.length} works analyzed · ${total} ${total === 1 ? 'issue' : 'issues'} detected · ${blocking} blocking · ${resolvable} resolvable · pre-cleaning diagnostic.</p>
+    </div>
+    <div class="score-circle">
+      <div class="score-num">${score}</div>
+      <div class="score-label">/ 100</div>
+    </div>
+  </div>
+
+  <div class="summary-row">
+    <div class="summary-card gray"><div class="label">Works analyzed</div><div class="value">${titles.length}</div><div class="sub">${totalContribs} contributor entries</div></div>
+    <div class="summary-card gray"><div class="label">Total issues</div><div class="value">${total}</div><div class="sub">across the catalog</div></div>
+    <div class="summary-card red"><div class="label">Blocking</div><div class="value">${blocking}</div><div class="sub">prevent CWR submission</div></div>
+    <div class="summary-card amber"><div class="label">Resolvable</div><div class="value">${resolvable}</div><div class="sub">fixable with confirmation</div></div>
+  </div>
+
+  <div class="section">
+    <h2>${sSummary}. High-level summary</h2>
+    <p class="lede">Pre-cleaning diagnostic. No assumptions, no auto-fixes. Every correction will require publisher confirmation.</p>
+    <div class="panel">
+      <div class="group-h">Most common problems</div>
+      <ul>${mostCommon || '<li class="green">No issues detected — catalog is in good shape.</li>'}</ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>${sCoverage}. Identifier coverage</h2>
+    <div class="panel">
+      <div class="group-h">ISWC</div>
+      <ul>
+        <li class="${iswcMissing === 0 ? 'green' : 'amber'}">${iswcCovered} / ${titles.length} works have a valid ISWC</li>
+        ${iswcMissing > 0 ? `<li>${iswcMissing} ${iswcMissing === 1 ? 'work' : 'works'} flagged as "Unregistered Work — No ISWC found"</li>` : ''}
+      </ul>
+      <div class="group-h">ISRC</div>
+      <ul>
+        <li class="${isrcMissing === 0 ? 'green' : 'amber'}">${isrcCovered} / ${titles.length} works have a valid ISRC</li>
+      </ul>
+      ${ipiIssues ? `<div class="group-h">IPI</div><ul>${ipiIssues}</ul>` : ''}
+      ${societyIssues ? `<div class="group-h">Society</div><ul>${societyIssues}</ul>` : ''}
+    </div>
+  </div>
+
+  ${splitIssues ? `<div class="section">
+    <h2>${sSplit}. Share validation</h2>
+    <p class="lede">Incorrect split sums (blocking):</p>
+    <div class="panel">
+      <ul>${splitIssues}</ul>
+      <p class="impact-note">Impact: these works cannot be submitted to STIM/ICE until splits equal exactly 100%.</p>
+    </div>
+  </div>` : ''}
+
+  ${(roleIssues || nameVariants || foreignWriter) ? `<div class="section">
+    <h2>${sRoleWriter}. Role &amp; writer validation</h2>
+    <div class="panel">
+      ${roleIssues ? `<div class="group-h">Invalid role</div><ul>${roleIssues}</ul>` : ''}
+      ${nameVariants ? `<div class="group-h">Name variants</div><ul>${nameVariants}</ul>` : ''}
+      ${foreignWriter ? `<div class="group-h">Foreign writer with no agreement</div><ul>${foreignWriter}</ul>` : ''}
+    </div>
+  </div>` : ''}
+
+  <div class="section">
+    <h2>${sPerWork}. Per-work status</h2>
+    <div class="works-table">
+      <table>
+        <thead><tr><th>Work</th><th>Status</th><th>Key issues</th></tr></thead>
+        <tbody>${workRows}</tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <div class="label">Publisher Confirmation Required</div>
+    <p>External metadata sources are used only to validate identifiers. All final decisions and catalog updates rest with the publisher.</p>
+  </div>
+
+  <p style="font-size:11px;color:#8f9bb3;text-align:center;margin-top:24px;">
+    {{PartnerBrand}} · Metadata compliance · {{PartnerContact}}
+  </p>
+
+</div>
+</body>
+</html>`;
+}
+</script>
+</body>
+</html>
