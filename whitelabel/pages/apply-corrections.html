@@ -357,7 +357,6 @@ $('processBtn').addEventListener('click', () => {
 
     $('downloadBtn').disabled = false;
     $('reportBtn').disabled = false;
-    $('wizardBtn').disabled = false;
 
   } catch (e) {
     status('<strong>✕ Error:</strong> ' + e.message, 'error');
@@ -375,16 +374,10 @@ $('downloadBtn').addEventListener('click', () => {
   URL.revokeObjectURL(url);
 });
 
-$('wizardBtn').addEventListener('click', () => {
-  if (!cleanedCSV) return;
-  // Stash in sessionStorage so review.html?demo=1&from=corrections can pick it up
-  try { sessionStorage.setItem('roya_cleaned_csv', cleanedCSV); } catch (e) {}
-  return; // wizard button removed (internal-only)
-});
-
 $('reportBtn').addEventListener('click', () => {
-  // Open the after-cleaning sample report in a new tab — user prints to PDF from there
-  return; // after-report sample removed
+  // After-report sample is internal-only; partner-safe build keeps the
+  // button disabled-by-default and no-ops on click.
+  return;
 });
 </script>
 </body>
