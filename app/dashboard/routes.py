@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import csv
+import io
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -8,6 +10,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import desc, select
+from sqlalchemy.orm import Session
 
 from app.models import (
     File as FileRow,
@@ -20,6 +23,40 @@ from app.models.db import session_scope
 from app.services import storage
 from app.services.auth import verify_dashboard_basic
 from app.services.email import send_via_resend
+
+
+_TEMPLATE_ATTACHMENTS: dict[str, list[tuple[str, str, str, str]]] = {
+    # template -> [(kind, key_or_role, display_filename, content_type), ...]
+    # kind is "report" or "file"
+    "analyzed": [
+        ("report", "before", "metadata-health-report.html", "text/html; charset=utf-8"),
+        ("file", "correction_template", "corrections-worksheet.csv", "text/csv; charset=utf-8"),
+    ],
+    "received": [],
+    "after": [
+        ("report", "after", "metadata-health-report-after.html", "text/html; charset=utf-8"),
+        ("file", "corrected_catalog", "catalog-cleaned.csv", "text/csv; charset=utf-8"),
+    ],
+}
+
+
+def _attachments_for_template(
+    template: str, job_id: uuid.UUID, session: Session
+) -> list[tuple[str, str, str]]:
+    """Returns [(filename, s3_key, content_type), ...] for the given template."""
+    out: list[tuple[str, str, str]] = []
+    for kind, key, filename, ctype in _TEMPLATE_ATTACHMENTS.get(template, []):
+        if kind == "report":
+            row = session.scalars(
+                select(Report).where(Report.job_id == job_id, Report.type == key)
+            ).one_or_none()
+        else:
+            row = session.scalars(
+                select(FileRow).where(FileRow.job_id == job_id, FileRow.role == key)
+            ).one_or_none()
+        if row is not None:
+            out.append((filename, row.s3_key, ctype))
+    return out
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
@@ -145,8 +182,18 @@ def dashboard_send_notification(
                 status.HTTP_409_CONFLICT,
                 detail=f"notification status is {n.status!r}, expected 'pending'",
             )
+        attachment_specs = _attachments_for_template(n.template, n.job_id, s)
+        attachments = [
+            (filename, storage.get_object(s3_key), ctype)
+            for filename, s3_key, ctype in attachment_specs
+        ]
         try:
-            send_via_resend(recipient=n.recipient, subject=n.subject, body_html=n.body_html)
+            send_via_resend(
+                recipient=n.recipient,
+                subject=n.subject,
+                body_html=n.body_html,
+                attachments=attachments or None,
+            )
             n.status = "sent"
             n.sent_at = datetime.now(timezone.utc)
             n.error = None
@@ -156,3 +203,90 @@ def dashboard_send_notification(
             n.error = str(exc)
             redirect_target = f"/dashboard/jobs/{n.job_id}"
     return RedirectResponse(url=redirect_target, status_code=status.HTTP_303_SEE_OTHER)
+
+
+@router.get("/dashboard/jobs/{job_id}/preview", response_class=HTMLResponse)
+def dashboard_job_preview(
+    job_id: str,
+    request: Request,
+    _user: str = Depends(verify_dashboard_basic),
+) -> HTMLResponse:
+    try:
+        job_uuid = uuid.UUID(job_id)
+    except ValueError as exc:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="job_id must be a UUID") from exc
+
+    with session_scope() as s:
+        job = s.get(Job, job_uuid)
+        if job is None:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, detail="job not found")
+
+        notifications = s.scalars(
+            select(Notification).where(Notification.job_id == job_uuid).order_by(Notification.created_at)
+        ).all()
+
+        previews = []
+        for n in notifications:
+            attachment_specs = _attachments_for_template(n.template, job_uuid, s)
+            attachment_views = []
+            for filename, s3_key, ctype in attachment_specs:
+                try:
+                    raw = storage.get_object(s3_key)
+                except Exception as exc:  # noqa: BLE001
+                    attachment_views.append(
+                        {"filename": filename, "kind": "error", "error": str(exc)}
+                    )
+                    continue
+                if ctype.startswith("text/html"):
+                    attachment_views.append(
+                        {
+                            "filename": filename,
+                            "kind": "html",
+                            "html": raw.decode("utf-8", errors="replace"),
+                        }
+                    )
+                elif ctype.startswith("text/csv"):
+                    text = raw.decode("utf-8", errors="replace")
+                    rows = list(csv.reader(io.StringIO(text)))
+                    header, body_rows = (rows[0], rows[1:]) if rows else ([], [])
+                    truncated = len(body_rows) > 200
+                    attachment_views.append(
+                        {
+                            "filename": filename,
+                            "kind": "csv",
+                            "header": header,
+                            "rows": body_rows[:200],
+                            "row_count": len(body_rows),
+                            "truncated": truncated,
+                        }
+                    )
+                else:
+                    attachment_views.append(
+                        {"filename": filename, "kind": "binary", "size": len(raw)}
+                    )
+
+            previews.append(
+                {
+                    "id": str(n.id),
+                    "template": n.template,
+                    "recipient": n.recipient,
+                    "subject": n.subject,
+                    "status": n.status,
+                    "body_html": n.body_html,
+                    "attachments": attachment_views,
+                }
+            )
+
+        ctx = {
+            "request": request,
+            "job": {
+                "id": str(job.id),
+                "publisher_id": job.publisher_id,
+                "publisher_email": job.publisher_email,
+                "catalog_name": job.catalog_name,
+                "phase": job.phase,
+                "status": job.status,
+            },
+            "previews": previews,
+        }
+    return templates.TemplateResponse("preview.html", ctx)

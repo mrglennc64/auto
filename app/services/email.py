@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 from dataclasses import dataclass
 from typing import Literal
 
@@ -74,7 +75,12 @@ HeyRoya · Metadata compliance for Nordic music publishers
     return RenderedEmail(subject=subject, body_html=body)
 
 
-def send_via_resend(recipient: str, subject: str, body_html: str) -> str:
+def send_via_resend(
+    recipient: str,
+    subject: str,
+    body_html: str,
+    attachments: list[tuple[str, bytes, str]] | None = None,
+) -> str:
     if not settings.resend_api_key:
         raise RuntimeError("RESEND_API_KEY not configured")
     resend.api_key = settings.resend_api_key
@@ -86,5 +92,14 @@ def send_via_resend(recipient: str, subject: str, body_html: str) -> str:
     }
     if settings.resend_operator_bcc:
         params["bcc"] = [settings.resend_operator_bcc]
+    if attachments:
+        params["attachments"] = [
+            {
+                "filename": filename,
+                "content": base64.b64encode(content).decode("ascii"),
+                "content_type": content_type,
+            }
+            for filename, content, content_type in attachments
+        ]
     response = resend.Emails.send(params)
     return response.get("id", "")

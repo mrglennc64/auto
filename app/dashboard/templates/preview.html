@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Preview · Job {{ job.id[:8] }} · HeyRoya</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background:#f4f6f5; color:#222; font-family:system-ui,-apple-system,Segoe UI,sans-serif; line-height:1.5; padding:24px; }
+.container { max-width:900px; margin:0 auto; }
+.toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid #d8dcdb; }
+h1 { color:#0f6657; font-size:20px; font-weight:700; }
+h2 { color:#0f6657; font-size:14px; text-transform:uppercase; letter-spacing:0.06em; margin:18px 0 8px; font-weight:700; }
+h3 { font-size:12px; color:#555; text-transform:uppercase; letter-spacing:0.06em; margin:14px 0 6px; font-weight:700; }
+a { color:#0f6657; font-weight:600; text-decoration:none; }
+a:hover { text-decoration:underline; }
+button { background:#0f6657; color:#fff; border:0; border-radius:6px; padding:8px 16px; font-weight:600; cursor:pointer; font-size:13px; }
+button:hover { background:#0c5246; }
+.muted { color:#888; font-size:12px; }
+.section { background:#fff; border:1px solid #d8dcdb; border-radius:8px; padding:20px; margin-bottom:24px; page-break-inside: avoid; }
+.meta { font-size:12px; color:#555; margin-bottom:12px; }
+.meta strong { color:#222; }
+.email-frame { width:100%; border:1px solid #ecefee; border-radius:6px; min-height:320px; background:#fafbfb; }
+.attachment { border:1px solid #ecefee; border-radius:6px; margin-top:10px; overflow:hidden; }
+.attachment-header { background:#fafbfb; padding:8px 12px; font-size:12px; font-weight:600; color:#444; border-bottom:1px solid #ecefee; }
+.attachment-body { padding:0; }
+.attachment-frame { width:100%; min-height:480px; border:0; }
+.csv-table { width:100%; border-collapse:collapse; font-size:11px; }
+.csv-table th, .csv-table td { padding:5px 8px; border-bottom:1px solid #ecefee; text-align:left; vertical-align:top; }
+.csv-table th { background:#f4f6f5; font-size:10px; text-transform:uppercase; letter-spacing:0.04em; color:#555; }
+.csv-truncated { padding:8px 12px; font-size:11px; color:#9a6a00; background:#fff8e1; }
+.pill { display:inline-block; padding:2px 10px; border-radius:999px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; }
+.pill.pending { background:#fff8e1; color:#9a6a00; border:1px solid #f3d67a; }
+.pill.sent { background:#e6f4ec; color:#0f6657; border:1px solid #8fc7a8; }
+.pill.failed { background:#fce4e1; color:#9a1f1f; border:1px solid #e89c95; }
+.empty { color:#999; padding:14px; }
+.error { color:#9a1f1f; font-size:12px; padding:8px 12px; }
+
+@media print {
+  body { background:#fff; padding:0; }
+  .toolbar { display:none; }
+  .section { border:1px solid #ccc; box-shadow:none; page-break-inside: avoid; }
+  .attachment-frame { min-height: 0; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="toolbar">
+    <div>
+      <h1>Email preview · Job {{ job.id[:8] }}</h1>
+      <div class="muted">{{ job.catalog_name or "—" }} · {{ job.publisher_email or "no email on file" }}</div>
+    </div>
+    <div>
+      <a href="/dashboard/jobs/{{ job.id }}" style="margin-right:16px;">← back to job</a>
+      <button onclick="window.print()">Print / Save as PDF</button>
+    </div>
+  </div>
+
+  {% if not previews %}
+    <p class="empty">No email drafts yet for this job.</p>
+  {% endif %}
+
+  {% for p in previews %}
+  <div class="section">
+    <h2>{{ p.template }} email</h2>
+    <div class="meta">
+      <strong>To:</strong> {{ p.recipient }} &nbsp;·&nbsp;
+      <strong>Subject:</strong> {{ p.subject }} &nbsp;·&nbsp;
+      <strong>Status:</strong> <span class="pill {{ p.status }}">{{ p.status }}</span>
+    </div>
+
+    <h3>Email body</h3>
+    <iframe class="email-frame" sandbox srcdoc="{{ p.body_html }}"></iframe>
+
+    {% if p.attachments %}
+      <h3>Attachments ({{ p.attachments|length }})</h3>
+      {% for a in p.attachments %}
+        <div class="attachment">
+          <div class="attachment-header">{{ a.filename }}{% if a.kind == "csv" %} · {{ a.row_count }} row{{ "s" if a.row_count != 1 else "" }}{% endif %}</div>
+          <div class="attachment-body">
+            {% if a.kind == "html" %}
+              <iframe class="attachment-frame" sandbox srcdoc="{{ a.html }}"></iframe>
+            {% elif a.kind == "csv" %}
+              <table class="csv-table">
+                <thead><tr>{% for h in a.header %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+                <tbody>
+                  {% for row in a.rows %}
+                  <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% if a.truncated %}
+                <div class="csv-truncated">Showing first 200 rows of {{ a.row_count }}.</div>
+              {% endif %}
+            {% elif a.kind == "error" %}
+              <div class="error">Failed to load: {{ a.error }}</div>
+            {% else %}
+              <div class="muted" style="padding:10px 12px;">Binary attachment · {{ a.size }} bytes</div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="muted" style="margin-top:8px;">No attachments for this template.</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+</body>
+</html>
