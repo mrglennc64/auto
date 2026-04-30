@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
 <meta charset="UTF-8" />
-<title>Apply Corrections — {{PartnerBrand}}</title>
+<title>Tillämpa korrigeringar — {{PartnerBrand}}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -65,48 +65,48 @@
   <header class="top">
     <div class="brand">{{PartnerBrand}}</div>
     <div class="meta">
-      <a href="portal.html" style="color:#8f9bb3;margin-right:12px;">← back to portal</a>
+      <a href="portal.html" style="color:#8f9bb3;margin-right:12px;">← tillbaka till portalen</a>
     </div>
   </header>
 
   <div style="background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:0.85rem 1.25rem; margin-bottom:1.5rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center; font-size:13px;">
-    <span style="color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-size:11px; font-weight:700; margin-right:0.5rem;">Workflow:</span>
-    <a href="scan-catalog.html" style="color:#8f9bb3;">1. Scan catalog</a>
+    <span style="color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-size:11px; font-weight:700; margin-right:0.5rem;">Arbetsflöde:</span>
+    <a href="scan-catalog.html" style="color:#8f9bb3;">1. Skanna katalog</a>
     <span style="color:#2a3345;">→</span>
-    <a href="apply-corrections.html" style="color:#1dd4b7; font-weight:700;">2. Apply corrections</a>
+    <a href="apply-corrections.html" style="color:#1dd4b7; font-weight:700;">2. Tillämpa korrigeringar</a>
   </div>
 
   <section class="hero">
-    <h1>Apply publisher corrections to the catalog</h1>
-    <p>Load the original catalog CSV plus the publisher's filled-in <code style="background:#0b0f18;padding:1px 6px;border-radius:4px;font-size:12px;color:#1dd4b7;">corrections-worksheet.csv</code>. The tool merges their decisions and produces a cleaned catalog ready for export.</p>
+    <h1>Tillämpa förlagets korrigeringar på katalogen</h1>
+    <p>Ladda upp den ursprungliga katalog-CSV:n tillsammans med förlagets ifyllda <code style="background:#0b0f18;padding:1px 6px;border-radius:4px;font-size:12px;color:#1dd4b7;">corrections-worksheet.csv</code>. Verktyget sammanför besluten och skapar en rensad katalog redo för export.</p>
   </section>
 
   <div class="upload-grid">
     <div class="upload-card">
-      <h3>1. Original catalog</h3>
-      <p class="hint">CSV with columns: title, iswc, isrc, name, role, share_percent, ipi, society</p>
+      <h3>1. Ursprunglig katalog</h3>
+      <p class="hint">CSV med kolumner: title, iswc, isrc, name, role, share_percent, ipi, society</p>
       <input type="file" id="catalogFile" accept=".csv" />
       <div class="filename" id="catalogName"></div>
     </div>
     <div class="upload-card">
-      <h3>2. Corrections worksheet (from publisher)</h3>
-      <p class="hint">CSV with columns: issue_id, work, field, current_value, suggested, decision, publisher_value, note</p>
+      <h3>2. Arbetsblad för korrigeringar (från förlaget)</h3>
+      <p class="hint">CSV med kolumner: issue_id, work, field, current_value, suggested, decision, publisher_value, note</p>
       <input type="file" id="correctionsFile" accept=".csv" />
       <div class="filename" id="correctionsName"></div>
     </div>
   </div>
 
   <div class="actions">
-    <button class="btn btn-primary" id="processBtn" disabled>Apply corrections</button>
-    <button class="btn btn-secondary" id="downloadBtn" disabled>Download cleaned CSV</button>
-    <button class="btn btn-secondary" id="reportBtn" disabled>Generate after-cleaning report (HTML)</button>
+    <button class="btn btn-primary" id="processBtn" disabled>Tillämpa korrigeringar</button>
+    <button class="btn btn-secondary" id="downloadBtn" disabled>Ladda ner rensad CSV</button>
+    <button class="btn btn-secondary" id="reportBtn" disabled>Generera rapport efter rensning (HTML)</button>
   </div>
 
-  <div class="status" id="status">Load both files to begin.</div>
+  <div class="status" id="status">Ladda upp båda filerna för att börja.</div>
 
   <div class="preview" id="preview" style="display:none;">
     <div class="preview-header">
-      <h3>Decisions applied</h3>
+      <h3>Tillämpade beslut</h3>
       <span class="count" id="previewCount"></span>
     </div>
     <table>
@@ -118,11 +118,11 @@
   </div>
 
   <div class="docs">
-    <h3>How the merge works</h3>
-    <p><strong style="color:#1dd4b7;">accept</strong> — apply the suggested value (rebalance splits to 100%, set canonical name, fill in ISWC, etc.)</p>
-    <p><strong style="color:#f87171;">reject</strong> — keep the original value. Issue is logged but not applied.</p>
-    <p><strong style="color:#f2b36a;">edit</strong> — apply the publisher's <code>publisher_value</code> instead of the suggestion.</p>
-    <p style="margin-top:0.75rem; color:#8f9bb3; font-size:12px;">Sample worksheet: <a href="/samples/corrections-worksheet-template.csv">corrections-worksheet-template.csv</a> · Sample catalog: <a href="/samples/test-20-works.csv">test-20-works.csv</a></p>
+    <h3>Så fungerar sammanslagningen</h3>
+    <p><strong style="color:#1dd4b7;">accept</strong> — tillämpa föreslaget värde (exempel: balansera andelar till 100 %, sätt kanoniskt namn, fyll i ISWC)</p>
+    <p><strong style="color:#f87171;">reject</strong> — behåll ursprungligt värde (ärendet loggas men tillämpas inte)</p>
+    <p><strong style="color:#f2b36a;">edit</strong> — använd förlagets <code>publisher_value</code> i stället för förslaget</p>
+    <p style="margin-top:0.75rem; color:#8f9bb3; font-size:12px;">Exempelarbetsblad: <a href="/samples/corrections-worksheet-template.csv">corrections-worksheet-template.csv</a> · Exempelkatalog: <a href="/samples/test-20-works.csv">test-20-works.csv</a></p>
   </div>
 
 </div>
@@ -158,7 +158,7 @@ readFile($('correctionsFile'), 'correctionsText', $('correctionsName'));
 function checkReady() {
   if (window.catalogText && window.correctionsText) {
     $('processBtn').disabled = false;
-    status('Both files loaded — click <strong>Apply corrections</strong> to merge.');
+    status('Båda filer inlästa — klicka <strong>Tillämpa korrigeringar</strong> för att slå ihop.');
   }
 }
 
@@ -197,7 +197,7 @@ $('processBtn').addEventListener('click', () => {
   try {
     const catRows = parseCSV(window.catalogText);
     const corrRows = parseCSV(window.correctionsText);
-    if (catRows.length < 2 || corrRows.length < 2) throw new Error('Both files must have a header + at least 1 row.');
+    if (catRows.length < 2 || corrRows.length < 2) throw new Error('Båda filerna måste ha en rubrikrad + minst 1 datarad.');
 
     const catHeader = catRows[0].map(h => h.trim().toLowerCase());
     const corrHeader = corrRows[0].map(h => h.trim().toLowerCase());
@@ -211,7 +211,7 @@ $('processBtn').addEventListener('click', () => {
     const roleIdx = ci('role');
     const ipiIdx = ci('ipi');
     const societyIdx = ci('society');
-    if (titleIdx < 0 || nameIdx < 0) throw new Error('Catalog must have title + name columns.');
+    if (titleIdx < 0 || nameIdx < 0) throw new Error('Katalogen måste ha kolumnerna title + name.');
 
     const decIdx = cj('decision');
     const fieldIdx = cj('field');
@@ -347,19 +347,19 @@ $('processBtn').addEventListener('click', () => {
       tbody.appendChild(tr);
     });
     $('preview').style.display = 'block';
-    $('previewCount').textContent = log.length + ' decisions · ' + acceptCount + ' accepted · ' + rejectCount + ' rejected · ' + editCount + ' edited';
+    $('previewCount').textContent = log.length + ' beslut · ' + acceptCount + ' godkända · ' + rejectCount + ' avvisade · ' + editCount + ' ändrade';
 
-    status('<div class="row ok"><span>Status</span><strong>✓ Corrections applied</strong></div>'+
-      '<div class="row"><span>Decisions processed</span><strong>'+log.length+'</strong></div>'+
-      '<div class="row"><span>Accepted</span><strong style="color:#1dd4b7;">'+acceptCount+'</strong></div>'+
-      '<div class="row"><span>Rejected</span><strong style="color:#f87171;">'+rejectCount+'</strong></div>'+
-      '<div class="row"><span>Edited</span><strong style="color:#f2b36a;">'+editCount+'</strong></div>', 'success');
+    status('<div class="row ok"><span>Status</span><strong>✓ Korrigeringar tillämpade</strong></div>'+
+      '<div class="row"><span>Beslut behandlade</span><strong>'+log.length+'</strong></div>'+
+      '<div class="row"><span>Godkända</span><strong style="color:#1dd4b7;">'+acceptCount+'</strong></div>'+
+      '<div class="row"><span>Avvisade</span><strong style="color:#f87171;">'+rejectCount+'</strong></div>'+
+      '<div class="row"><span>Ändrade</span><strong style="color:#f2b36a;">'+editCount+'</strong></div>', 'success');
 
     $('downloadBtn').disabled = false;
     $('reportBtn').disabled = false;
 
   } catch (e) {
-    status('<strong>✕ Error:</strong> ' + e.message, 'error');
+    status('<strong>✕ Fel:</strong> ' + e.message, 'error');
     console.error(e);
   }
 });

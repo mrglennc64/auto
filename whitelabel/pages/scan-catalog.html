@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
 <meta charset="UTF-8" />
-<title>Scan Catalog → Worksheet — {{PartnerBrand}}</title>
+<title>Skanna katalog → arbetsblad — {{PartnerBrand}}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
   * { box-sizing:border-box; margin:0; padding:0; }
@@ -74,49 +74,49 @@
   <header class="top">
     <div class="brand">{{PartnerBrand}}</div>
     <div class="meta">
-      <a href="portal.html" style="color:#8f9bb3;margin-right:12px;">← back to portal</a>
+      <a href="portal.html" style="color:#8f9bb3;margin-right:12px;">← tillbaka till portalen</a>
     </div>
   </header>
 
   <div style="background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:0.85rem 1.25rem; margin-bottom:1.5rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center; font-size:13px;">
-    <span style="color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-size:11px; font-weight:700; margin-right:0.5rem;">Workflow:</span>
-    <a href="scan-catalog.html" style="color:#1dd4b7; font-weight:700;">1. Scan catalog</a>
+    <span style="color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-size:11px; font-weight:700; margin-right:0.5rem;">Arbetsflöde:</span>
+    <a href="scan-catalog.html" style="color:#1dd4b7; font-weight:700;">1. Skanna katalog</a>
     <span style="color:#2a3345;">→</span>
-    <a href="apply-corrections.html" style="color:#8f9bb3;">2. Apply corrections</a>
+    <a href="apply-corrections.html" style="color:#8f9bb3;">2. Tillämpa korrigeringar</a>
   </div>
 
   <section class="hero">
-    <h1>Generate corrections worksheet from a catalog</h1>
-    <p>Upload the publisher's catalog CSV. The tool runs the standard scan, identifies metadata issues, and outputs a <code style="background:#0b0f18;padding:1px 6px;border-radius:4px;font-size:12px;color:#1dd4b7;">corrections-worksheet.csv</code> ready to email to the publisher for their decisions.</p>
+    <h1>Generera arbetsblad för korrigeringar från en katalog</h1>
+    <p>Ladda upp förlagets katalog-CSV. Verktyget kör standardskanningen, identifierar metadataavvikelser och skapar en <code style="background:#0b0f18;padding:1px 6px;border-radius:4px;font-size:12px;color:#1dd4b7;">corrections-worksheet.csv</code> som kan skickas till förlaget för deras beslut.</p>
   </section>
 
   <div class="upload-card">
-    <h3>Catalog CSV</h3>
-    <p class="hint">Columns: title, iswc, isrc, name, role, share_percent, ipi, society</p>
+    <h3>Katalog-CSV</h3>
+    <p class="hint">Kolumner: title, iswc, isrc, name, role, share_percent, ipi, society</p>
     <input type="file" id="catalogFile" accept=".csv" />
     <div class="filename" id="catalogName"></div>
   </div>
 
   <div class="actions">
-    <button class="btn btn-primary" id="scanBtn" disabled>Run scan</button>
-    <button class="btn btn-secondary" id="downloadWorksheetBtn" disabled>Download worksheet (Excel)</button>
-    <button class="btn btn-secondary" id="downloadInstructionsBtn" disabled>Download instructions.txt</button>
-    <button class="btn btn-secondary" id="generateReportBtn" disabled>Generate Health Report (HTML/PDF)</button>
+    <button class="btn btn-primary" id="scanBtn" disabled>Kör skanning</button>
+    <button class="btn btn-secondary" id="downloadWorksheetBtn" disabled>Ladda ner arbetsblad (Excel)</button>
+    <button class="btn btn-secondary" id="downloadInstructionsBtn" disabled>Ladda ner instructions.txt</button>
+    <button class="btn btn-secondary" id="generateReportBtn" disabled>Generera hälsorapport (HTML/PDF)</button>
   </div>
 
-  <div class="status" id="status">Load a catalog CSV to begin.</div>
+  <div class="status" id="status">Ladda upp en katalog-CSV för att börja.</div>
 
   <div class="summary-cards" id="summaryCards" style="display:none;">
-    <div class="summary-card"><div class="label">Works analyzed</div><div class="value" id="cWorks">0</div></div>
-    <div class="summary-card amber"><div class="label">Issues found</div><div class="value" id="cIssues">0</div></div>
-    <div class="summary-card red"><div class="label">Blocking</div><div class="value" id="cBlocking">0</div></div>
-    <div class="summary-card amber"><div class="label">Resolvable</div><div class="value" id="cResolvable">0</div></div>
-    <div class="summary-card"><div class="label">Health score</div><div class="value" id="cScore">—</div></div>
+    <div class="summary-card"><div class="label">Verk analyserade</div><div class="value" id="cWorks">0</div></div>
+    <div class="summary-card amber"><div class="label">Avvikelser funna</div><div class="value" id="cIssues">0</div></div>
+    <div class="summary-card red"><div class="label">Blockerande</div><div class="value" id="cBlocking">0</div></div>
+    <div class="summary-card amber"><div class="label">Åtgärdbara</div><div class="value" id="cResolvable">0</div></div>
+    <div class="summary-card"><div class="label">Hälsopoäng</div><div class="value" id="cScore">—</div></div>
   </div>
 
   <div class="preview" id="preview" style="display:none;">
     <div class="preview-header">
-      <h3>Detected issues (worksheet preview)</h3>
+      <h3>Identifierade avvikelser (förhandsvisning av arbetsblad)</h3>
       <span class="count" id="previewCount"></span>
     </div>
     <table>
@@ -128,14 +128,15 @@
   </div>
 
   <div class="docs">
-    <h3>Workflow</h3>
+    <h3>Arbetsflöde</h3>
     <ol>
-      <li>Upload publisher's catalog → click <strong>Run scan</strong></li>
-      <li><strong>Download worksheet CSV</strong> + <strong>Download instructions.txt</strong></li>
+      <li>Ladda upp förlagets katalog → klicka <strong>Kör skanning</strong></li>
+      <li><strong>Ladda ner arbetsblad (CSV)</strong> + <strong>Ladda ner instructions.txt</strong></li>
       <li>Email both attachments to the publisher</li>
-      <li>When they reply with the filled-in worksheet, head to <a href="apply-corrections.html">apply-corrections</a> to merge it back into the catalog</li>
+      <li>Skicka båda filerna till förlaget</li>
+      <li>När de skickar tillbaka ifyllt arbetsblad → gå till <a href="apply-corrections.html">apply-corrections</a> för att slå ihop det med katalogen</li>
     </ol>
-    <p style="margin-top:0.75rem;">Sample catalog for testing: <a href="/samples/test-20-works.csv">/samples/test-20-works.csv</a></p>
+    <p style="margin-top:0.75rem;">Exempelkatalog för test: <a href="/samples/test-20-works.csv">/samples/test-20-works.csv</a></p>
   </div>
 
 </div>
@@ -152,7 +153,7 @@ $('catalogFile').addEventListener('change', e => {
   const f = e.target.files[0]; if (!f) return;
   $('catalogName').textContent = f.name;
   const r = new FileReader();
-  r.onload = ev => { catalogText = ev.target.result; $('scanBtn').disabled = false; status('File loaded — click <strong>Run scan</strong>.'); };
+  r.onload = ev => { catalogText = ev.target.result; $('scanBtn').disabled = false; status('Fil inläst — klicka <strong>Kör skanning</strong>.'); };
   r.readAsText(f);
 });
 
@@ -191,7 +192,7 @@ $('scanBtn').addEventListener('click', () => {
     const idx = name => h.indexOf(name);
     const ti = idx('title'), iswc = idx('iswc'), isrc = idx('isrc');
     const ni = idx('name'), ri = idx('role'), si = idx('share_percent'), ii = idx('ipi'), soi = idx('society');
-    if (ti < 0 || ni < 0) throw new Error('Catalog must have title + name columns.');
+    if (ti < 0 || ni < 0) throw new Error('Katalogen måste ha kolumnerna title + name.');
 
     // Group by title
     const works = {};
@@ -329,11 +330,11 @@ $('scanBtn').addEventListener('click', () => {
     $('preview').style.display = 'block';
     $('previewCount').textContent = issues.length + ' issues · ' + blocking + ' blocking · ' + resolvable + ' resolvable';
 
-    status('<div class="row ok"><span>Status</span><strong>✓ Scan complete</strong></div>'+
-      '<div class="row"><span>Works analyzed</span><strong>'+titles.length+'</strong></div>'+
-      '<div class="row"><span>Issues identified</span><strong>'+issues.length+'</strong></div>'+
-      '<div class="row"><span>Health score</span><strong>'+score+' / 100</strong></div>'+
-      '<div class="row"><span>Worksheet ready</span><strong style="color:#1dd4b7;">click "Download worksheet CSV"</strong></div>', 'success');
+    status('<div class="row ok"><span>Status</span><strong>✓ Skanning klar</strong></div>'+
+      '<div class="row"><span>Verk analyserade</span><strong>'+titles.length+'</strong></div>'+
+      '<div class="row"><span>Avvikelser funna</span><strong>'+issues.length+'</strong></div>'+
+      '<div class="row"><span>Hälsopoäng</span><strong>'+score+' / 100</strong></div>'+
+      '<div class="row"><span>Arbetsblad klart</span><strong style="color:#1dd4b7;">klicka "Ladda ner arbetsblad"</strong></div>', 'success');
 
     // Save for report generation
     const totalContribs = Object.values(works).reduce((s, w) => s + w.contribs.length, 0);
@@ -346,7 +347,7 @@ $('scanBtn').addEventListener('click', () => {
     $('generateReportBtn').disabled = false;
 
   } catch (e) {
-    status('<strong>✕ Error:</strong> ' + e.message, 'error');
+    status('<strong>✕ Fel:</strong> ' + e.message, 'error');
     console.error(e);
   }
 });
