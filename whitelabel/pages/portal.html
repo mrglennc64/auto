@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -380,7 +380,7 @@
     </div>
     <div class="portal-tabs">
       <a href="#" class="portal-tab active">⚖ Partner Portal</a>
-      <a href="index.html" class="portal-tab">▣ Webbplats</a>
+      <a href="index.html" class="portal-tab">▣ Website</a>
     </div>
   </div>
   <div class="right">
@@ -396,26 +396,26 @@
     <h2>Operations Portal</h2>
 
     <div class="nav-group">
-      <a href="#overview" class="nav-item active" data-section="overview"><span class="icon cyan">▤</span> Översikt</a>
-      <a href="#metadata-health" class="nav-item" data-section="metadata-health"><span class="icon red">⚑</span> Metadatahälsa</a>
+      <a href="#overview" class="nav-item active" data-section="overview"><span class="icon cyan">▤</span> Overview</a>
+      <a href="#metadata-health" class="nav-item" data-section="metadata-health"><span class="icon red">⚑</span> Metadata Health</a>
       <a href="#ingest" class="nav-item" data-section="ingest"><span class="icon cyan">⇪</span> Catalog Ingest Engine</a>
     </div>
 
     <div class="nav-group">
       <div class="group-label">Workspace</div>
-      <a href="#part1-scan" class="ws-tool t-green" data-section="part1-scan"><span class="icon">①</span> Del 1 — Skanna katalog</a>
-      <a href="#part2-apply" class="ws-tool t-yellow" data-section="part2-apply"><span class="icon">②</span> Del 2 — Tillämpa korrigeringar</a>
+      <a href="#part1-scan" class="ws-tool t-green" data-section="part1-scan"><span class="icon">①</span> Part 1 — Scan Catalog</a>
+      <a href="#part2-apply" class="ws-tool t-yellow" data-section="part2-apply"><span class="icon">②</span> Part 2 — Apply Corrections</a>
       <a href="#master-catalog" class="ws-tool t-green" data-section="master-catalog"><span class="icon">▤</span> Master Catalog</a>
-      <a href="#reports" class="ws-tool t-cyan" data-section="reports"><span class="icon">▣</span> Rapporter</a>
-      <a href="#worksheets" class="ws-tool t-cyan" data-section="worksheets"><span class="icon">▦</span> Arbetsblad</a>
-      <a href="#exports" class="ws-tool t-green" data-section="exports"><span class="icon">↓</span> Exportfiler (CWR-ready)</a>
+      <a href="#reports" class="ws-tool t-cyan" data-section="reports"><span class="icon">▣</span> Reports</a>
+      <a href="#worksheets" class="ws-tool t-cyan" data-section="worksheets"><span class="icon">▦</span> Worksheets</a>
+      <a href="#exports" class="ws-tool t-green" data-section="exports"><span class="icon">↓</span> Export Files (CWR-ready)</a>
       <a href="#audit-pdf" class="ws-tool t-red" data-section="audit-pdf"><span class="icon">⚑</span> Audit PDF</a>
     </div>
 
     <div class="nav-group">
-      <div class="group-label">Konto</div>
+      <div class="group-label">Account</div>
       <a href="#support" class="nav-item" data-section="support"><span class="icon cyan">?</span> Support</a>
-      <a href="#account" class="nav-item" data-section="account"><span class="icon purple">◐</span> Konto</a>
+      <a href="#account" class="nav-item" data-section="account"><span class="icon purple">◐</span> Account</a>
     </div>
   </aside>
 
@@ -424,34 +424,34 @@
     <!-- OVERVIEW -->
     <section id="overview">
       <div class="preheader">Operations Portal</div>
-      <h1>Översikt</h1>
-      <p class="lede">Automatisera er katalog. Spåra korrigeringar. Leverera under {{PartnerBrand}}.</p>
+      <h1>Overview</h1>
+      <p class="lede">Automate your catalog. Track corrections. Deliver under {{PartnerBrand}}.</p>
 
       <div class="detail-row">
         <div class="detail-card">
-          <div class="h">Metadatahälsa (snitt)</div>
+          <div class="h">Metadata Health (Average)</div>
           <div class="big yellow">68%</div>
-          <div class="sub">Behöver åtgärd · 1 242 verk skannade</div>
+          <div class="sub">Needs attention · 1,242 works scanned</div>
           <div class="progress yellow"><span style="width:68%;"></span></div>
-          <a href="#metadata-health" class="cta yellow">Visa metadatahälsa →</a>
+          <a href="#metadata-health" class="cta yellow">View Metadata Health →</a>
         </div>
       </div>
     </section>
 
     <!-- PART 1: SCAN -->
     <section id="part1-scan">
-      <div class="preheader">Workspace · Del 1</div>
-      <h1>Skanna katalog</h1>
-      <p class="lede">Ladda upp en katalogfil för metadataanalys. Skanningen identifierar saknade identifierare, roll-/andelsavvikelser, dubbletter och konflikter. Du får tillbaka en hälsorapport, en lista över påverkade verk och ett arbetsblad.</p>
-      <a href="scan-catalog.html" class="btn-pill primary" style="display:inline-flex; padding:10px 22px;">Öppna Del 1 — Skanna katalog →</a>
+      <div class="preheader">Workspace · Part 1</div>
+      <h1>Scan Catalog</h1>
+      <p class="lede">Upload a catalog file for metadata analysis. The scan identifies missing identifiers, role/share inconsistencies, duplicates, and conflicts. You receive a health report, a list of affected works, and a worksheet.</p>
+      <a href="scan-catalog.html" class="btn-pill primary" style="display:inline-flex; padding:10px 22px;">Open Part 1 — Scan Catalog →</a>
     </section>
 
     <!-- PART 2: APPLY -->
     <section id="part2-apply">
-      <div class="preheader">Workspace · Del 2</div>
-      <h1>Tillämpa korrigeringar</h1>
-      <p class="lede">När slutkunden har returnerat det ifyllda arbetsbladet — ladda upp det här. Du får tillbaka en korrigerad hälsorapport, CWR-export och CSV-export.</p>
-      <a href="apply-corrections.html" class="btn-pill primary" style="display:inline-flex; padding:10px 22px;">Öppna Del 2 — Tillämpa korrigeringar →</a>
+      <div class="preheader">Workspace · Part 2</div>
+      <h1>Apply Corrections</h1>
+      <p class="lede">Once the end client has returned the completed worksheet, upload it here. You will receive an updated health report, CWR export, and CSV export.</p>
+      <a href="apply-corrections.html" class="btn-pill primary" style="display:inline-flex; padding:10px 22px;">Open Part 2 — Apply Corrections →</a>
     </section>
 
     <!-- MASTER CATALOG -->
@@ -460,58 +460,58 @@
       <div class="folder-head">
         <span class="icon-folder">📁</span>
         <h1>Master Catalog</h1>
-        <span class="count">8 verk</span>
+        <span class="count">8 works</span>
       </div>
-      <p class="lede">Fullständig kataloggranskning. Varje verk — ISWC, ISRC, IPI, andelar, rättighetshavare, territoriegap och granskningsflaggor.</p>
+      <p class="lede">Complete catalog review. Each work includes ISWC, ISRC, IPI, shares, rights holders, territory gaps, and review flags.</p>
 
       <div class="stats" style="margin-bottom: 18px;">
-        <div class="stat-card"><div class="label">Totalt verk</div><div class="num cyan">8</div></div>
-        <div class="stat-card"><div class="label">Andelar OK</div><div class="num green">5</div></div>
-        <div class="stat-card"><div class="label">Behöver åtgärd</div><div class="num red">3</div></div>
-        <div class="stat-card"><div class="label">Granskningsflaggor</div><div class="num yellow">11 flaggor · 2 rena</div></div>
+        <div class="stat-card"><div class="label">Total Works</div><div class="num cyan">8</div></div>
+        <div class="stat-card"><div class="label">Shares OK</div><div class="num green">5</div></div>
+        <div class="stat-card"><div class="label">Needs Attention</div><div class="num red">3</div></div>
+        <div class="stat-card"><div class="label">Review Flags</div><div class="num yellow">11 flags · 2 clean</div></div>
       </div>
 
       <div class="filter-bar">
-        <input type="text" placeholder="Sök titel, upphovsperson, ISRC, ISWC...">
-        <select><option>Alla statusar</option><option>Aktiv</option><option>Tvist</option><option>Väntande</option></select>
-        <select><option>Alla flaggor</option><option>Saknad ISWC</option><option>Andelsfel</option></select>
-        <span class="results-count">8 resultat</span>
+        <input type="text" placeholder="Search title, songwriter, ISRC, ISWC...">
+        <select><option>All statuses</option><option>Active</option><option>Disputed</option><option>Pending</option></select>
+        <select><option>All flags</option><option>Missing ISWC</option><option>Share error</option></select>
+        <span class="results-count">8 results</span>
       </div>
 
       <table class="data-table">
-        <thead><tr><th>Verk</th><th>Uppdaterad</th><th class="num">Skannat värde</th><th class="num">Behöver åtgärd</th><th class="center">Flaggor</th><th>Status</th></tr></thead>
+        <thead><tr><th>Work</th><th>Updated</th><th class="num">Scanned Value</th><th class="num">Needs Attention</th><th class="center">Flags</th><th>Status</th></tr></thead>
         <tbody>
           <tr>
             <td><div class="work-title">Midnight Sun</div><div class="work-sub">Erik Andersson · Anna Lindberg</div><div class="work-codes">ISWC T-123.456.789-0 · ISRC SE6QZ2401001</div></td>
-            <td class="dash">2026-04-29</td><td class="num green">€512</td><td class="num dash">—</td><td class="center"><span class="flag-check">✓</span></td><td><span class="status-pill active"><span class="dot"></span>Aktiv</span></td>
+            <td class="dash">2026-04-29</td><td class="num green">€512</td><td class="num dash">—</td><td class="center"><span class="flag-check">✓</span></td><td><span class="status-pill active"><span class="dot"></span>Active</span></td>
           </tr>
           <tr>
-            <td><div class="work-title">Vinterljus</div><div class="work-sub">Marta Svensson · Nordic Music AB</div><div class="work-codes">ISWC T-234.567.890-1 · ISRC SE6QZ2401002</div></td>
-            <td class="dash">2026-04-28</td><td class="num green">€284</td><td class="num red">€12</td><td class="center"><span class="flag-num">1</span></td><td><span class="status-pill active"><span class="dot"></span>Aktiv</span></td>
+            <td><div class="work-title">Winter Light</div><div class="work-sub">Marta Svensson · Nordic Music AB</div><div class="work-codes">ISWC T-234.567.890-1 · ISRC SE6QZ2401002</div></td>
+            <td class="dash">2026-04-28</td><td class="num green">€284</td><td class="num red">€12</td><td class="center"><span class="flag-num">1</span></td><td><span class="status-pill active"><span class="dot"></span>Active</span></td>
           </tr>
           <tr>
             <td><div class="work-title">Aurora</div><div class="work-sub">Johan Berg</div><div class="work-codes">ISWC T-345.678.901-2 · ISRC SE6QZ2401003</div></td>
-            <td class="dash">2026-04-25</td><td class="num green">€156</td><td class="num dash">—</td><td class="center"><span class="flag-num">1</span></td><td><span class="status-pill dispute"><span class="dot"></span>Tvist</span></td>
+            <td class="dash">2026-04-25</td><td class="num green">€156</td><td class="num dash">—</td><td class="center"><span class="flag-num">1</span></td><td><span class="status-pill dispute"><span class="dot"></span>Disputed</span></td>
           </tr>
           <tr>
             <td><div class="work-title">No Role Modelz</div><div class="work-sub">Lars Holm</div><div class="work-codes">ISWC T-456.789.012-3 · ISRC SE6QZ2401004</div></td>
-            <td class="dash">2026-04-22</td><td class="num green">€98</td><td class="num red">€22</td><td class="center"><span class="flag-num">2</span></td><td><span class="status-pill active"><span class="dot"></span>Aktiv</span></td>
+            <td class="dash">2026-04-22</td><td class="num green">€98</td><td class="num red">€22</td><td class="center"><span class="flag-num">2</span></td><td><span class="status-pill active"><span class="dot"></span>Active</span></td>
           </tr>
           <tr>
-            <td><div class="work-title">Antidote</div><div class="work-sub">Per Karlsson</div><div class="work-codes">ISWC <span style="color:var(--red);">saknas</span> · ISRC SE6QZ2401005</div></td>
-            <td class="dash">2026-04-19</td><td class="num green">€88</td><td class="num red">€9</td><td class="center"><span class="flag-num">2</span></td><td><span class="status-pill dispute"><span class="dot"></span>Tvist</span></td>
+            <td><div class="work-title">Antidote</div><div class="work-sub">Per Karlsson</div><div class="work-codes">ISWC <span style="color:var(--red);">missing</span> · ISRC SE6QZ2401005</div></td>
+            <td class="dash">2026-04-19</td><td class="num green">€88</td><td class="num red">€9</td><td class="center"><span class="flag-num">2</span></td><td><span class="status-pill dispute"><span class="dot"></span>Disputed</span></td>
           </tr>
           <tr>
-            <td><div class="work-title">Drip Too Hard</div><div class="work-sub">Lily &amp; Gunnar</div><div class="work-codes">ISWC <span style="color:var(--red);">saknas</span> · ISRC SE6QZ2401006</div></td>
-            <td class="dash">2026-04-15</td><td class="num green">€74</td><td class="num red">€31</td><td class="center"><span class="flag-num">2</span></td><td><span class="status-pill active"><span class="dot"></span>Aktiv</span></td>
+            <td><div class="work-title">Drip Too Hard</div><div class="work-sub">Lily &amp; Gunnar</div><div class="work-codes">ISWC <span style="color:var(--red);">missing</span> · ISRC SE6QZ2401006</div></td>
+            <td class="dash">2026-04-15</td><td class="num green">€74</td><td class="num red">€31</td><td class="center"><span class="flag-num">2</span></td><td><span class="status-pill active"><span class="dot"></span>Active</span></td>
           </tr>
           <tr>
             <td><div class="work-title">Love Yourz</div><div class="work-sub">Lars Holm</div><div class="work-codes">ISWC T-789.012.345-6 · ISRC SE6QZ2401007</div></td>
-            <td class="dash">2026-04-12</td><td class="num green">€64</td><td class="num dash">—</td><td class="center"><span class="flag-check">✓</span></td><td><span class="status-pill active"><span class="dot"></span>Aktiv</span></td>
+            <td class="dash">2026-04-12</td><td class="num green">€64</td><td class="num dash">—</td><td class="center"><span class="flag-check">✓</span></td><td><span class="status-pill active"><span class="dot"></span>Active</span></td>
           </tr>
           <tr>
             <td><div class="work-title">Look Alive</div><div class="work-sub">Block &amp; Drake-trio</div><div class="work-codes">ISWC T-890.123.456-7 · ISRC SE6QZ2401008</div></td>
-            <td class="dash">2026-04-08</td><td class="num green">€41</td><td class="num red">€18</td><td class="center"><span class="flag-num">3</span></td><td><span class="status-pill pending"><span class="dot"></span>Väntande</span></td>
+            <td class="dash">2026-04-08</td><td class="num green">€41</td><td class="num red">€18</td><td class="center"><span class="flag-num">3</span></td><td><span class="status-pill pending"><span class="dot"></span>Pending</span></td>
           </tr>
         </tbody>
       </table>
@@ -562,25 +562,25 @@
     <section id="metadata-health">
       <div class="preheader">Operations Portal</div>
       <h1>Metadatahälsa</h1>
-      <p class="lede">Aggregerad hälsobedömning per slutkund. Identifierare, roller, andelar och dubbletter.</p>
+      <p class="lede">Aggregated health assessment per end client. Identifiers, roles, shares, and duplicates.</p>
 
       <div class="detail-row">
         <div class="detail-card">
-          <div class="h">Slutkund A</div>
+          <div class="h">End Client A</div>
           <div class="big green">92%</div>
-          <div class="sub">CWR-ready · 0 blockerande avvikelser</div>
+          <div class="sub">CWR-ready · 0 blocking deviations</div>
           <div class="progress"><span style="width:92%;"></span></div>
         </div>
         <div class="detail-card">
-          <div class="h">Slutkund B</div>
+          <div class="h">End Client B</div>
           <div class="big yellow">68%</div>
-          <div class="sub">Behöver åtgärd · 12 påverkade verk</div>
+          <div class="sub">Needs attention · 12 affected works</div>
           <div class="progress yellow"><span style="width:68%;"></span></div>
         </div>
         <div class="detail-card">
-          <div class="h">Slutkund C</div>
+          <div class="h">End Client C</div>
           <div class="big red">41%</div>
-          <div class="sub">Kritisk · 31 påverkade verk</div>
+          <div class="sub">Critical · 31 affected works</div>
           <div class="progress red"><span style="width:41%;"></span></div>
         </div>
       </div>
@@ -589,14 +589,14 @@
     <!-- REPORTS -->
     <section id="reports">
       <div class="preheader">Workspace</div>
-      <h1>Rapporter</h1>
-      <p class="lede">Hälsorapporter under {{PartnerBrand}}.</p>
+      <h1>Reports</h1>
+      <p class="lede">Health reports under {{PartnerBrand}}.</p>
       <table class="data-table">
-        <thead><tr><th>Fall</th><th>Typ</th><th>Datum</th><th class="num">Hämta</th></tr></thead>
+        <thead><tr><th>Case</th><th>Type</th><th>Date</th><th class="num">Download</th></tr></thead>
         <tbody>
-          <tr><td>Slutkund A · v1</td><td class="dash">Hälsorapport (före)</td><td class="dash">2026-04-29</td><td class="num"><a href="#" style="color:var(--accent);">HTML ↓</a></td></tr>
-          <tr><td>Slutkund A · v1</td><td class="dash">Hälsorapport (efter)</td><td class="dash">2026-04-29</td><td class="num"><a href="#" style="color:var(--accent);">HTML ↓</a></td></tr>
-          <tr><td>Slutkund B · v3</td><td class="dash">Hälsorapport (före)</td><td class="dash">2026-04-28</td><td class="num"><a href="#" style="color:var(--accent);">HTML ↓</a></td></tr>
+          <tr><td>End Client A · v1</td><td class="dash">Health Report (Before)</td><td class="dash">2026-04-29</td><td class="num"><a href="#" style="color:var(--accent);">HTML ↓</a></td></tr>
+          <tr><td>End Client A · v1</td><td class="dash">Health Report (After)</td><td class="dash">2026-04-29</td><td class="num"><a href="#" style="color:var(--accent);">HTML ↓</a></td></tr>
+          <tr><td>End Client B · v3</td><td class="dash">Health Report (Before)</td><td class="dash">2026-04-28</td><td class="num"><a href="#" style="color:var(--accent);">HTML ↓</a></td></tr>
         </tbody>
       </table>
     </section>
@@ -604,13 +604,13 @@
     <!-- WORKSHEETS -->
     <section id="worksheets">
       <div class="preheader">Workspace</div>
-      <h1>Arbetsblad</h1>
-      <p class="lede">Arbetsblad för val av korrigeringar. Slutkunden markerar Godkänn / Ändra / Avvisa.</p>
+      <h1>Worksheets</h1>
+      <p class="lede">Correction selection worksheets. The end client marks Approve / Modify / Reject.</p>
       <table class="data-table">
-        <thead><tr><th>Fall</th><th>Format</th><th>Status</th><th class="num">Hämta</th></tr></thead>
+        <thead><tr><th>Case</th><th>Format</th><th>Status</th><th class="num">Download</th></tr></thead>
         <tbody>
-          <tr><td>Slutkund A · v1</td><td class="dash">XLSX</td><td><span class="status-pill active"><span class="dot"></span>Returnerat</span></td><td class="num"><a href="#" style="color:var(--accent);">XLSX ↓</a></td></tr>
-          <tr><td>Slutkund B · v3</td><td class="dash">XLSX</td><td><span class="status-pill pending"><span class="dot"></span>Väntar</span></td><td class="num"><a href="#" style="color:var(--accent);">XLSX ↓</a></td></tr>
+          <tr><td>End Client A · v1</td><td class="dash">XLSX</td><td><span class="status-pill active"><span class="dot"></span>Returned</span></td><td class="num"><a href="#" style="color:var(--accent);">XLSX ↓</a></td></tr>
+          <tr><td>End Client B · v3</td><td class="dash">XLSX</td><td><span class="status-pill pending"><span class="dot"></span>Pending</span></td><td class="num"><a href="#" style="color:var(--accent);">XLSX ↓</a></td></tr>
         </tbody>
       </table>
     </section>
@@ -618,12 +618,12 @@
     <!-- EXPORTS -->
     <section id="exports">
       <div class="preheader">Workspace</div>
-      <h1>Exportfiler (CWR-ready)</h1>
-      <p class="lede">Filer genererade i Del 2 (Tillämpa korrigeringar). Hämta för att vidarebefordra till önskad rättighetsorganisation.</p>
+      <h1>Export Files (CWR-ready)</h1>
+      <p class="lede">Files generated in Part 2 (Apply Corrections). Download to forward to the rights organization of your choice.</p>
       <table class="data-table">
-        <thead><tr><th>Filnamn</th><th>Format</th><th>Datum</th><th class="num">Storlek</th><th class="num">Hämta</th></tr></thead>
+        <thead><tr><th>Filename</th><th>Format</th><th>Date</th><th class="num">Size</th><th class="num">Download</th></tr></thead>
         <tbody id="exportsTbody">
-          <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--dim);">Inga exporter ännu — gå till <a href="apply-corrections.html" style="color:var(--accent);">Del 2</a> för att generera CWR/CSV/rapport.</td></tr>
+          <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--dim);">No exports yet — go to <a href="apply-corrections.html" style="color:var(--accent);">Part 2</a> to generate CWR / CSV / report.</td></tr>
         </tbody>
       </table>
     </section>
@@ -632,40 +632,40 @@
     <section id="audit-pdf">
       <div class="preheader">Workspace</div>
       <h1>Audit PDF</h1>
-      <p class="lede">Sammanställd granskning per fall i PDF-format. Färdig för partnerns juridiska arkiv.</p>
+      <p class="lede">Compiled audit per case in PDF format. Ready for the partner's legal archive.</p>
       <table class="data-table">
-        <thead><tr><th>Fall</th><th>Sidor</th><th>Datum</th><th class="num">Hämta</th></tr></thead>
+        <thead><tr><th>Case</th><th>Pages</th><th>Date</th><th class="num">Download</th></tr></thead>
         <tbody>
-          <tr><td>Slutkund A · v1</td><td class="dash">14</td><td class="dash">2026-04-29</td><td class="num"><a href="#" style="color:var(--accent);">PDF ↓</a></td></tr>
-          <tr><td>Slutkund B · v2</td><td class="dash">11</td><td class="dash">2026-04-22</td><td class="num"><a href="#" style="color:var(--accent);">PDF ↓</a></td></tr>
+          <tr><td>End Client A · v1</td><td class="dash">14</td><td class="dash">2026-04-29</td><td class="num"><a href="#" style="color:var(--accent);">PDF ↓</a></td></tr>
+          <tr><td>End Client B · v2</td><td class="dash">11</td><td class="dash">2026-04-22</td><td class="num"><a href="#" style="color:var(--accent);">PDF ↓</a></td></tr>
         </tbody>
       </table>
     </section>
 
     <!-- SUPPORT -->
     <section id="support">
-      <div class="preheader">Konto</div>
+      <div class="preheader">Account</div>
       <h1>Support</h1>
-      <p class="lede">För frågor om pågående fall eller leveranser.</p>
+      <p class="lede">For questions regarding active cases or deliveries.</p>
       <div class="detail-card">
-        <div class="row"><span>E-post</span><span class="v"><a href="mailto:{{PartnerContact}}" style="color:var(--accent);">{{PartnerContact}}</a></span></div>
-        <div class="row"><span>Svarstid</span><span class="v">1–2 arbetsdagar</span></div>
-        <div class="row"><span>Vanliga frågor</span><span class="v"><a href="faq.html" style="color:var(--accent);">→ FAQ</a></span></div>
+        <div class="row"><span>Email</span><span class="v"><a href="mailto:{{PartnerContact}}" style="color:var(--accent);">{{PartnerContact}}</a></span></div>
+        <div class="row"><span>Response Time</span><span class="v">1–2 business days</span></div>
+        <div class="row"><span>Frequently Asked Questions</span><span class="v"><a href="faq.html" style="color:var(--accent);">→ FAQ</a></span></div>
       </div>
     </section>
 
     <!-- ACCOUNT -->
     <section id="account">
-      <div class="preheader">Konto</div>
-      <h1>Konto</h1>
-      <p class="lede">Hantera licens, användare och inställningar.</p>
+      <div class="preheader">Account</div>
+      <h1>Account</h1>
+      <p class="lede">Manage license, users, and settings.</p>
       <div class="detail-card">
         <div class="row"><span>Partner</span><span class="v">{{PartnerBrand}}</span></div>
-        <div class="row"><span>Kontaktadress</span><span class="v">{{PartnerContact}}</span></div>
-        <div class="row"><span>Domän</span><span class="v">{{PartnerDomain}}</span></div>
-        <div class="row"><span>Licensnivå</span><span class="v">Standard (månadsvis)</span></div>
-        <div class="row"><span>Volym denna månad</span><span class="v">9 skanningar</span></div>
-        <div class="row"><span>Nästa faktura</span><span class="v">2026-05-01</span></div>
+        <div class="row"><span>Contact Address</span><span class="v">{{PartnerContact}}</span></div>
+        <div class="row"><span>Domain</span><span class="v">{{PartnerDomain}}</span></div>
+        <div class="row"><span>License Tier</span><span class="v">Standard (monthly)</span></div>
+        <div class="row"><span>Volume This Month</span><span class="v">9 scans</span></div>
+        <div class="row"><span>Next Invoice</span><span class="v">2026-05-01</span></div>
       </div>
     </section>
 
@@ -721,7 +721,7 @@
     return [
       'work_id,title,iswc,writer_name,writer_ipi,writer_role,share_pct,publisher_ipi,decision',
       '00000001,Midnight Sun,T0043553311,ANDERSSON ERIK,00712984310,CA,50,00712984310,accept',
-      '00000002,Vinterljus,T3456789012,SVENSSON MARIA,01234567890,CA,50,00988777101,accept'
+      '00000002,Winter Light,T3456789012,SVENSSON MARIA,01234567890,CA,50,00988777101,accept'
     ].join('\n');
   }
 
