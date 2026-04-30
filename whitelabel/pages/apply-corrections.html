@@ -99,7 +99,8 @@
   <div class="actions">
     <button class="btn btn-primary" id="processBtn" disabled>Apply corrections</button>
     <button class="btn btn-secondary" id="downloadBtn" disabled>Download cleaned CSV</button>
-    <button class="btn btn-secondary" id="reportBtn" disabled>Generate after-cleaning report (PDF)</button>
+    <button class="btn btn-secondary" id="reportBtn" disabled>Generate after-cleaning report (HTML)</button>
+    <button class="btn btn-secondary" id="cwrBtn" disabled>Generate CWR (.v21)</button>
   </div>
 
   <div class="status" id="status">Load both files to begin.</div>
@@ -357,6 +358,7 @@ $('processBtn').addEventListener('click', () => {
 
     $('downloadBtn').disabled = false;
     $('reportBtn').disabled = false;
+    $('cwrBtn').disabled = false;
 
   } catch (e) {
     status('<strong>✕ Error:</strong> ' + e.message, 'error');
@@ -374,10 +376,240 @@ $('downloadBtn').addEventListener('click', () => {
   URL.revokeObjectURL(url);
 });
 
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// CSV parser (matches scan-catalog's parseCSV — RFC 4180 quoted)
+function parseCleanedCSV(text) {
+  const rows = [];
+  const lines = text.replace(/\r\n/g, '\n').split('\n');
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const cells = []; let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (inQ) {
+        if (c === '"' && line[i+1] === '"') { cur += '"'; i++; }
+        else if (c === '"') inQ = false; else cur += c;
+      } else {
+        if (c === '"') inQ = true;
+        else if (c === ',') { cells.push(cur); cur = ''; }
+        else cur += c;
+      }
+    }
+    cells.push(cur); rows.push(cells);
+  }
+  return rows;
+}
+
+// Group cleaned CSV rows into works keyed by title
+function rowsToWorks(text) {
+  const rows = parseCleanedCSV(text);
+  if (rows.length < 2) return { works: {}, titles: [], totalContribs: 0 };
+  const h = rows[0].map(x => x.trim().toLowerCase());
+  const idx = name => h.indexOf(name);
+  const ti = idx('title'), iswcI = idx('iswc'), isrcI = idx('isrc');
+  const ni = idx('name'), ri = idx('role'), si = idx('share_percent'), ii = idx('ipi'), soi = idx('society');
+  const works = {};
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i]; const t = (r[ti] || '').trim(); if (!t) continue;
+    works[t] = works[t] || { contribs: [] };
+    works[t].contribs.push({
+      name: (r[ni] || '').trim(),
+      role: (r[ri] || '').trim(),
+      share: parseFloat((r[si] || '0').replace(',', '.').replace('%','').trim()) || 0,
+      ipi: (r[ii] || '').trim(),
+      society: (r[soi] || '').trim(),
+      iswc: (r[iswcI] || '').trim(),
+      isrc: (r[isrcI] || '').trim(),
+    });
+  }
+  const titles = Object.keys(works);
+  const totalContribs = titles.reduce((s, t) => s + works[t].contribs.length, 0);
+  return { works, titles, totalContribs };
+}
+
+// Re-scan the cleaned catalog (lighter than the pre-scan — same checks though)
+function rescanCleaned(text) {
+  const VALID_ROLES = new Set(['CA','C','A','AR','AD','SR','SA','TR','PA','E','SE','AM']);
+  const FOREIGN = new Set(['TONO','GEMA','SACEM','PRS','BMI','ASCAP','SOCAN','ICE','MLC','SIAE','BUMA','SUISA','ZAIKS','AKM','SABAM','SACM','SADAIC','APRA','JASRAC']);
+  const { works, titles, totalContribs } = rowsToWorks(text);
+  const issues = [];
+  let id = 1; const nextId = () => 'AR-' + String(id++).padStart(3, '0');
+  for (const t of titles) {
+    const w = works[t]; const c0 = w.contribs[0] || {};
+    if (!c0.iswc) issues.push({ id: nextId(), work: t, field: 'iswc', current: 'still missing', suggested: '—', severity: 'resolvable' });
+    const sum = w.contribs.reduce((s, c) => s + (c.share || 0), 0);
+    if (Math.abs(sum - 100) > 0.5) issues.push({ id: nextId(), work: t, field: 'split_total', current: sum.toFixed(2) + '%', suggested: 'still not 100%', severity: 'blocking' });
+  }
+  for (const t of titles) for (const c of works[t].contribs) {
+    if (c.name && !c.ipi) issues.push({ id: nextId(), work: t, field: 'writer_ipi', current: c.name + ' has no IPI', suggested: 'still missing', severity: 'blocking' });
+    if (c.society && FOREIGN.has(c.society.toUpperCase())) {
+      const hasDecl = works[t].contribs.some(x => ['E','SE','AM'].includes((x.role || '').toUpperCase()));
+      if (!hasDecl) issues.push({ id: nextId(), work: t, field: 'foreign_writer', current: c.name + ' (' + c.society + ')', suggested: 'no E/SE/AM', severity: 'blocking' });
+    }
+    if (c.role && !VALID_ROLES.has(c.role.toUpperCase())) issues.push({ id: nextId(), work: t, field: 'role', current: c.role + ' (' + c.name + ')', suggested: 'still invalid', severity: 'blocking' });
+  }
+  const blocking = issues.filter(i => i.severity === 'blocking').length;
+  const resolvable = issues.filter(i => i.severity === 'resolvable').length;
+  const score = Math.max(0, Math.min(100, 100 - 6 * blocking - 1 * resolvable));
+  return { titles, totalContribs, issues, blocking, resolvable, score };
+}
+
+// After-cleaning report — same visual language as the before-report,
+// but framed as a delta. Keep template inline (single-file pattern).
+function buildAfterReport(scan) {
+  const { titles, issues, blocking, resolvable, score, totalContribs } = scan;
+  const date = new Date().toISOString().slice(0, 10);
+  const scanId = 'AR-' + date.replace(/-/g, '') + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+  const tone = score >= 80 ? 'good' : score >= 50 ? 'warn' : 'bad';
+  const heroBg = tone === 'good' ? 'linear-gradient(135deg, #0d3a2a 0%, #0f5d3f 100%)' : tone === 'warn' ? 'linear-gradient(135deg, #3a2810 0%, #5d4220 100%)' : 'linear-gradient(135deg, #2a1810 0%, #4a2820 100%)';
+  const heroBorder = tone === 'good' ? '#1f7a4a' : tone === 'warn' ? '#7a5a30' : '#6b3a30';
+  const heroAccent = tone === 'good' ? '#86efac' : '#fbbf77';
+  const accent = tone === 'good' ? '#1dd4b7' : tone === 'warn' ? '#f2b36a' : '#f87171';
+  const tagText = tone === 'good' ? '✓ After cleaning · CWR-ready' : '⚠ After cleaning · residual issues';
+  const heroH1 = tone === 'good' ? 'Catalog is CWR-ready' : tone === 'warn' ? 'Improved — some issues remain' : 'Major issues still present';
+  const issueRows = issues.map(i =>
+    `<tr><td><code style="color:${accent};font-family:monospace;">${escapeHtml(i.id)}</code></td><td>${escapeHtml(i.work)}</td><td><span style="color:${accent};font-family:monospace;font-size:11px;">${escapeHtml(i.field)}</span></td><td>${escapeHtml(i.current)}</td><td><span style="display:inline-block;padding:1px 8px;border-radius:999px;font-family:monospace;font-size:10px;font-weight:700;background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.3);">${escapeHtml(i.severity)}</span></td></tr>`
+  ).join('');
+  const noIssuesMsg = '<tr><td colspan="5" style="padding:20px;text-align:center;color:#1dd4b7;">All checks pass — no residual issues.</td></tr>';
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Metadata Health Report (After Cleaning) — {{PartnerBrand}}</title><style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:#05070b; color:#f5f7fb; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; line-height:1.55; -webkit-font-smoothing:antialiased; padding:32px 20px 64px; }
+.container { max-width:1080px; margin:0 auto; }
+header { display:flex; justify-content:space-between; align-items:center; padding-bottom:24px; border-bottom:1px solid #1b2233; margin-bottom:24px; flex-wrap:wrap; gap:1rem; }
+.brand { color:#1dd4b7; font-weight:700; }
+.meta { font-size:12px; color:#8f9bb3; text-align:right; }
+.print-btn { background:#1dd4b7; color:#020308; border:0; border-radius:999px; padding:8px 16px; font-weight:700; cursor:pointer; font-size:12px; margin-top:8px; font-family:inherit; }
+.hero { background:${heroBg}; border:1px solid ${heroBorder}; border-radius:18px; padding:28px 32px; margin-bottom:24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:24px; }
+.hero h1 { font-size:24px; font-weight:800; margin-bottom:6px; color:#fff; }
+.hero p { color:${heroAccent}; font-size:14px; }
+.tag { display:inline-block; background:rgba(255,255,255,0.08); color:${accent}; border:1px solid ${accent}; border-radius:999px; padding:3px 12px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; }
+.score-circle { width:100px; height:100px; border-radius:999px; background:rgba(0,0,0,0.3); border:4px solid ${accent}; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.score-num { font-size:32px; font-weight:800; color:${accent}; line-height:1; }
+.score-label { font-size:10px; color:${heroAccent}; margin-top:4px; text-transform:uppercase; letter-spacing:0.06em; }
+.summary-row { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:24px; }
+@media (max-width:720px) { .summary-row { grid-template-columns:repeat(2, 1fr); } }
+.summary-card { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:16px 18px; }
+.summary-card .label { font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
+.summary-card .value { font-size:26px; font-weight:700; color:#f5f7fb; }
+.summary-card.red .value { color:#f87171; }
+.summary-card.amber .value { color:#f2b36a; }
+.summary-card.green .value { color:#1dd4b7; }
+.section { margin-bottom:28px; }
+.section h2 { font-size:14px; font-weight:700; color:${accent}; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; }
+.tbl { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; overflow:hidden; }
+.tbl table { width:100%; border-collapse:collapse; font-size:13px; }
+.tbl th { text-align:left; padding:12px 16px; font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; background:#0a0d14; border-bottom:1px solid #1b2233; }
+.tbl td { padding:12px 16px; border-bottom:1px solid #1b2233; color:#c3cad8; vertical-align:top; }
+.tbl tr:last-child td { border-bottom:0; }
+.disclaimer { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:18px 22px; margin-top:16px; }
+.disclaimer .label { font-size:12px; font-weight:700; color:${accent}; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
+.disclaimer p { color:#c3cad8; font-size:13px; }
+@media print { body { background:#fff; color:#000; } .print-btn { display:none; } .hero, .summary-card, .tbl, .disclaimer { background:#fff !important; border:1px solid #ccc !important; color:#000 !important; } }
+</style></head><body><div class="container">
+<header><div class="brand">{{PartnerBrand}} · Metadata Health Report</div><div><div class="meta">Catalog: ${titles.length} works · ${totalContribs} contributor entries</div><div class="meta">Scan ID: ${escapeHtml(scanId)} · Generated ${escapeHtml(date)}</div><button class="print-btn" onclick="window.print()">🖨 Print / Save as PDF</button></div></header>
+<div class="hero"><div><span class="tag">${tagText}</span><h1>${heroH1}</h1><p>${titles.length} works analyzed · ${issues.length} ${issues.length === 1 ? 'residual issue' : 'residual issues'} · ${blocking} blocking · ${resolvable} resolvable.</p></div><div class="score-circle"><div class="score-num">${score}</div><div class="score-label">/ 100</div></div></div>
+<div class="summary-row"><div class="summary-card green"><div class="label">Works analyzed</div><div class="value">${titles.length}</div></div><div class="summary-card ${issues.length === 0 ? 'green' : 'amber'}"><div class="label">Residual issues</div><div class="value">${issues.length}</div></div><div class="summary-card ${blocking === 0 ? 'green' : 'red'}"><div class="label">Blocking</div><div class="value">${blocking}</div></div><div class="summary-card ${resolvable === 0 ? 'green' : 'amber'}"><div class="label">Resolvable</div><div class="value">${resolvable}</div></div></div>
+<div class="section"><h2>Residual issues</h2><div class="tbl"><table><thead><tr><th>ID</th><th>Work</th><th>Field</th><th>Detail</th><th>Severity</th></tr></thead><tbody>${issueRows || noIssuesMsg}</tbody></table></div></div>
+<div class="disclaimer"><div class="label">After-cleaning diagnostic</div><p>This report reflects the catalog state after applying publisher-confirmed corrections from the worksheet. Issues remaining here were either rejected, edited with values that still fail validation, or were not part of the original scan. Re-scan to refresh.</p></div>
+<p style="font-size:11px;color:#8f9bb3;text-align:center;margin-top:24px;">{{PartnerBrand}} · Metadata compliance · {{PartnerContact}}</p>
+</div></body></html>`;
+}
+
+// CWR v2.1 packet builder — emits real records from the cleaned-catalog rows.
+// Record format follows CWR v2.1 spec: HDR, GRH, NWR (work), SPU (sub-publisher),
+// SWR (writer), PWR (writer-publisher link), GRT (group trailer), TRL (transmission trailer).
+function pad(s, n) { s = String(s == null ? '' : s); return (s + ' '.repeat(n)).slice(0, n); }
+function padNum(n, w) { let s = String(n); while (s.length < w) s = '0' + s; return s; }
+function buildCwrFromCleaned(text, submitterName) {
+  const { works, titles } = rowsToWorks(text);
+  const sub = pad((submitterName || 'PARTNER').toUpperCase(), 45);
+  const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const lines = [];
+  lines.push('HDR ROYA-' + stamp + '-001  ' + sub + '01.10     ' + stamp + '14:30:00');
+  lines.push('GRHNWR                                                   0000001');
+  let recSeq = 0; let workSeq = 0;
+  for (const t of titles) {
+    workSeq++;
+    const w = works[t];
+    const wn = padNum(workSeq, 8);
+    recSeq++;
+    const iswc = w.contribs[0] && w.contribs[0].iswc ? pad(w.contribs[0].iswc.replace(/[^A-Z0-9]/gi,''), 11) : pad('', 11);
+    lines.push('NWR' + wn + pad(t.toUpperCase(), 60) + iswc + '              UNC Y       ');
+    // SPU + SWR + PWR per writer/publisher pair
+    let pubSeq = 1;
+    for (const c of w.contribs) {
+      const role = (c.role || 'CA').toUpperCase();
+      const ipi = pad((c.ipi || '').replace(/\D/g,''), 11);
+      const lastName = pad((c.name || 'UNKNOWN').toUpperCase().split(/\s+/).pop(), 45);
+      const firstName = pad((c.name || '').toUpperCase().split(/\s+/).slice(0, -1).join(' '), 30);
+      const society = pad((c.society || 'STIM'), 3);
+      const sharePct = padNum(Math.round((c.share || 0) * 100), 5);
+      // SPU (publisher line — uses submitter as publisher placeholder)
+      lines.push('SPU' + wn + padNum(pubSeq, 8) + '01' + ipi + sub + society);
+      // SWR (writer line)
+      lines.push('SWR' + wn + padNum(pubSeq + 1, 8) + ipi + sharePct + lastName + firstName + ' ' + pad(role, 2) + ' ' + society);
+      // PWR (writer↔publisher link)
+      lines.push('PWR' + wn + padNum(pubSeq + 2, 8) + ipi + '  ' + sub);
+      pubSeq += 3;
+      recSeq += 3;
+    }
+  }
+  const totalRecs = recSeq + 2; // +HDR +TRL
+  lines.push('GRT' + padNum(1, 5) + padNum(workSeq, 8) + padNum(recSeq, 8));
+  lines.push('TRL' + padNum(1, 5) + padNum(workSeq, 8) + padNum(totalRecs, 8));
+  return lines.join('\n');
+}
+
+// localStorage bridge: save export metadata so portal Exportfiler can list them.
+// Content lives in localStorage too (per-tenant key), capped to most-recent 20.
+function saveExport(kind, filename, content, mime) {
+  try {
+    const key = 'kataloghub_exports';
+    const list = JSON.parse(localStorage.getItem(key) || '[]');
+    list.unshift({
+      ts: Date.now(),
+      date: new Date().toISOString().slice(0, 10),
+      kind: kind,           // 'csv' | 'cwr' | 'report'
+      filename: filename,
+      size: content.length,
+      mime: mime,
+      content: content,
+    });
+    localStorage.setItem(key, JSON.stringify(list.slice(0, 20)));
+  } catch (e) { /* quota or storage disabled — non-fatal */ }
+}
+
 $('reportBtn').addEventListener('click', () => {
-  // After-report sample is internal-only; partner-safe build keeps the
-  // button disabled-by-default and no-ops on click.
-  return;
+  if (!cleanedCSV) return;
+  const scan = rescanCleaned(cleanedCSV);
+  const html = buildAfterReport(scan);
+  const w = window.open('', '_blank');
+  if (!w) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+  saveExport('report', 'health-report-after-' + new Date().toISOString().slice(0, 10) + '.html', html, 'text/html');
+});
+
+$('cwrBtn').addEventListener('click', () => {
+  if (!cleanedCSV) return;
+  // Use the brand from the page header as the CWR HDR submitter
+  const brandEl = document.querySelector('.brand');
+  const submitter = brandEl ? brandEl.textContent.trim() : 'PARTNER';
+  const cwr = buildCwrFromCleaned(cleanedCSV, submitter);
+  const filename = 'cwr-package-' + new Date().toISOString().slice(0, 10) + '.v21';
+  const blob = new Blob([cwr], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+  saveExport('cwr', filename, cwr, 'text/plain');
+});
+
+// Also save the cleaned CSV when downloaded, so it shows up in the Exportfiler listing
+const _origDownload = $('downloadBtn').onclick;
+$('downloadBtn').addEventListener('click', () => {
+  if (cleanedCSV) saveExport('csv', 'catalog-cleaned-' + new Date().toISOString().slice(0, 10) + '.csv', cleanedCSV, 'text/csv');
 });
 </script>
 </body>

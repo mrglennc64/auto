@@ -619,13 +619,11 @@
     <section id="exports">
       <div class="preheader">Workspace</div>
       <h1>Exportfiler (CWR-ready)</h1>
-      <p class="lede">CWR-kompatibla och CSV-exporter, klara att vidarebefordra.</p>
+      <p class="lede">Filer genererade i Del 2 (Tillämpa korrigeringar). Hämta för att vidarebefordra till önskad rättighetsorganisation.</p>
       <table class="data-table">
-        <thead><tr><th>Fall</th><th>Format</th><th>Datum</th><th class="num">Hämta</th></tr></thead>
-        <tbody>
-          <tr><td>Slutkund A · v1</td><td class="dash">CWR v2.1</td><td class="dash">2026-04-29</td><td class="num"><a href="#" data-download="cwr" data-case="slutkund-a-v1" style="color:var(--accent);">.cwr ↓</a></td></tr>
-          <tr><td>Slutkund A · v1</td><td class="dash">CSV</td><td class="dash">2026-04-29</td><td class="num"><a href="#" data-download="csv" data-case="slutkund-a-v1" style="color:var(--accent);">.csv ↓</a></td></tr>
-          <tr><td>Slutkund B · v3</td><td class="dash">CWR v2.1</td><td class="dash">2026-04-28</td><td class="num"><a href="#" data-download="cwr" data-case="slutkund-b-v3" style="color:var(--accent);">.cwr ↓</a></td></tr>
+        <thead><tr><th>Filnamn</th><th>Format</th><th>Datum</th><th class="num">Storlek</th><th class="num">Hämta</th></tr></thead>
+        <tbody id="exportsTbody">
+          <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--dim);">Inga exporter ännu — gå till <a href="apply-corrections.html" style="color:var(--accent);">Del 2</a> för att generera CWR/CSV/rapport.</td></tr>
         </tbody>
       </table>
     </section>
@@ -752,6 +750,41 @@
       }
     });
   });
+
+  // Render real exports from localStorage (populated by apply-corrections page).
+  // Falls back to the placeholder row when nothing has been generated yet.
+  function fmtSize(n) { if (n < 1024) return n + ' B'; if (n < 1024*1024) return (n/1024).toFixed(1) + ' KB'; return (n/1024/1024).toFixed(1) + ' MB'; }
+  function kindLabel(k) { return ({csv:'CSV', cwr:'CWR v2.1', report:'HTML report'})[k] || k; }
+  function renderExports() {
+    var tbody = document.getElementById('exportsTbody');
+    if (!tbody) return;
+    var raw;
+    try { raw = JSON.parse(localStorage.getItem('kataloghub_exports') || '[]'); } catch(e) { raw = []; }
+    if (!raw.length) return; // keep the empty-state placeholder row
+    tbody.innerHTML = '';
+    raw.forEach(function(item, i){
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td><span style="font-family:var(--font-mono);font-size:11.5px;">' + (item.filename || '?') + '</span></td>' +
+        '<td class="dash">' + kindLabel(item.kind) + '</td>' +
+        '<td class="dash">' + (item.date || '') + '</td>' +
+        '<td class="num">' + fmtSize(item.size || 0) + '</td>' +
+        '<td class="num"><a href="#" data-export-i="' + i + '" style="color:var(--accent);">↓</a></td>';
+      tbody.appendChild(tr);
+    });
+    tbody.querySelectorAll('a[data-export-i]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        var item = raw[parseInt(a.dataset.exportI, 10)];
+        if (item && item.content) downloadBlob(item.content, item.filename, item.mime || 'text/plain');
+      });
+    });
+  }
+  renderExports();
+  // Re-render when the user navigates back to the portal tab (in case
+  // they generated something in apply-corrections in the meantime).
+  window.addEventListener('focus', renderExports);
+  window.addEventListener('storage', function(e){ if (e.key === 'kataloghub_exports') renderExports(); });
 })();
 
 // Catalog Ingest Engine — folder drag-drop, format detection, SHA-256 hashing.
