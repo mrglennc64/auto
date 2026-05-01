@@ -1,30 +1,30 @@
 #!/usr/bin/env bash
 #
-# heyroya-automation timestamped backup.
+# kataloghub.se site — timestamped full backup.
 #
 # Captures:
 #   code/      project tree (excludes .venv, __pycache__, logs, backups, celerybeat-schedule)
 #   postgres/  heyroya database (pg_dump plain SQL, --no-owner --no-acl)
-#   minio/     MinIO bucket mirror (heyroya-automation), via boto3
+#   minio/     MinIO bucket mirror (kataloghub-automation), via boto3
 #   system/    nginx site config + systemd unit files
 #
-# Output:    /opt/heyroya-automation/backups/heyroya-YYYYMMDD-HHMMSS.tar.gz (mode 600)
+# Output:    /opt/kataloghub-automation/backups/kataloghub-YYYYMMDD-HHMMSS.tar.gz (mode 600)
 # Retention: keeps the last $RETENTION_DAYS days, prunes older backups locally.
 #
 # Run via cron as root:
-#   30 3 * * * /opt/heyroya-automation/scripts/backup.sh >> /opt/heyroya-automation/logs/backup.log 2>&1
+#   30 3 * * * /opt/kataloghub-automation/scripts/backup.sh >> /opt/kataloghub-automation/logs/backup.log 2>&1
 
 set -euo pipefail
 
-PROJECT_DIR="/opt/heyroya-automation"
+PROJECT_DIR="/opt/kataloghub-automation"
 VENV_DIR="$PROJECT_DIR/.venv"
 BACKUP_DIR="$PROJECT_DIR/backups"
 LOGS_DIR="$PROJECT_DIR/logs"
 RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-14}"
 
 TS="$(date -u +%Y%m%d-%H%M%S)"
-STAGE="$(mktemp -d /tmp/heyroya-backup.XXXXXX)"
-OUT="$BACKUP_DIR/heyroya-$TS.tar.gz"
+STAGE="$(mktemp -d /tmp/kataloghub-backup.XXXXXX)"
+OUT="$BACKUP_DIR/kataloghub-$TS.tar.gz"
 
 mkdir -p "$BACKUP_DIR" "$LOGS_DIR"
 trap 'rm -rf "$STAGE"' EXIT
@@ -96,9 +96,9 @@ step "Capturing nginx + systemd configs"
 mkdir -p "$STAGE/system"
 for f in \
   /etc/nginx/sites-available/automation \
-  /etc/systemd/system/heyroya-api.service \
-  /etc/systemd/system/heyroya-worker.service \
-  /etc/systemd/system/heyroya-beat.service \
+  /etc/systemd/system/kataloghub-api.service \
+  /etc/systemd/system/kataloghub-worker.service \
+  /etc/systemd/system/kataloghub-beat.service \
   /etc/systemd/system/minio.service ; do
   if [ -f "$f" ]; then cp "$f" "$STAGE/system/$(basename "$f")"; fi
 done
@@ -107,7 +107,7 @@ step "Writing manifest"
 GIT_HEAD="$(cd "$PROJECT_DIR" && git rev-parse HEAD 2>/dev/null || echo "n/a")"
 GIT_REF="$(cd "$PROJECT_DIR" && git symbolic-ref --short HEAD 2>/dev/null || echo "n/a")"
 cat > "$STAGE/MANIFEST.txt" <<EOF
-heyroya-automation backup
+kataloghub.se site backup
 generated:    $TS (UTC)
 host:         $(hostname -f)
 git HEAD:     $GIT_HEAD
@@ -126,6 +126,6 @@ chmod 600 "$OUT"
 ls -la "$OUT"
 
 step "Pruning backups older than $RETENTION_DAYS days"
-find "$BACKUP_DIR" -name 'heyroya-*.tar.gz' -mtime "+$RETENTION_DAYS" -print -delete || true
+find "$BACKUP_DIR" -name 'kataloghub-*.tar.gz' -mtime "+$RETENTION_DAYS" -print -delete || true
 
 step "Done — $OUT"
