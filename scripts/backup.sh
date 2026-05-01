@@ -40,7 +40,7 @@ step() { echo; echo "==> $1"; }
 step "Archiving code tree"
 mkdir -p "$STAGE/code"
 # Two-stage tar avoids GNU-vs-BSD --transform/-X quirks.
-tar -cf - -C "$PROJECT_DIR" . \
+tar -cf - \
   --exclude='./backups' \
   --exclude='./.venv' \
   --exclude='./.pytest_cache' \
@@ -49,6 +49,7 @@ tar -cf - -C "$PROJECT_DIR" . \
   --exclude='./celerybeat-schedule' \
   --exclude='__pycache__' \
   --exclude='*.pyc' \
+  -C "$PROJECT_DIR" . \
   | tar -xf - -C "$STAGE/code"
 
 step "Dumping Postgres heyroya database"
