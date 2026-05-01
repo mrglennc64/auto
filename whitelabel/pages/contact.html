@@ -4,62 +4,94 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{PartnerBrand}} — Kontakt</title>
-<meta name="description" content="Kontakta {{PartnerBrand}}.">
+<meta name="description" content="Kontaktadresser för enterprise-validering och korrigering via HeyRoya.">
 <style>
-  :root {
-    --bg: #05070b; --bg-card: #0b0f18; --border: #1b2233; --border-strong: #2a3345;
-    --text: #f5f7fb; --muted: #c3cad8; --dim: #8f9bb3;
-    --accent: #1dd4b7; --accent-hover: #18bfa5; --accent-soft: rgba(29,212,183,0.12);
-    --amber: #f2b36a; --amber-soft: rgba(242,179,106,0.12);
-    --radius-card: 14px; --radius-pill: 999px; --max-width: 880px;
-    --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  * { box-sizing: border-box; }
+  body {
+    background: #050505;
+    color: #f5f5f5;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    margin: 0; padding: 0;
+    line-height: 1.55;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.55; -webkit-font-smoothing: antialiased; }
   a { color: inherit; text-decoration: none; }
-  h1, h2, h3 { font-weight: 600; line-height: 1.25; }
 
-  header.topnav { max-width: 1120px; margin: 0 auto; padding: 1.4rem 1.5rem 0.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  header.topnav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px 24px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+    border-bottom: 1px solid #222;
+  }
   .brand { display: flex; align-items: center; gap: 0.65rem; }
-  .brand-mark { width: 28px; height: 28px; border-radius: var(--radius-pill); background: radial-gradient(circle at 30% 20%, #b0fbe9 0, var(--accent) 40%, #0f6657 100%); }
-  .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: var(--dim); }
-  nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: var(--dim); }
-  nav.primary a:hover, nav.primary a.active { color: var(--accent); }
+  .brand-mark { width: 24px; height: 24px; border-radius: 999px; background: radial-gradient(circle at 30% 20%, #cfeed9 0, #1f7a3a 40%, #0c3f1d 100%); }
+  .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: #aaaaaa; }
+  nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: #aaaaaa; }
+  nav.primary a:hover, nav.primary a.active { color: #ffffff; }
 
-  .hero { padding: 3rem 1.5rem 1.5rem; max-width: var(--max-width); margin: 0 auto; text-align: center; }
-  .hero h1 { font-size: 2.2rem; margin-bottom: 0.8rem; letter-spacing: -0.01em; }
-  .hero p.lede { color: var(--muted); max-width: 720px; margin: 0 auto; font-size: 1.05rem; }
+  main { max-width: 760px; margin: 0 auto; padding: 0 24px 64px; }
 
-  .section { margin: 2.5rem auto; max-width: var(--max-width); padding: 0 1.5rem; }
-  .contact-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-  @media (max-width: 720px) { .contact-grid { grid-template-columns: 1fr; } }
-  .contact-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.5rem 1.7rem; }
-  .contact-card h3 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.5rem; }
-  .contact-card p { color: var(--muted); font-size: 0.92rem; margin-bottom: 0.5rem; }
-  .contact-card a.value { display: inline-block; color: var(--text); font-size: 1.05rem; font-weight: 500; margin-top: 0.3rem; }
-  .contact-card a.value:hover { color: var(--accent); }
+  section.hero { padding: 56px 0 24px; }
+  section.hero h1 { font-size: 28px; font-weight: 600; margin: 0 0 10px; letter-spacing: -0.01em; }
+  section.hero p { color: #cccccc; font-size: 15px; margin: 0; }
 
-  .form-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.75rem 2rem; margin-top: 2rem; }
-  .form-card h2 { font-size: 1.3rem; margin-bottom: 0.4rem; }
-  .form-card p.lede { color: var(--muted); font-size: 0.92rem; margin-bottom: 1.3rem; }
-  .field { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
-  .field label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dim); font-weight: 700; }
-  .field input, .field select, .field textarea { background: var(--bg); border: 1px solid var(--border-strong); border-radius: 8px; padding: 0.7rem 0.9rem; color: var(--text); font-family: inherit; font-size: 0.95rem; outline: none; transition: border-color 0.15s ease; }
-  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
-  .field textarea { min-height: 110px; resize: vertical; }
-  .form-actions { display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem; }
-  .btn-primary { display: inline-block; background: var(--accent); color: #020308; padding: 0.8rem 1.7rem; border-radius: var(--radius-pill); font-weight: 600; font-size: 0.95rem; transition: 0.15s ease; cursor: pointer; border: 0; font-family: inherit; }
-  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
-  .form-note { color: var(--dim); font-size: 0.78rem; }
+  .contact-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .contact-card {
+    background: #101010;
+    border: 1px solid #222;
+    border-radius: 6px;
+    padding: 20px 22px;
+  }
+  .contact-card h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #1f7a3a;
+    font-weight: 700;
+    margin: 0 0 10px;
+  }
+  .contact-card p {
+    font-size: 14px;
+    color: #cccccc;
+    margin: 0 0 14px;
+  }
+  .contact-card a.mailto {
+    display: inline-block;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: #1f7a3a;
+    text-underline-offset: 4px;
+  }
+  .contact-card a.mailto:hover { color: #6dbe85; }
 
-  .response-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.4rem 1.7rem; margin-top: 1.5rem; }
-  .response-card .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); font-weight: 700; }
-  .response-card p { color: var(--muted); font-size: 0.92rem; margin-top: 0.4rem; }
+  .note {
+    margin-top: 24px;
+    padding: 14px 18px;
+    border: 1px solid #222;
+    border-left: 2px solid #1f7a3a;
+    border-radius: 0 6px 6px 0;
+    color: #aaaaaa;
+    font-size: 13px;
+  }
 
-  footer { color: var(--dim); font-size: 12px; text-align: center; padding: 2rem 1.5rem 3rem; border-top: 1px solid var(--border); }
-  footer p { margin: 0.3rem 0; }
-  footer a { color: var(--dim); }
-  footer a:hover { color: var(--accent); }
+  footer.foot {
+    color: #888;
+    font-size: 12px;
+    text-align: center;
+    padding: 24px;
+    border-top: 1px solid #222;
+    margin-top: 32px;
+  }
+  footer.foot p { margin: 4px 0; }
+  footer.foot a { color: #aaaaaa; }
 </style>
 </head>
 <body>
@@ -78,82 +110,36 @@
   </nav>
 </header>
 
-<section class="hero">
-  <h1>Kontakta {{PartnerBrand}}</h1>
-  <p class="lede">Endast partnerförfrågningar. Slutkunder ska gå via sin partner direkt.</p>
-</section>
+<main>
 
-<section class="section">
-  <div class="contact-grid">
+  <section class="hero">
+    <h1>Kontakt</h1>
+    <p>Filbaserade förfrågningar via e-post. Inget formulär. Ingen lagring av kontaktdata.</p>
+  </section>
+
+  <div class="contact-row">
     <div class="contact-card">
-      <h3>Partnerförfrågningar</h3>
-      <p>Nya partnersamtal, priser, aktivering.</p>
-      <a href="mailto:{{PartnerContact}}" class="value">{{PartnerContact}}</a>
+      <h2>Enterprise validering</h2>
+      <p>För avtalsnivåer, volymjusteringar och dedikerade förfrågningar.</p>
+      <a class="mailto" href="mailto:{{PartnerContact}}?subject=Enterprise%20validering">{{PartnerContact}}</a>
     </div>
     <div class="contact-card">
-      <h3>Befintliga partners</h3>
-      <p>Operativa frågor och avtalsjusteringar.</p>
-      <a href="mailto:support@{{PartnerDomain}}" class="value">support@{{PartnerDomain}}</a>
+      <h2>HeyRoya korrigering</h2>
+      <p>För korrigering av metadata baserat på Kataloghubs underlag.</p>
+      <a class="mailto" href="mailto:ken@heyroya.se?subject=Korrigeringstj%C3%A4nst">ken@heyroya.se</a>
     </div>
   </div>
 
-  <div class="response-card">
-    <div class="label">Svarstid</div>
-    <p>En arbetsdag för partnerförfrågningar. Operativa frågor besvaras inom fyra arbetstimmar under lokal arbetsvecka.</p>
-  </div>
+  <p class="note">Korrigering ingår inte i Kataloghub. Korrigering hanteras separat av HeyRoya och faktureras separat.</p>
 
-  <div class="form-card">
-    <h2>Skicka ett meddelande</h2>
-    <p class="lede">När formuläret skickas öppnas e-postklienten med meddelandet förifyllt, adresserat till {{PartnerContact}}. {{PartnerBrand}} samlar inte in eller lagrar formulärdata på denna webbplats.</p>
-    <form id="contact-form">
-      <div class="field">
-        <label for="f-name">Ditt namn</label>
-        <input id="f-name" name="name" type="text" required>
-      </div>
-      <div class="field">
-        <label for="f-org">Organisation</label>
-        <input id="f-org" name="org" type="text" required>
-      </div>
-      <div class="field">
-        <label for="f-topic">Ämne</label>
-        <select id="f-topic" name="topic" required>
-          <option value="">Välj ett</option>
-          <option value="ny-partner">Ny partnerförfrågan</option>
-          <option value="priser">Priser</option>
-          <option value="avtalsjustering">Avtalsjustering</option>
-          <option value="ovrigt">Övrigt</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="f-msg">Meddelande</label>
-        <textarea id="f-msg" name="message" required></textarea>
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="btn-primary">Öppna e-postutkast</button>
-        <span class="form-note">Öppnas i din standard-e-postklient.</span>
-      </div>
-    </form>
-  </div>
-</section>
+</main>
 
-<footer>
+<footer class="foot">
   <p>{{PartnerBrand}} · Validering av katalogmetadata, filbaserat</p>
   <p><a href="mailto:{{PartnerContact}}">{{PartnerContact}}</a> · {{PartnerDomain}}</p>
   <p>© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna</p>
 </footer>
 
-<script>
-document.getElementById('contact-form').addEventListener('submit', function(e){
-  e.preventDefault();
-  var name = document.getElementById('f-name').value.trim();
-  var org = document.getElementById('f-org').value.trim();
-  var topic = document.getElementById('f-topic').value;
-  var msg = document.getElementById('f-msg').value.trim();
-  var subj = '[' + topic + '] ' + org;
-  var body = 'Från: ' + name + ' (' + org + ')\nÄmne: ' + topic + '\n\n' + msg;
-  window.location.href = 'mailto:{{PartnerContact}}?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-});
-</script>
 <!-- src-guard:v1 -->
 <script>
 (function(){
