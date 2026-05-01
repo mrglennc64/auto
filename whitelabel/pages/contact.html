@@ -2,64 +2,53 @@
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{PartnerBrand}} — Kontakt</title>
-<meta name="description" content="Kontakta {{PartnerBrand}}.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Kontakta Kataloghub för validering av musikförlagskataloger.">
 <style>
-  :root {
-    --bg: #05070b; --bg-card: #0b0f18; --border: #1b2233; --border-strong: #2a3345;
-    --text: #f5f7fb; --muted: #c3cad8; --dim: #8f9bb3;
-    --accent: #1dd4b7; --accent-hover: #18bfa5; --accent-soft: rgba(29,212,183,0.12);
-    --amber: #f2b36a; --amber-soft: rgba(242,179,106,0.12);
-    --radius-card: 14px; --radius-pill: 999px; --max-width: 880px;
-    --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  body { background: #050505; color: #f5f5f5; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; line-height: 1.55; }
   a { color: inherit; text-decoration: none; }
-  h1, h2, h3 { font-weight: 600; line-height: 1.25; }
 
-  header.topnav { max-width: 1120px; margin: 0 auto; padding: 1.4rem 1.5rem 0.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  header.topnav { max-width: 1100px; margin: 0 auto; padding: 18px 24px 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid #222; }
   .brand { display: flex; align-items: center; gap: 0.65rem; }
-  .brand-mark { width: 28px; height: 28px; border-radius: var(--radius-pill); background: radial-gradient(circle at 30% 20%, #b0fbe9 0, var(--accent) 40%, #0f6657 100%); }
-  .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: var(--dim); }
-  nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: var(--dim); }
-  nav.primary a:hover, nav.primary a.active { color: var(--accent); }
+  .brand-mark { width: 24px; height: 24px; border-radius: 999px; background: radial-gradient(circle at 30% 20%, #cfeed9 0, #1f7a3a 40%, #0c3f1d 100%); }
+  .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: #aaaaaa; }
+  nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: #aaaaaa; }
+  nav.primary a:hover, nav.primary a.active { color: #ffffff; }
 
-  .hero { padding: 3rem 1.5rem 1.5rem; max-width: var(--max-width); margin: 0 auto; text-align: center; }
-  .hero h1 { font-size: 2.2rem; margin-bottom: 0.8rem; letter-spacing: -0.01em; }
-  .hero p.lede { color: var(--muted); max-width: 720px; margin: 0 auto; font-size: 1.05rem; }
+  main { max-width: 720px; margin: 0 auto; padding: 0 24px 64px; }
 
-  .section { margin: 2.5rem auto; max-width: var(--max-width); padding: 0 1.5rem; }
-  .contact-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-  @media (max-width: 720px) { .contact-grid { grid-template-columns: 1fr; } }
-  .contact-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.5rem 1.7rem; }
-  .contact-card h3 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.5rem; }
-  .contact-card p { color: var(--muted); font-size: 0.92rem; margin-bottom: 0.5rem; }
-  .contact-card a.value { display: inline-block; color: var(--text); font-size: 1.05rem; font-weight: 500; margin-top: 0.3rem; }
-  .contact-card a.value:hover { color: var(--accent); }
+  section.hero { padding: 56px 0 24px; text-align: center; }
+  section.hero h1 { font-size: 28px; font-weight: 600; margin: 0 0 12px; letter-spacing: -0.01em; }
+  section.hero p { color: #cccccc; font-size: 15px; margin: 0; }
 
-  .form-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.75rem 2rem; margin-top: 2rem; }
-  .form-card h2 { font-size: 1.3rem; margin-bottom: 0.4rem; }
-  .form-card p.lede { color: var(--muted); font-size: 0.92rem; margin-bottom: 1.3rem; }
-  .field { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
-  .field label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dim); font-weight: 700; }
-  .field input, .field select, .field textarea { background: var(--bg); border: 1px solid var(--border-strong); border-radius: 8px; padding: 0.7rem 0.9rem; color: var(--text); font-family: inherit; font-size: 0.95rem; outline: none; transition: border-color 0.15s ease; }
-  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
-  .field textarea { min-height: 110px; resize: vertical; }
-  .form-actions { display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem; }
-  .btn-primary { display: inline-block; background: var(--accent); color: #020308; padding: 0.8rem 1.7rem; border-radius: var(--radius-pill); font-weight: 600; font-size: 0.95rem; transition: 0.15s ease; cursor: pointer; border: 0; font-family: inherit; }
-  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
-  .form-note { color: var(--dim); font-size: 0.78rem; }
+  .card { background: #101010; border: 1px solid #222; border-radius: 8px; padding: 24px 26px; margin-top: 24px; }
+  .card h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: #1f7a3a; font-weight: 700; margin: 0 0 14px; }
+  .card p { color: #cccccc; font-size: 14px; margin: 0 0 8px; }
+  .card p strong { color: #ffffff; }
+  .card a.email { color: #6dbe85; font-weight: 600; }
 
-  .response-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.4rem 1.7rem; margin-top: 1.5rem; }
-  .response-card .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); font-weight: 700; }
-  .response-card p { color: var(--muted); font-size: 0.92rem; margin-top: 0.4rem; }
+  .intake { background: #101010; border: 1px solid #222; border-radius: 8px; padding: 24px 26px; margin-top: 16px; }
+  .intake h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: #1f7a3a; font-weight: 700; margin: 0 0 12px; }
+  .intake p.intro { color: #cccccc; font-size: 14px; margin: 0 0 18px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #aaaaaa; margin-bottom: 6px; font-weight: 700; }
+  .field input, .field textarea { width: 100%; padding: 9px 12px; border-radius: 4px; border: 1px solid #2f2f2f; background: #0a0a0a; color: #f5f5f5; font-size: 14px; outline: none; font-family: inherit; line-height: 1.4; }
+  .field input:focus, .field textarea:focus { border-color: #1f7a3a; }
+  .field textarea { resize: vertical; min-height: 90px; }
+  button.submit { background: #1f7a3a; color: #ffffff; padding: 10px 22px; border-radius: 4px; font-weight: 600; border: 1px solid #1f7a3a; cursor: pointer; font-family: inherit; font-size: 14px; margin-top: 4px; }
+  button.submit:hover:not(:disabled) { background: #249245; }
+  button.submit:disabled { background: #2a2a2a; border-color: #2a2a2a; color: #777; cursor: not-allowed; }
+  .privacy-note { font-size: 11px; color: #888; margin-top: 10px; }
+  .intake-status { margin-top: 12px; font-size: 13px; padding: 10px 14px; border-radius: 4px; display: none; }
+  .intake-status.show { display: block; }
+  .intake-status.ok { background: rgba(31,122,58,0.12); border: 1px solid rgba(31,122,58,0.5); color: #b6e2c4; }
+  .intake-status.err { background: rgba(122,40,40,0.12); border: 1px solid rgba(122,40,40,0.5); color: #f3a3a3; }
 
-  footer { color: var(--dim); font-size: 12px; text-align: center; padding: 2rem 1.5rem 3rem; border-top: 1px solid var(--border); }
-  footer p { margin: 0.3rem 0; }
-  footer a { color: var(--dim); }
-  footer a:hover { color: var(--accent); }
+  footer.foot { color: #888; font-size: 12px; text-align: center; padding: 24px; border-top: 1px solid #222; margin-top: 40px; }
+  footer.foot p { margin: 4px 0; }
+  footer.foot a { color: #aaaaaa; }
 </style>
 </head>
 <body>
@@ -70,89 +59,107 @@
     <a href="index.html"><span class="brand-text">{{PartnerBrand}}</span></a>
   </div>
   <nav class="primary">
-    <a href="index.html">Validering</a>
-    <a href="portal.html">Historik</a>
+    <a href="index.html">Start</a>
+    <a href="validera.html">Validering</a>
+    <a href="faq.html">FAQ</a>
     <a href="pricing-kataloghub.html">Priser</a>
-    <a href="faq.html">Vanliga frågor</a>
     <a href="contact.html" class="active">Kontakt</a>
   </nav>
 </header>
 
-<section class="hero">
-  <h1>Kontakta {{PartnerBrand}}</h1>
-  <p class="lede">Endast partnerförfrågningar. Slutkunder ska gå via sin partner direkt.</p>
-</section>
+<main>
 
-<section class="section">
-  <div class="contact-grid">
-    <div class="contact-card">
-      <h3>Partnerförfrågningar</h3>
-      <p>Nya partnersamtal, priser, aktivering.</p>
-      <a href="mailto:{{PartnerContact}}" class="value">{{PartnerContact}}</a>
-    </div>
-    <div class="contact-card">
-      <h3>Befintliga partners</h3>
-      <p>Operativa frågor och avtalsjusteringar.</p>
-      <a href="mailto:support@{{PartnerDomain}}" class="value">support@{{PartnerDomain}}</a>
-    </div>
+  <section class="hero">
+    <h1>Kontakt</h1>
+    <p>Vill ni validera er katalog? Hör av er.</p>
+  </section>
+
+  <div class="card">
+    <h2>Kontaktuppgifter</h2>
+    <p><strong>E-post:</strong> <a class="email" href="mailto:{{PartnerContact}}">{{PartnerContact}}</a></p>
+    <p><strong>Plats:</strong> Sverige (remote, nordiskt fokus)</p>
+    <p>Skicka gärna en kort beskrivning av er katalog (storlek, territorier, CMO:er) så återkommer vi med ett konkret förslag.</p>
   </div>
 
-  <div class="response-card">
-    <div class="label">Svarstid</div>
-    <p>En arbetsdag för partnerförfrågningar. Operativa frågor besvaras inom fyra arbetstimmar under lokal arbetsvecka.</p>
-  </div>
+  <div class="intake">
+    <h2>Begär valideringsinstruktioner</h2>
+    <p class="intro">För att påbörja en validering lämnar ni in grundläggande information om förlaget och katalogen. Efter inskickat formulär skickar vi valideringsinstruktioner, CSV-mall och checklista.</p>
 
-  <div class="form-card">
-    <h2>Skicka ett meddelande</h2>
-    <p class="lede">När formuläret skickas öppnas e-postklienten med meddelandet förifyllt, adresserat till {{PartnerContact}}. {{PartnerBrand}} samlar inte in eller lagrar formulärdata på denna webbplats.</p>
-    <form id="contact-form">
+    <form id="intakeForm" onsubmit="submitIntake(event)">
       <div class="field">
-        <label for="f-name">Ditt namn</label>
-        <input id="f-name" name="name" type="text" required>
+        <label for="forlag">Förlag</label>
+        <input id="forlag" name="forlag" type="text" required>
       </div>
       <div class="field">
-        <label for="f-org">Organisation</label>
-        <input id="f-org" name="org" type="text" required>
+        <label for="kontaktperson">Kontaktperson</label>
+        <input id="kontaktperson" name="kontaktperson" type="text" required>
       </div>
       <div class="field">
-        <label for="f-topic">Ämne</label>
-        <select id="f-topic" name="topic" required>
-          <option value="">Välj ett</option>
-          <option value="ny-partner">Ny partnerförfrågan</option>
-          <option value="priser">Priser</option>
-          <option value="avtalsjustering">Avtalsjustering</option>
-          <option value="ovrigt">Övrigt</option>
-        </select>
+        <label for="email">E-post</label>
+        <input id="email" name="email" type="email" required>
       </div>
       <div class="field">
-        <label for="f-msg">Meddelande</label>
-        <textarea id="f-msg" name="message" required></textarea>
+        <label for="katalog">Katalognamn</label>
+        <input id="katalog" name="katalog" type="text" required>
       </div>
-      <div class="form-actions">
-        <button type="submit" class="btn-primary">Öppna e-postutkast</button>
-        <span class="form-note">Öppnas i din standard-e-postklient.</span>
+      <div class="field">
+        <label for="verk">Antal verk i katalogen</label>
+        <input id="verk" name="verk" type="number" min="1" required>
       </div>
+      <div class="field">
+        <label for="kommentar">Kommentar (valfritt)</label>
+        <textarea id="kommentar" name="kommentar"></textarea>
+      </div>
+      <button type="submit" class="submit">Begär valideringsinstruktioner</button>
+      <p class="privacy-note">Inga katalogdata laddas upp via detta formulär. Filer skickas via e-post efter att ni mottagit instruktioner.</p>
+      <div id="intakeStatus" class="intake-status" role="status" aria-live="polite"></div>
     </form>
   </div>
-</section>
 
-<footer>
-  <p>{{PartnerBrand}} · Validering av katalogmetadata, filbaserat</p>
+</main>
+
+<footer class="foot">
+  <p>Kataloghub – Filbaserad validering av katalogmetadata</p>
   <p><a href="mailto:{{PartnerContact}}">{{PartnerContact}}</a> · {{PartnerDomain}}</p>
   <p>© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna</p>
 </footer>
 
 <script>
-document.getElementById('contact-form').addEventListener('submit', function(e){
+async function submitIntake(e) {
   e.preventDefault();
-  var name = document.getElementById('f-name').value.trim();
-  var org = document.getElementById('f-org').value.trim();
-  var topic = document.getElementById('f-topic').value;
-  var msg = document.getElementById('f-msg').value.trim();
-  var subj = '[' + topic + '] ' + org;
-  var body = 'Från: ' + name + ' (' + org + ')\nÄmne: ' + topic + '\n\n' + msg;
-  window.location.href = 'mailto:{{PartnerContact}}?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-});
+  var f = document.getElementById('intakeForm');
+  var status = document.getElementById('intakeStatus');
+  var btn = f.querySelector('button[type="submit"]');
+  status.className = 'intake-status show';
+  status.textContent = 'Skickar…';
+  btn.disabled = true;
+  try {
+    var res = await fetch('/api/kataloghub/intake', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        forlag:        f.forlag.value.trim(),
+        kontaktperson: f.kontaktperson.value.trim(),
+        email:         f.email.value.trim(),
+        katalog:       f.katalog.value.trim(),
+        verk:          parseInt(f.verk.value, 10),
+        kommentar:     f.kommentar.value.trim()
+      })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    var data = await res.json();
+    if (!data.ok) throw new Error('not ok');
+    status.className = 'intake-status show ok';
+    status.textContent = 'Tack — vi har tagit emot er förfrågan och återkommer snart.';
+    f.reset();
+  } catch (err) {
+    status.className = 'intake-status show err';
+    status.textContent = 'Något gick fel. Försök igen eller mejla {{PartnerContact}} direkt.';
+    if (window.console && console.error) console.error('intake submit failed:', err);
+  } finally {
+    btn.disabled = false;
+  }
+}
 </script>
 <!-- src-guard:v1 -->
 <script>

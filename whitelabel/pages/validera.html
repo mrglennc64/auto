@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<title>{{PartnerBrand}} — Validering av katalogfil</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Filbaserad kontroll av struktur, identifierare och format. Ingen integration. Ingen automatisering.">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    background: #050505;
+    color: #f5f5f5;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    margin: 0; padding: 0;
+    line-height: 1.55;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  header.topnav { max-width: 1100px; margin: 0 auto; padding: 18px 24px 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid #222; }
+  .brand { display: flex; align-items: center; gap: 0.65rem; }
+  .brand-mark { width: 24px; height: 24px; border-radius: 999px; background: radial-gradient(circle at 30% 20%, #cfeed9 0, #1f7a3a 40%, #0c3f1d 100%); }
+  .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: #aaaaaa; }
+  nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: #aaaaaa; }
+  nav.primary a:hover, nav.primary a.active { color: #ffffff; }
+
+  main { max-width: 880px; margin: 0 auto; padding: 0 24px 64px; }
+
+  section.hero { padding: 56px 0 24px; }
+  section.hero h1 { font-size: 28px; font-weight: 600; margin: 0 0 12px; letter-spacing: -0.01em; }
+  section.hero p.lede { color: #cccccc; font-size: 15px; margin: 0; }
+
+  section { padding: 24px 0; }
+  section.divider { border-top: 1px solid #222; }
+  section h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: #1f7a3a; font-weight: 700; margin: 0 0 12px; }
+
+  .upload-card { background: #101010; border: 1px solid #222; border-radius: 6px; padding: 20px 22px; }
+  .upload-card p.req { font-size: 13px; color: #cccccc; margin: 0 0 16px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  .upload-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .file-label { display: inline-block; padding: 8px 16px; border-radius: 4px; border: 1px solid #2f2f2f; background: #181818; color: #f5f5f5; cursor: pointer; font-size: 14px; }
+  .file-label:hover { border-color: #444; }
+  #file-name { font-size: 13px; color: #888; }
+  .btn-primary { display: inline-block; padding: 10px 22px; border-radius: 4px; background: #1f7a3a; border: 1px solid #1f7a3a; color: #ffffff; font-size: 14px; font-weight: 600; cursor: pointer; margin-left: auto; font-family: inherit; }
+  .btn-primary:hover:not(:disabled) { background: #249245; }
+  .btn-primary:disabled { background: #2a2a2a; border-color: #2a2a2a; color: #777; cursor: not-allowed; }
+
+  ul.checks { list-style: none; padding: 0; margin: 0; background: #101010; border: 1px solid #222; border-radius: 6px; }
+  ul.checks li { padding: 14px 20px 14px 44px; border-bottom: 1px solid #222; color: #cccccc; font-size: 14px; position: relative; }
+  ul.checks li:last-child { border-bottom: 0; }
+  ul.checks li::before { content: '·'; position: absolute; left: 22px; top: 11px; color: #1f7a3a; font-weight: 700; font-size: 22px; line-height: 1; }
+
+  .status { margin-top: 16px; padding: 14px 18px; border: 1px solid #222; border-radius: 6px; background: #101010; font-size: 13px; color: #cccccc; }
+  .status.error { border-color: #7a2828; color: #f3a3a3; }
+  .status.success { border-color: #1f7a3a; color: #b6e2c4; }
+  .status.blocked { border-color: #7a2828; color: #f3a3a3; }
+  .status .row { display: flex; justify-content: space-between; padding: 2px 0; }
+  .status .row strong { color: #ffffff; }
+  .status .code { display: inline-block; font-family: monospace; font-size: 11px; color: #aaaaaa; margin-left: 0.5rem; padding: 1px 8px; border: 1px solid #2f2f2f; border-radius: 999px; }
+
+  .actions { margin-top: 14px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-secondary { display: inline-block; padding: 10px 18px; border-radius: 4px; background: transparent; border: 1px solid #2f2f2f; color: #f5f5f5; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; }
+  .btn-secondary:hover { border-color: #444; }
+
+  footer.foot { color: #888; font-size: 12px; text-align: center; padding: 24px; border-top: 1px solid #222; margin-top: 32px; }
+  footer.foot p { margin: 4px 0; }
+  footer.foot a { color: #aaaaaa; }
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <a href="index.html"><span class="brand-text">{{PartnerBrand}}</span></a>
+  </div>
+  <nav class="primary">
+    <a href="index.html">Start</a>
+    <a href="validera.html" class="active">Validering</a>
+    <a href="faq.html">FAQ</a>
+    <a href="pricing-kataloghub.html">Priser</a>
+    <a href="contact.html">Kontakt</a>
+  </nav>
+</header>
+
+<main>
+
+  <section class="hero">
+    <h1>Validering av katalogfil</h1>
+    <p class="lede">Filbaserad kontroll av struktur, identifierare och format. Ingen integration. Ingen automatisering.</p>
+  </section>
+
+  <section class="divider">
+    <h2>Ladda upp katalogfil</h2>
+    <div class="upload-card">
+      <p class="req">Krävd struktur: work_id, title, writer_name, writer_ipi, role_code, share, agreement_type, iswc, isrc.</p>
+      <div class="upload-row">
+        <label for="file" class="file-label">Välj fil</label>
+        <input id="file" type="file" accept=".csv" style="display:none;">
+        <span id="file-name">Ingen fil har valts</span>
+        <button id="start" class="btn-primary" disabled>Starta validering</button>
+      </div>
+    </div>
+    <div class="status" id="status" style="display:none;"></div>
+    <div class="actions" id="actions" style="display:none;">
+      <button id="download-pdf" class="btn-secondary">Ladda ner PDF-rapport</button>
+      <button id="download-csv" class="btn-secondary">Ladda ner CSV-underlag</button>
+    </div>
+  </section>
+
+  <section class="divider">
+    <h2>Vad som kontrolleras</h2>
+    <ul class="checks">
+      <li>Kolumnordning och obligatoriska fält</li>
+      <li>Identifierare: work_id, writer_ipi, iswc, isrc</li>
+      <li>Format, roller, andelar och teckenkodning</li>
+      <li>Dubbletter baserat på work_id och writer_ipi</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p>Kataloghub – Filbaserad validering av katalogmetadata</p>
+  <p><a href="mailto:{{PartnerContact}}">{{PartnerContact}}</a> · {{PartnerDomain}}</p>
+  <p>© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna</p>
+</footer>
+
+<script>
+window.KATALOGHUB_TIER_CONFIG = window.KATALOGHUB_TIER_CONFIG || { maxWorksPerValidation: 1000, maxValidationsPerPeriod: 1, maxCatalogsPerPeriod: 1 };
+window.KATALOGHUB_USAGE_STATE = window.KATALOGHUB_USAGE_STATE || { validationsThisPeriod: 0, catalogsThisPeriod: 0, userId: null };
+
+var TIER_MESSAGES = {
+  OK: 'Validering kan genomföras.',
+  LIMIT_WORKS: 'Valideringen kan inte genomföras. Antalet verk överstiger avtalad nivå.',
+  LIMIT_VALIDATIONS: 'Valideringsgränsen för perioden är uppnådd. Uppdatering av avtal krävs.',
+  LIMIT_CATALOGS: 'Antalet kataloger överstiger avtalad nivå. Kontakta HeyRoya för justering.'
+};
+
+function $(id) { return document.getElementById(id); }
+function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+function csvEscape(v) { v = (v == null) ? '' : String(v); if (/[",\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"'; return v; }
+function setStatus(html, cls) { var s = $('status'); s.style.display = 'block'; s.className = 'status' + (cls ? ' ' + cls : ''); s.innerHTML = html; }
+
+function parseCsv(text) {
+  var rows = [];
+  var lines = text.replace(/\r\n/g, '\n').split('\n');
+  for (var li = 0; li < lines.length; li++) {
+    var line = lines[li]; if (!line.trim()) continue;
+    var cells = []; var cur = ''; var inQ = false;
+    for (var i = 0; i < line.length; i++) {
+      var c = line[i];
+      if (inQ) {
+        if (c === '"' && line[i+1] === '"') { cur += '"'; i++; }
+        else if (c === '"') inQ = false;
+        else cur += c;
+      } else {
+        if (c === '"') inQ = true;
+        else if (c === ',' || c === ';') { cells.push(cur); cur = ''; }
+        else cur += c;
+      }
+    }
+    cells.push(cur); rows.push(cells);
+  }
+  if (rows.length === 0) throw new Error('Filen saknar data.');
+  var header = rows[0].map(function(h){ return h.trim().toLowerCase(); });
+  var required = ['work_id','title','writer_name','writer_ipi','role_code','share','agreement_type','iswc','isrc'];
+  for (var ri = 0; ri < required.length; ri++) {
+    if (header.indexOf(required[ri]) < 0) throw new Error('Saknar kolumn: ' + required[ri]);
+  }
+  return rows.slice(1).map(function(cols){ var obj = {}; for (var hi = 0; hi < header.length; hi++) obj[header[hi]] = (cols[hi] != null ? cols[hi] : '').trim(); return obj; });
+}
+
+function validateRow(row) {
+  var issues = [];
+  if (!row.work_id) issues.push(['work_id','','','missing','Saknar work_id']);
+  if (!row.writer_ipi || row.writer_ipi.length < 9) issues.push(['writer_ipi', row.writer_ipi, '', 'invalid', 'Ogiltigt IPI-format']);
+  if (['C','CA','A'].indexOf(row.role_code) < 0) issues.push(['role_code', row.role_code, '', 'invalid', 'Ogiltig rollkod']);
+  var s = Number(row.share); if (!(s > 0) || s > 100) issues.push(['share', row.share, '', 'invalid', 'Ogiltig delning']);
+  if (['E','SE','AM'].indexOf(row.agreement_type) < 0) issues.push(['agreement_type', row.agreement_type, '', 'invalid', 'Ogiltig avtalstyp']);
+  return issues.map(function(a){ return { work_id: row.work_id, field: a[0], original_value: a[1], validated_value: a[2], status: a[3], comment: a[4] }; });
+}
+
+function detectDuplicates(rows) {
+  var seen = {}; var dups = [];
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i]; var key = (r.work_id || '') + '|' + (r.writer_ipi || '');
+    if (!r.work_id && !r.writer_ipi) continue;
+    if (seen[key]) dups.push({ work_id: r.work_id, field: 'duplicate', original_value: r.writer_ipi, validated_value: '', status: 'invalid', comment: 'Dubblett av work_id+writer_ipi' });
+    else seen[key] = true;
+  }
+  return dups;
+}
+
+function tierGate(distinct) {
+  var c = window.KATALOGHUB_TIER_CONFIG, u = window.KATALOGHUB_USAGE_STATE;
+  if (typeof c.maxWorksPerValidation === 'number' && distinct > c.maxWorksPerValidation) return { status: 'blocked', reason: TIER_MESSAGES.LIMIT_WORKS, code: 'LIMIT_WORKS' };
+  if (typeof c.maxValidationsPerPeriod === 'number' && (u.validationsThisPeriod || 0) >= c.maxValidationsPerPeriod) return { status: 'blocked', reason: TIER_MESSAGES.LIMIT_VALIDATIONS, code: 'LIMIT_VALIDATIONS' };
+  if (typeof c.maxCatalogsPerPeriod === 'number' && (u.catalogsThisPeriod || 0) >= c.maxCatalogsPerPeriod) return { status: 'blocked', reason: TIER_MESSAGES.LIMIT_CATALOGS, code: 'LIMIT_CATALOGS' };
+  return { status: 'allowed', reason: TIER_MESSAGES.OK, code: 'OK' };
+}
+
+function uniqueCount(rows, key) { var seen = {}, n = 0; for (var i = 0; i < rows.length; i++) { var v = (rows[i][key] || '').trim(); if (v && !seen[v]) { seen[v] = 1; n++; } } return n; }
+
+var parsed = null; var lastResult = null;
+
+$('file').addEventListener('change', function(e){
+  var f = e.target.files[0]; if (!f) return;
+  $('file-name').textContent = f.name;
+  var r = new FileReader();
+  r.onload = function(ev){
+    try { parsed = parseCsv(ev.target.result); $('start').disabled = false; $('status').style.display = 'none'; $('actions').style.display = 'none'; }
+    catch (err) { parsed = null; $('start').disabled = true; setStatus('<strong>Fel:</strong> ' + escapeHtml(err.message), 'error'); }
+  };
+  r.readAsText(f);
+});
+
+$('start').addEventListener('click', function(){
+  if (!parsed) return;
+  var distinct = uniqueCount(parsed, 'work_id');
+  var gate = tierGate(distinct);
+  if (gate.status === 'blocked') { setStatus('<strong>' + escapeHtml(gate.reason) + '</strong><span class="code">' + gate.code + '</span>', 'blocked'); $('actions').style.display = 'none'; return; }
+
+  var allIssues = [];
+  for (var i = 0; i < parsed.length; i++) { var ri = validateRow(parsed[i]); for (var j = 0; j < ri.length; j++) allIssues.push(ri[j]); }
+  var dups = detectDuplicates(parsed); for (var k = 0; k < dups.length; k++) allIssues.push(dups[k]);
+
+  var scanDate = new Date().toISOString().slice(0, 10);
+  var scanId = 'HR-' + scanDate.replace(/-/g, '') + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+  lastResult = { scanId: scanId, scanDate: scanDate, rows: parsed, issues: allIssues, distinctWorks: distinct };
+
+  setStatus(
+    '<div class="row"><span>Status</span><strong>Validering klar</strong></div>'+
+    '<div class="row"><span>Verk</span><strong>' + distinct + '</strong></div>'+
+    '<div class="row"><span>Rader</span><strong>' + parsed.length + '</strong></div>'+
+    '<div class="row"><span>Avvikelser</span><strong>' + allIssues.length + '</strong></div>'+
+    '<div class="row"><span>Scan-ID</span><strong>' + scanId + '</strong></div>',
+    'success'
+  );
+  $('actions').style.display = 'flex';
+});
+
+function downloadFile(content, filename, mime) { var blob = new Blob([content], { type: mime + ';charset=utf-8' }); var url = URL.createObjectURL(blob); var a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
+
+$('download-csv').addEventListener('click', function(){
+  if (!lastResult) return;
+  var out = ['work_id,field,original_value,validated_value,status,comment'];
+  for (var i = 0; i < lastResult.issues.length; i++) { var x = lastResult.issues[i]; out.push([x.work_id, x.field, x.original_value, x.validated_value, x.status, x.comment].map(csvEscape).join(',')); }
+  downloadFile(out.join('\n'), 'kataloghub-CSV-underlag-' + lastResult.scanId + '.csv', 'text/csv');
+});
+
+$('download-pdf').addEventListener('click', function(){
+  if (!lastResult) return;
+  var byField = {}; for (var bi = 0; bi < lastResult.issues.length; bi++) { var x = lastResult.issues[bi]; (byField[x.field] = byField[x.field] || []).push(x); }
+  var labels = { work_id: 'Saknar work_id', writer_ipi: 'Ogiltigt IPI-format', role_code: 'Ogiltig rollkod', share: 'Ogiltig delning', agreement_type: 'Ogiltig avtalstyp', duplicate: 'Dubbletter (work_id + writer_ipi)' };
+  var entries = []; for (var fk in byField) entries.push([fk, byField[fk]]); entries.sort(function(a,b){ return b[1].length - a[1].length; });
+  var list = entries.map(function(e){ return '<li><strong>' + escapeHtml(labels[e[0]] || e[0]) + ':</strong> ' + e[1].length + ' rader</li>'; }).join('');
+  var html = '<!DOCTYPE html>\n<html lang="sv">\n<head>\n<meta charset="UTF-8">\n<title>Valideringsrapport — Kataloghub</title>\n<style>\n'
+    + 'body { background:#fff; color:#111; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; line-height:1.55; padding:32px 28px 64px; }\n'
+    + '.container { max-width:1080px; margin:0 auto; }\n'
+    + 'h1 { font-size:18px; color:#1f7a3a; margin-bottom:6px; }\n'
+    + '.meta { font-size:12px; color:#555; }\n'
+    + '.print-btn { background:#1f7a3a; color:#fff; border:0; border-radius:4px; padding:8px 14px; font-weight:600; cursor:pointer; font-size:12px; margin-top:8px; }\n'
+    + '.summary { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin:18px 0; }\n'
+    + '.card { border:1px solid #e5e5e5; border-radius:6px; padding:12px 14px; }\n'
+    + '.card .label { font-size:11px; color:#777; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }\n'
+    + '.card .value { font-size:22px; font-weight:600; }\n'
+    + 'h2 { font-size:13px; text-transform:uppercase; letter-spacing:0.08em; color:#1f7a3a; margin:24px 0 8px; }\n'
+    + '.panel { border:1px solid #e5e5e5; border-radius:6px; padding:12px 16px; }\n'
+    + '.panel ul { margin:0; padding-left:20px; } .panel li { font-size:13px; color:#333; padding:4px 0; }\n'
+    + '.disclaimer { border:1px solid #e5e5e5; border-radius:6px; padding:12px 16px; margin-top:18px; font-size:12px; color:#444; }\n'
+    + '.disclaimer p { margin-bottom:4px; }\n'
+    + '@media print { .print-btn { display:none; } }\n'
+    + '</style>\n</head>\n<body>\n<div class="container">\n'
+    + '  <h1>Kataloghub · Valideringsrapport</h1>\n'
+    + '  <div class="meta">Scan-ID: ' + escapeHtml(lastResult.scanId) + ' · Genererad ' + escapeHtml(lastResult.scanDate) + ' · Verk: ' + lastResult.distinctWorks + ' · Rader: ' + lastResult.rows.length + '</div>\n'
+    + '  <button class="print-btn" onclick="window.print()">Skriv ut / Spara som PDF</button>\n'
+    + '  <div class="summary">\n'
+    + '    <div class="card"><div class="label">Verk</div><div class="value">' + lastResult.distinctWorks + '</div></div>\n'
+    + '    <div class="card"><div class="label">Rader</div><div class="value">' + lastResult.rows.length + '</div></div>\n'
+    + '    <div class="card"><div class="label">Avvikelser</div><div class="value">' + lastResult.issues.length + '</div></div>\n'
+    + '    <div class="card"><div class="label">Fälttyper</div><div class="value">' + Object.keys(byField).length + '</div></div>\n'
+    + '  </div>\n'
+    + '  <h2>Avvikelser per kategori</h2>\n'
+    + '  <div class="panel"><ul>' + (list || '<li>Inga avvikelser identifierade.</li>') + '</ul></div>\n'
+    + '  <div class="disclaimer">\n'
+    + '    <p><strong>Valideringsbegränsningar.</strong> Kataloghub genomför validering enligt avtalad nivå.</p>\n'
+    + '    <p>Korrigering av metadata ingår inte. Korrigering erbjuds separat via HeyRoya.</p>\n'
+    + '  </div>\n'
+    + '</div>\n</body>\n</html>';
+  var w = window.open('', '_blank');
+  if (!w) { alert('Pop-up blockerad — tillåt pop-ups för denna sida.'); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+});
+</script>
+<!-- src-guard:v1 -->
+<script>
+(function(){
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, false);
+  document.addEventListener('keydown', function(e){
+    var k = (e.key || '').toLowerCase();
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && (k === 'u' || k === 's')) { e.preventDefault(); return false; }
+  }, false);
+})();
+</script>
+</body>
+</html>
