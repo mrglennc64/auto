@@ -91,7 +91,7 @@
   <section class="divider">
     <h2>Ladda upp katalogfil</h2>
     <div class="upload-card">
-      <p class="req">Krävd struktur: work_id, title, writer_name, writer_ipi, role_code, share, agreement_type, iswc, isrc.</p>
+      <p class="req">Krävd struktur: work_id, title, writer_name, writer_ipi, role_code, share, agreement_type, iswc, isrc. <a href="#" id="sample-link" style="color:#6dbe85;text-decoration:underline;">Hämta exempelfil</a>.</p>
       <div class="upload-row">
         <label for="file" class="file-label">Välj fil</label>
         <input id="file" type="file" accept=".csv" style="display:none;">
@@ -199,6 +199,54 @@ function tierGate(distinct) {
 }
 
 function uniqueCount(rows, key) { var seen = {}, n = 0; for (var i = 0; i < rows.length; i++) { var v = (rows[i][key] || '').trim(); if (v && !seen[v]) { seen[v] = 1; n++; } } return n; }
+
+// Embedded 15-work test catalog (new 9-column schema). Click "Hämta
+// exempelfil" to download. The catalog contains realistic data with
+// intentional issues so the validator finds something to report.
+var SAMPLE_CSV = [
+  'work_id,title,writer_name,writer_ipi,role_code,share,agreement_type,iswc,isrc',
+  'W-001,Midnattssol,Erik Andersson,00712984310,CA,50,E,T-100.001.001-1,SE-NRD-26-10001',
+  'W-001,Midnattssol,Maria Svensson,00123456789,CA,50,E,T-100.001.001-1,SE-NRD-26-10001',
+  'W-002,Vågens Sång,Johan Berg,00345678901,CA,50,E,T-100.002.002-2,SE-NRD-26-10002',
+  'W-002,Vågens Sång,Karin Lindgren,00987654321,CA,50,E,T-100.002.002-2,SE-NRD-26-10002',
+  'W-003,Skär,Anna Holm,00444555666,CA,50,E,,SE-NRD-26-10003',
+  'W-003,Skär,Sofie Berg,00777888999,CA,50,E,,SE-NRD-26-10003',
+  'W-004,Drottningens Klang,Mikael Östberg,00888999000,CA,50,E,,SE-NRD-26-10004',
+  'W-004,Drottningens Klang,Erik Andersson,00712984310,CA,50,E,,SE-NRD-26-10004',
+  'W-005,Frusen Tid,Maria Svensson,00123456789,CA,60,E,T-100.005.005-5,SE-NRD-26-10005',
+  'W-005,Frusen Tid,Johan Berg,00345678901,CA,30,E,T-100.005.005-5,SE-NRD-26-10005',
+  'W-006,Bergslagen,Karin Lindgren,00987654321,CA,40,E,T-100.006.006-6,SE-NRD-26-10006',
+  'W-006,Bergslagen,Anna Holm,00444555666,CA,40,E,T-100.006.006-6,SE-NRD-26-10006',
+  'W-006,Bergslagen,Sofie Berg,00777888999,CA,30,E,T-100.006.006-6,SE-NRD-26-10006',
+  'W-007,Vinterns Ros,Lars Petersen,,CA,50,E,T-100.007.007-7,SE-NRD-26-10007',
+  'W-007,Vinterns Ros,Erik Andersson,00712984310,CA,50,E,T-100.007.007-7,SE-NRD-26-10007',
+  'W-008,Nordvinden,Mikael Östberg,00888999000,CA,50,E,T-100.008.008-8,SE-NRD-26-10008',
+  'W-008,Nordvinden,Maria Svensson,00123456789,CA,50,E,T-100.008.008-8,SE-NRD-26-10008',
+  'W-009,Berlin Drömmar,Tobias Schmidt,00211322433,CA,50,SE,T-100.009.009-9,SE-NRD-26-10009',
+  'W-009,Berlin Drömmar,Erik Andersson,00712984310,CA,50,E,T-100.009.009-9,SE-NRD-26-10009',
+  'W-010,Paris i Höst,Pierre Lambert,00322433544,CA,50,SE,T-100.010.010-1,SE-NRD-26-10010',
+  'W-010,Paris i Höst,Maria Svensson,00123456789,CA,50,E,T-100.010.010-1,SE-NRD-26-10010',
+  'W-011,Skuggornas Dans,Anna Holm,00444555666,WR,50,E,T-100.011.011-2,SE-NRD-26-10011',
+  'W-011,Skuggornas Dans,Johan Berg,00345678901,CA,50,E,T-100.011.011-2,SE-NRD-26-10011',
+  'W-012,Stjärnvägen,L. Petersen,00111222333,CA,50,E,T-100.012.012-3,SE-NRD-26-10012',
+  'W-012,Stjärnvägen,Karin Lindgren,00987654321,CA,50,E,T-100.012.012-3,SE-NRD-26-10012',
+  'W-013,Tystnaden Talar,Erik Andersson,00712984310,CA,50,E,T-100.013.013-4,SE-NRD-26-10013',
+  'W-013,Tystnaden Talar,Maria Svensson,00123456789,CA,50,E,T-100.013.013-4,SE-NRD-26-10013',
+  'W-014,Glömda Dagar,Sofie Berg,,CA,50,E,,SE-NRD-26-10014',
+  'W-014,Glömda Dagar,Johan Berg,00345678901,CA,50,E,,SE-NRD-26-10014',
+  'W-015,Norrlands Hjärta,Lars Petersen,00111222333,CA,50,E,T-100.015.015-6,SE-NRD-26-10015',
+  'W-015,Norrlands Hjärta,Mikael Östberg,00888999000,CA,50,E,T-100.015.015-6,SE-NRD-26-10015'
+].join('\n');
+
+function downloadSample() {
+  var blob = new Blob([SAMPLE_CSV], { type: 'text/csv;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'kataloghub-exempel.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+$('sample-link').addEventListener('click', function(e){ e.preventDefault(); downloadSample(); });
 
 var parsed = null; var lastResult = null;
 
