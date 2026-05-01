@@ -140,6 +140,8 @@ function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, f
 function csvEscape(v) { v = (v == null) ? '' : String(v); if (/[",\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"'; return v; }
 function setStatus(html, cls) { var s = $('status'); s.style.display = 'block'; s.className = 'status' + (cls ? ' ' + cls : ''); s.innerHTML = html; }
 
+var FOREIGN_SOCIETIES = { TONO:1, GEMA:1, SACEM:1, PRS:1, BMI:1, ASCAP:1, SOCAN:1, ICE:1, MLC:1, SIAE:1, BUMA:1, SUISA:1, ZAIKS:1, AKM:1, AUSTRO:1, SABAM:1, SACM:1, SADAIC:1, APRA:1, JASRAC:1 };
+
 function parseCsv(text) {
   var rows = [];
   var lines = text.replace(/\r\n/g, '\n').split('\n');
@@ -162,11 +164,46 @@ function parseCsv(text) {
   }
   if (rows.length === 0) throw new Error('Filen saknar data.');
   var header = rows[0].map(function(h){ return h.trim().toLowerCase(); });
-  var required = ['work_id','title','writer_name','writer_ipi','role_code','share','agreement_type','iswc','isrc'];
-  for (var ri = 0; ri < required.length; ri++) {
-    if (header.indexOf(required[ri]) < 0) throw new Error('Saknar kolumn: ' + required[ri]);
+  var dataRows = rows.slice(1);
+
+  function hasAll(cols) { for (var i = 0; i < cols.length; i++) if (header.indexOf(cols[i]) < 0) return false; return true; }
+  function val(cols, name) { var i = header.indexOf(name); return (i >= 0 && cols[i] != null) ? cols[i].trim() : ''; }
+
+  var newRequired = ['work_id','title','writer_name','writer_ipi','role_code','share','agreement_type','iswc','isrc'];
+  if (hasAll(newRequired)) {
+    return dataRows.map(function(cols){ var o = {}; for (var hi = 0; hi < header.length; hi++) o[header[hi]] = (cols[hi] != null ? cols[hi] : '').trim(); return o; });
   }
-  return rows.slice(1).map(function(cols){ var obj = {}; for (var hi = 0; hi < header.length; hi++) obj[header[hi]] = (cols[hi] != null ? cols[hi] : '').trim(); return obj; });
+
+  // Legacy 8-column schema auto-detect: title, name, role, share_percent, ipi (+ optional iswc/isrc/society).
+  // Auto-converts to the new 9-column schema in memory before validation.
+  var legacyRequired = ['title','name','role','share_percent','ipi'];
+  if (hasAll(legacyRequired)) {
+    var workIdMap = {};
+    var nextId = 1;
+    return dataRows.map(function(cols){
+      var title = val(cols, 'title');
+      if (!workIdMap[title]) { workIdMap[title] = 'W-' + String(nextId++).padStart(3, '0'); }
+      var society = val(cols, 'society').toUpperCase();
+      var agreement = FOREIGN_SOCIETIES[society] ? 'SE' : 'E';
+      return {
+        work_id:        workIdMap[title],
+        title:          title,
+        writer_name:    val(cols, 'name'),
+        writer_ipi:     val(cols, 'ipi'),
+        role_code:      val(cols, 'role'),
+        share:          val(cols, 'share_percent'),
+        agreement_type: agreement,
+        iswc:           val(cols, 'iswc'),
+        isrc:           val(cols, 'isrc')
+      };
+    });
+  }
+
+  // Neither schema matched — report the first new-schema column missing.
+  for (var ri = 0; ri < newRequired.length; ri++) {
+    if (header.indexOf(newRequired[ri]) < 0) throw new Error('Saknar kolumn: ' + newRequired[ri]);
+  }
+  throw new Error('Okänt CSV-format.');
 }
 
 function validateRow(row) {
@@ -258,7 +295,7 @@ $('file').addEventListener('change', function(e){
     try { parsed = parseCsv(ev.target.result); $('start').disabled = false; $('status').style.display = 'none'; $('actions').style.display = 'none'; }
     catch (err) { parsed = null; $('start').disabled = true; setStatus('<strong>Fel:</strong> ' + escapeHtml(err.message), 'error'); }
   };
-  r.readAsText(f);
+  r.readAsText(f, 'UTF-8');
 });
 
 $('start').addEventListener('click', function(){
