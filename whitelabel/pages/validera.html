@@ -71,6 +71,29 @@
   .issues-table .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-family: monospace; }
   .issues-table .pill.invalid { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.4); }
   .issues-table .pill.missing { background: rgba(242,179,106,0.12); color: #f2b36a; border: 1px solid rgba(242,179,106,0.4); }
+
+  .cov-section { margin-top: 16px; }
+  .cov-section-header { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #1f7a3a; font-weight: 700; margin-bottom: 10px; }
+  .cov-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .cov { background: #101010; border: 1px solid #222; border-radius: 6px; padding: 12px 14px; }
+  .cov-label { font-size: 11px; color: #aaaaaa; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .cov-bar { height: 6px; background: #222; border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+  .cov-fill { height: 6px; background: #1f7a3a; border-radius: 3px; transition: width 0.3s ease; }
+  .cov-fill.amber { background: #a86c20; }
+  .cov-fill.red { background: #c43838; }
+  .cov-text { font-size: 12px; color: #cccccc; font-family: monospace; }
+
+  .works-section { margin-top: 16px; background: #101010; border: 1px solid #222; border-radius: 6px; overflow: hidden; }
+  .works-section-header { padding: 12px 16px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #1f7a3a; font-weight: 700; }
+  .works-section-header .count { color: #aaaaaa; font-family: monospace; }
+  .works-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .works-table th, .works-table td { text-align: left; padding: 8px 14px; border-bottom: 1px solid #222; color: #cccccc; }
+  .works-table tr:last-child td { border-bottom: 0; }
+  .works-table th { background: #0a0a0a; font-size: 10px; color: #8f9bb3; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+  .works-table td.wid { color: #6dbe85; font-family: monospace; font-size: 12px; }
+  .works-table .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  .works-table .pill.clean { background: rgba(31,122,58,0.15); color: #6dbe85; border: 1px solid rgba(31,122,58,0.4); }
+  .works-table .pill.major { background: rgba(196,56,56,0.15); color: #f87171; border: 1px solid rgba(196,56,56,0.4); }
   .btn-secondary { display: inline-block; padding: 10px 18px; border-radius: 4px; background: transparent; border: 1px solid #2f2f2f; color: #f5f5f5; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; }
   .btn-secondary:hover { border-color: #444; }
 
@@ -128,6 +151,24 @@
           <tr><th>work_id</th><th>fält</th><th>nuvarande</th><th>status</th><th>kommentar</th></tr>
         </thead>
         <tbody id="issues-body"></tbody>
+      </table>
+    </div>
+
+    <div class="cov-section" id="cov-section" style="display:none;">
+      <div class="cov-section-header">Identifierartäckning</div>
+      <div class="cov-grid" id="cov-grid"></div>
+    </div>
+
+    <div class="works-section" id="works-section" style="display:none;">
+      <div class="works-section-header">
+        <span>Status per verk</span>
+        <span class="count" id="works-count"></span>
+      </div>
+      <table class="works-table">
+        <thead>
+          <tr><th>work_id</th><th>title</th><th>status</th><th>avvikelsefält</th></tr>
+        </thead>
+        <tbody id="works-body"></tbody>
       </table>
     </div>
   </section>
@@ -318,7 +359,7 @@ $('file').addEventListener('change', function(e){
   $('file-name').textContent = f.name;
   var r = new FileReader();
   r.onload = function(ev){
-    try { parsed = parseCsv(ev.target.result); $('start').disabled = false; $('status').style.display = 'none'; $('actions').style.display = 'none'; $('issues-table').style.display = 'none'; }
+    try { parsed = parseCsv(ev.target.result); $('start').disabled = false; $('status').style.display = 'none'; $('actions').style.display = 'none'; $('issues-table').style.display = 'none'; $('cov-section').style.display = 'none'; $('works-section').style.display = 'none'; }
     catch (err) { parsed = null; $('start').disabled = true; setStatus('<strong>Fel:</strong> ' + escapeHtml(err.message), 'error'); }
   };
   r.readAsText(f, 'UTF-8');
@@ -366,6 +407,70 @@ $('start').addEventListener('click', function(){
   }
   $('issues-count').textContent = allIssues.length + ' rader';
   $('issues-table').style.display = 'block';
+
+  // Identifier coverage (6 bars)
+  var workTitles = {}, workHasISWC = {}, workHasISRC = {};
+  for (var ri2 = 0; ri2 < parsed.length; ri2++) {
+    var rr = parsed[ri2], wid2 = rr.work_id || '';
+    if (!workTitles[wid2]) workTitles[wid2] = rr.title || '';
+    if ((rr.iswc || '').trim() !== '') workHasISWC[wid2] = true;
+    if ((rr.isrc || '').trim() !== '') workHasISRC[wid2] = true;
+  }
+  var workIds2 = Object.keys(workTitles);
+  var iswcOK = 0, isrcOK = 0;
+  for (var w2 = 0; w2 < workIds2.length; w2++) {
+    if (workHasISWC[workIds2[w2]]) iswcOK++;
+    if (workHasISRC[workIds2[w2]]) isrcOK++;
+  }
+  var ipiOK = 0, roleOK = 0, shareOK = 0, agrOK = 0;
+  for (var pj2 = 0; pj2 < parsed.length; pj2++) {
+    var pr2 = parsed[pj2];
+    if ((pr2.writer_ipi || '').length >= 9) ipiOK++;
+    if (['C','CA','A'].indexOf(pr2.role_code) >= 0) roleOK++;
+    var sn = Number(pr2.share); if (sn > 0 && sn <= 100) shareOK++;
+    if (['E','SE','AM'].indexOf(pr2.agreement_type) >= 0) agrOK++;
+  }
+  function pctNum(n, total) { return total ? Math.round(100 * n / total) : 0; }
+  function fillClass(p) { return p === 100 ? '' : (p >= 80 ? 'amber' : 'red'); }
+  function covCard(label, n, total) {
+    var p = pctNum(n, total);
+    return '<div class="cov"><div class="cov-label">' + escapeHtml(label) + '</div>'
+      + '<div class="cov-bar"><div class="cov-fill ' + fillClass(p) + '" style="width:' + p + '%;"></div></div>'
+      + '<div class="cov-text">' + n + ' / ' + total + ' (' + p + '%)</div></div>';
+  }
+  var covHtml = covCard('ISWC per verk', iswcOK, distinct)
+    + covCard('ISRC per verk', isrcOK, distinct)
+    + covCard('writer_ipi (rader)', ipiOK, parsed.length)
+    + covCard('role_code (rader)', roleOK, parsed.length)
+    + covCard('share (rader)', shareOK, parsed.length)
+    + covCard('agreement_type (rader)', agrOK, parsed.length);
+  $('cov-grid').innerHTML = covHtml;
+  $('cov-section').style.display = 'block';
+
+  // Status per verk
+  var byWid = {};
+  for (var bi2 = 0; bi2 < allIssues.length; bi2++) {
+    var iy = allIssues[bi2];
+    (byWid[iy.work_id || ''] = byWid[iy.work_id || ''] || []).push(iy);
+  }
+  var wbody = $('works-body'); wbody.innerHTML = '';
+  for (var wj2 = 0; wj2 < workIds2.length; wj2++) {
+    var wid3 = workIds2[wj2]; if (!wid3) continue;
+    var t = workTitles[wid3] || '';
+    var iss = byWid[wid3] || [];
+    var pill = iss.length === 0
+      ? '<span class="pill clean">Ren</span>'
+      : '<span class="pill major">Avvikelser</span>';
+    var fields = iss.length ? iss.map(function(z){ return z.field; }).join(', ') : '—';
+    var trw = document.createElement('tr');
+    trw.innerHTML = '<td class="wid">' + escapeHtml(wid3) + '</td>'
+      + '<td>' + escapeHtml(t) + '</td>'
+      + '<td>' + pill + '</td>'
+      + '<td>' + escapeHtml(fields) + '</td>';
+    wbody.appendChild(trw);
+  }
+  $('works-count').textContent = workIds2.filter(function(k){ return k; }).length + ' verk';
+  $('works-section').style.display = 'block';
 });
 
 function downloadFile(content, filename, mime) { var blob = new Blob([content], { type: mime + ';charset=utf-8' }); var url = URL.createObjectURL(blob); var a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
