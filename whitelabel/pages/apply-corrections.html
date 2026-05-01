@@ -466,13 +466,13 @@ function buildAfterReport(scan) {
   const heroBorder = tone === 'good' ? '#1f7a4a' : tone === 'warn' ? '#7a5a30' : '#6b3a30';
   const heroAccent = tone === 'good' ? '#86efac' : '#fbbf77';
   const accent = tone === 'good' ? '#1dd4b7' : tone === 'warn' ? '#f2b36a' : '#f87171';
-  const tagText = tone === 'good' ? '✓ After cleaning · CWR-ready' : '⚠ After cleaning · residual issues';
-  const heroH1 = tone === 'good' ? 'Catalog is CWR-ready' : tone === 'warn' ? 'Improved — some issues remain' : 'Major issues still present';
+  const tagText = tone === 'good' ? '✓ Efter rensning · CWR-ready' : '⚠ Efter rensning · restavvikelser';
+  const heroH1 = tone === 'good' ? 'Katalogen är CWR-ready' : tone === 'warn' ? 'Förbättrad — vissa avvikelser kvarstår' : 'Stora avvikelser kvarstår';
   const issueRows = issues.map(i =>
     `<tr><td><code style="color:${accent};font-family:monospace;">${escapeHtml(i.id)}</code></td><td>${escapeHtml(i.work)}</td><td><span style="color:${accent};font-family:monospace;font-size:11px;">${escapeHtml(i.field)}</span></td><td>${escapeHtml(i.current)}</td><td><span style="display:inline-block;padding:1px 8px;border-radius:999px;font-family:monospace;font-size:10px;font-weight:700;background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.3);">${escapeHtml(i.severity)}</span></td></tr>`
   ).join('');
-  const noIssuesMsg = '<tr><td colspan="5" style="padding:20px;text-align:center;color:#1dd4b7;">All checks pass — no residual issues.</td></tr>';
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Metadata Health Report (After Cleaning) — {{PartnerBrand}}</title><style>
+  const noIssuesMsg = '<tr><td colspan="5" style="padding:20px;text-align:center;color:#1dd4b7;">Inga avvikelser — alla kontroller godkända.</td></tr>';
+  return `<!DOCTYPE html><html lang="sv"><head><meta charset="UTF-8"><title>Metadatahälsorapport (efter rensning) — {{PartnerBrand}}</title><style>
 * { box-sizing:border-box; margin:0; padding:0; }
 body { background:#05070b; color:#f5f7fb; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; line-height:1.55; -webkit-font-smoothing:antialiased; padding:32px 20px 64px; }
 .container { max-width:1080px; margin:0 auto; }
@@ -507,12 +507,12 @@ header { display:flex; justify-content:space-between; align-items:center; paddin
 .disclaimer p { color:#c3cad8; font-size:13px; }
 @media print { body { background:#fff; color:#000; } .print-btn { display:none; } .hero, .summary-card, .tbl, .disclaimer { background:#fff !important; border:1px solid #ccc !important; color:#000 !important; } }
 </style></head><body><div class="container">
-<header><div class="brand">{{PartnerBrand}} · Metadata Health Report</div><div><div class="meta">Catalog: ${titles.length} works · ${totalContribs} contributor entries</div><div class="meta">Scan ID: ${escapeHtml(scanId)} · Generated ${escapeHtml(date)}</div><button class="print-btn" onclick="window.print()">🖨 Print / Save as PDF</button></div></header>
-<div class="hero"><div><span class="tag">${tagText}</span><h1>${heroH1}</h1><p>${titles.length} works analyzed · ${issues.length} ${issues.length === 1 ? 'residual issue' : 'residual issues'} · ${blocking} blocking · ${resolvable} resolvable.</p></div><div class="score-circle"><div class="score-num">${score}</div><div class="score-label">/ 100</div></div></div>
-<div class="summary-row"><div class="summary-card green"><div class="label">Works analyzed</div><div class="value">${titles.length}</div></div><div class="summary-card ${issues.length === 0 ? 'green' : 'amber'}"><div class="label">Residual issues</div><div class="value">${issues.length}</div></div><div class="summary-card ${blocking === 0 ? 'green' : 'red'}"><div class="label">Blocking</div><div class="value">${blocking}</div></div><div class="summary-card ${resolvable === 0 ? 'green' : 'amber'}"><div class="label">Resolvable</div><div class="value">${resolvable}</div></div></div>
-<div class="section"><h2>Residual issues</h2><div class="tbl"><table><thead><tr><th>ID</th><th>Work</th><th>Field</th><th>Detail</th><th>Severity</th></tr></thead><tbody>${issueRows || noIssuesMsg}</tbody></table></div></div>
-<div class="disclaimer"><div class="label">After-cleaning diagnostic</div><p>This report reflects the catalog state after applying publisher-confirmed corrections from the worksheet. Issues remaining here were either rejected, edited with values that still fail validation, or were not part of the original scan. Re-scan to refresh.</p></div>
-<p style="font-size:11px;color:#8f9bb3;text-align:center;margin-top:24px;">{{PartnerBrand}} · Metadata compliance · {{PartnerContact}}</p>
+<header><div class="brand">{{PartnerBrand}} · Metadatahälsorapport</div><div><div class="meta">Katalog: ${titles.length} verk · ${totalContribs} upphovsposteringar</div><div class="meta">Scan-ID: ${escapeHtml(scanId)} · Genererad ${escapeHtml(date)}</div><button class="print-btn" onclick="window.print()">🖨 Skriv ut / Spara som PDF</button></div></header>
+<div class="hero"><div><span class="tag">${tagText}</span><h1>${heroH1}</h1><p>${titles.length} verk analyserade · ${issues.length} ${issues.length === 1 ? 'restavvikelse' : 'restavvikelser'} · ${blocking} blockerande · ${resolvable} åtgärdbara.</p></div><div class="score-circle"><div class="score-num">${score}</div><div class="score-label">/ 100</div></div></div>
+<div class="summary-row"><div class="summary-card green"><div class="label">Analyserade verk</div><div class="value">${titles.length}</div></div><div class="summary-card ${issues.length === 0 ? 'green' : 'amber'}"><div class="label">Restavvikelser</div><div class="value">${issues.length}</div></div><div class="summary-card ${blocking === 0 ? 'green' : 'red'}"><div class="label">Blockerande</div><div class="value">${blocking}</div></div><div class="summary-card ${resolvable === 0 ? 'green' : 'amber'}"><div class="label">Åtgärdbara</div><div class="value">${resolvable}</div></div></div>
+<div class="section"><h2>Restavvikelser</h2><div class="tbl"><table><thead><tr><th>ID</th><th>Verk</th><th>Fält</th><th>Detalj</th><th>Allvar</th></tr></thead><tbody>${issueRows || noIssuesMsg}</tbody></table></div></div>
+<div class="disclaimer"><div class="label">Diagnostik efter rensning</div><p>Denna rapport visar katalogens status efter att förlagets bekräftade korrigeringar från arbetsbladet har tillämpats. Eventuella kvarvarande avvikelser här är sådana som avslogs av förlaget, redigerades med värden som fortfarande inte passerar validering, eller inte ingick i ursprunglig skanning. Kör en ny skanning för att uppdatera status.</p></div>
+<p style="font-size:11px;color:#8f9bb3;text-align:center;margin-top:24px;">{{PartnerBrand}} · Metadataefterlevnad · {{PartnerContact}}</p>
 </div></body></html>`;
 }
 

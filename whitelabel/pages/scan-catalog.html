@@ -537,12 +537,12 @@ function buildHealthReport(scan) {
   const tagColor = tone === 'good' ? '#1dd4b7' : tone === 'warn' ? '#f2b36a' : '#f87171';
   const sectionH2Color = tone === 'good' ? '#1dd4b7' : tone === 'warn' ? '#f2b36a' : '#f87171';
   const scoreColor = tone === 'good' ? '#1dd4b7' : tone === 'warn' ? '#f2b36a' : '#f87171';
-  const tagText = tone === 'good' ? '✓ Pre-cleaning scan' : '⚠ Before cleaning';
+  const tagText = tone === 'good' ? '✓ För-rensning' : '⚠ För rensning';
   const heroH1 = tone === 'good'
-    ? 'Catalog largely CWR-ready'
+    ? 'Katalogen är i stort sett CWR-ready'
     : tone === 'warn'
-      ? 'Resolvable issues identified'
-      : 'Major Fixes Required — Catalog Not CWR-Ready';
+      ? 'Åtgärdbara avvikelser identifierade'
+      : 'Stora åtgärder krävs — katalog ej CWR-ready';
 
   // Group issues per work
   const byWork = {};
@@ -559,14 +559,14 @@ function buildHealthReport(scan) {
   }
 
   const fieldLabel = {
-    iswc: 'Missing ISWC',
-    isrc: 'Missing ISRC',
-    split_total: 'Incorrect split sums',
-    writer_ipi: 'Missing writer IPI',
-    society: 'Missing society',
-    foreign_writer: 'Foreign writer — no agreement declared',
-    role: 'Invalid role',
-    writer_name: 'Writer name variants',
+    iswc: 'Saknad ISWC',
+    isrc: 'Saknad ISRC',
+    split_total: 'Felaktiga andelsummor',
+    writer_ipi: 'Saknad upphovspersons-IPI',
+    society: 'Saknad sällskap',
+    foreign_writer: 'Utländsk upphovsperson — inget avtal angivet',
+    role: 'Ogiltig roll',
+    writer_name: 'Namnvarianter',
   };
 
   // Per-work table rows
@@ -574,14 +574,14 @@ function buildHealthReport(scan) {
     const workIssues = byWork[t] || [];
     const status = workIssues.length === 0 ? 'Clean' : 'Major fixes';
     const keyIssues = workIssues.map(i => {
-      if (i.field === 'split_total') return `splits ${i.current}`;
-      if (i.field === 'iswc') return 'missing ISWC';
-      if (i.field === 'isrc') return 'missing ISRC';
-      if (i.field === 'writer_ipi') return 'missing IPI';
-      if (i.field === 'society') return 'missing society';
-      if (i.field === 'foreign_writer') return 'no E/SE/AM declaration';
-      if (i.field === 'role') return 'invalid role';
-      if (i.field === 'writer_name') return 'name variant';
+      if (i.field === 'split_total') return `andelar ${i.current}`;
+      if (i.field === 'iswc') return 'saknad ISWC';
+      if (i.field === 'isrc') return 'saknad ISRC';
+      if (i.field === 'writer_ipi') return 'saknad IPI';
+      if (i.field === 'society') return 'saknad sällskap';
+      if (i.field === 'foreign_writer') return 'saknar E/SE/AM-deklaration';
+      if (i.field === 'role') return 'ogiltig roll';
+      if (i.field === 'writer_name') return 'namnvariant';
       return i.field;
     }).join(', ') || '—';
     const pillClass = workIssues.length === 0 ? 'pill clean' : 'pill major';
@@ -642,10 +642,10 @@ function buildHealthReport(scan) {
   const sPerWork = sectionN++;
 
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
 <meta charset="UTF-8">
-<title>Metadata Health Report (Before Cleaning) — {{PartnerBrand}}</title>
+<title>Metadatahälsorapport (för rensning) — {{PartnerBrand}}</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background:#05070b; color:#f5f7fb; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; -webkit-font-smoothing:antialiased; padding:32px 20px 64px; }
@@ -710,11 +710,11 @@ header.topnav { display:flex; align-items:center; justify-content:space-between;
 <div class="container">
 
   <header class="topnav">
-    <div class="brand">{{PartnerBrand}} · Metadata Health Report</div>
+    <div class="brand">{{PartnerBrand}} · Metadatahälsorapport</div>
     <div>
-      <div class="meta">Catalog: ${escapeHtml(titles.length)} works · ${escapeHtml(totalContribs)} contributor entries</div>
-      <div class="meta">Scan ID: ${escapeHtml(scanId)} · Generated ${escapeHtml(date)}</div>
-      <button class="print-btn" onclick="window.print()" style="margin-top:8px;">🖨 Print / Save as PDF</button>
+      <div class="meta">Katalog: ${escapeHtml(titles.length)} verk · ${escapeHtml(totalContribs)} upphovsposteringar</div>
+      <div class="meta">Scan-ID: ${escapeHtml(scanId)} · Genererad ${escapeHtml(date)}</div>
+      <button class="print-btn" onclick="window.print()" style="margin-top:8px;">🖨 Skriv ut / Spara som PDF</button>
     </div>
   </header>
 
@@ -722,7 +722,7 @@ header.topnav { display:flex; align-items:center; justify-content:space-between;
     <div class="hero-left">
       <span class="pre-tag">${tagText}</span>
       <h1>${heroH1}</h1>
-      <p>${titles.length} works analyzed · ${total} ${total === 1 ? 'issue' : 'issues'} detected · ${blocking} blocking · ${resolvable} resolvable · pre-cleaning diagnostic.</p>
+      <p>${titles.length} verk analyserade · ${total} ${total === 1 ? 'avvikelse' : 'avvikelser'} identifierade · ${blocking} blockerande · ${resolvable} åtgärdbara · för-rensningsdiagnostik.</p>
     </div>
     <div class="score-circle">
       <div class="score-num">${score}</div>
@@ -731,73 +731,73 @@ header.topnav { display:flex; align-items:center; justify-content:space-between;
   </div>
 
   <div class="summary-row">
-    <div class="summary-card gray"><div class="label">Works analyzed</div><div class="value">${titles.length}</div><div class="sub">${totalContribs} contributor entries</div></div>
-    <div class="summary-card gray"><div class="label">Total issues</div><div class="value">${total}</div><div class="sub">across the catalog</div></div>
-    <div class="summary-card red"><div class="label">Blocking</div><div class="value">${blocking}</div><div class="sub">prevent CWR submission</div></div>
-    <div class="summary-card amber"><div class="label">Resolvable</div><div class="value">${resolvable}</div><div class="sub">fixable with confirmation</div></div>
+    <div class="summary-card gray"><div class="label">Analyserade verk</div><div class="value">${titles.length}</div><div class="sub">${totalContribs} upphovsposteringar</div></div>
+    <div class="summary-card gray"><div class="label">Totala avvikelser</div><div class="value">${total}</div><div class="sub">i hela katalogen</div></div>
+    <div class="summary-card red"><div class="label">Blockerande</div><div class="value">${blocking}</div><div class="sub">hindrar CWR-inlämning</div></div>
+    <div class="summary-card amber"><div class="label">Åtgärdbara</div><div class="value">${resolvable}</div><div class="sub">kan korrigeras med bekräftelse</div></div>
   </div>
 
   <div class="section">
-    <h2>${sSummary}. High-level summary</h2>
-    <p class="lede">Pre-cleaning diagnostic. No assumptions, no auto-fixes. Every correction will require publisher confirmation.</p>
+    <h2>${sSummary}. Översikt</h2>
+    <p class="lede">För-rensningsdiagnostik. Inga antaganden, inga automatiska korrigeringar. Alla ändringar kräver uttrycklig bekräftelse från förlaget.</p>
     <div class="panel">
-      <div class="group-h">Most common problems</div>
-      <ul>${mostCommon || '<li class="green">No issues detected — catalog is in good shape.</li>'}</ul>
+      <div class="group-h">Vanligaste avvikelserna</div>
+      <ul>${mostCommon || '<li class="green">Inga avvikelser — katalogen är i gott skick.</li>'}</ul>
     </div>
   </div>
 
   <div class="section">
-    <h2>${sCoverage}. Identifier coverage</h2>
+    <h2>${sCoverage}. Identifierartäckning</h2>
     <div class="panel">
       <div class="group-h">ISWC</div>
       <ul>
-        <li class="${iswcMissing === 0 ? 'green' : 'amber'}">${iswcCovered} / ${titles.length} works have a valid ISWC</li>
-        ${iswcMissing > 0 ? `<li>${iswcMissing} ${iswcMissing === 1 ? 'work' : 'works'} flagged as "Unregistered Work — No ISWC found"</li>` : ''}
+        <li class="${iswcMissing === 0 ? 'green' : 'amber'}">${iswcCovered} / ${titles.length} verk har giltig ISWC</li>
+        ${iswcMissing > 0 ? `<li>${iswcMissing} ${iswcMissing === 1 ? 'verk' : 'verk'} flaggat som "Oregistrerat verk — ingen ISWC hittad"</li>` : ''}
       </ul>
       <div class="group-h">ISRC</div>
       <ul>
-        <li class="${isrcMissing === 0 ? 'green' : 'amber'}">${isrcCovered} / ${titles.length} works have a valid ISRC</li>
+        <li class="${isrcMissing === 0 ? 'green' : 'amber'}">${isrcCovered} / ${titles.length} verk har giltig ISRC</li>
       </ul>
       ${ipiIssues ? `<div class="group-h">IPI</div><ul>${ipiIssues}</ul>` : ''}
-      ${societyIssues ? `<div class="group-h">Society</div><ul>${societyIssues}</ul>` : ''}
+      ${societyIssues ? `<div class="group-h">Sällskap</div><ul>${societyIssues}</ul>` : ''}
     </div>
   </div>
 
   ${splitIssues ? `<div class="section">
-    <h2>${sSplit}. Share validation</h2>
-    <p class="lede">Incorrect split sums (blocking):</p>
+    <h2>${sSplit}. Andelsvalidering</h2>
+    <p class="lede">Felaktiga andelsummor (blockerande):</p>
     <div class="panel">
       <ul>${splitIssues}</ul>
-      <p class="impact-note">Impact: these works cannot be submitted to STIM/ICE until splits equal exactly 100%.</p>
+      <p class="impact-note">Konsekvens: dessa verk kan inte skickas till STIM/ICE förrän andelarna är exakt 100 %.</p>
     </div>
   </div>` : ''}
 
   ${(roleIssues || nameVariants || foreignWriter) ? `<div class="section">
-    <h2>${sRoleWriter}. Role &amp; writer validation</h2>
+    <h2>${sRoleWriter}. Validering av roller och upphovspersoner</h2>
     <div class="panel">
-      ${roleIssues ? `<div class="group-h">Invalid role</div><ul>${roleIssues}</ul>` : ''}
-      ${nameVariants ? `<div class="group-h">Name variants</div><ul>${nameVariants}</ul>` : ''}
-      ${foreignWriter ? `<div class="group-h">Foreign writer with no agreement</div><ul>${foreignWriter}</ul>` : ''}
+      ${roleIssues ? `<div class="group-h">Ogiltig roll</div><ul>${roleIssues}</ul>` : ''}
+      ${nameVariants ? `<div class="group-h">Namnvarianter</div><ul>${nameVariants}</ul>` : ''}
+      ${foreignWriter ? `<div class="group-h">Utländsk upphovsperson utan avtal</div><ul>${foreignWriter}</ul>` : ''}
     </div>
   </div>` : ''}
 
   <div class="section">
-    <h2>${sPerWork}. Per-work status</h2>
+    <h2>${sPerWork}. Status per verk</h2>
     <div class="works-table">
       <table>
-        <thead><tr><th>Work</th><th>Status</th><th>Key issues</th></tr></thead>
+        <thead><tr><th>Verk</th><th>Status</th><th>Nyckelavvikelser</th></tr></thead>
         <tbody>${workRows}</tbody>
       </table>
     </div>
   </div>
 
   <div class="disclaimer">
-    <div class="label">Publisher Confirmation Required</div>
-    <p>External metadata sources are used only to validate identifiers. All final decisions and catalog updates rest with the publisher.</p>
+    <div class="label">Förlagsbekräftelse krävs</div>
+    <p>Externa metadatakällor används endast för att validera identifierare. Alla slutliga beslut och kataloguppdateringar ligger hos förlaget.</p>
   </div>
 
   <p style="font-size:11px;color:#8f9bb3;text-align:center;margin-top:24px;">
-    {{PartnerBrand}} · Metadata compliance · {{PartnerContact}}
+    {{PartnerBrand}} · Metadataefterlevnad · {{PartnerContact}}
   </p>
 
 </div>
