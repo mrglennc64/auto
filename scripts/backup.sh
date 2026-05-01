@@ -5,18 +5,20 @@
 # Captures:
 #   code/      project tree (excludes .venv, __pycache__, logs, backups, celerybeat-schedule)
 #   postgres/  heyroya database (pg_dump plain SQL, --no-owner --no-acl)
-#   minio/     MinIO bucket mirror (kataloghub-automation), via boto3
+#   minio/     MinIO bucket mirror, via boto3
 #   system/    nginx site config + systemd unit files
 #
-# Output:    /opt/kataloghub-automation/backups/kataloghub-YYYYMMDD-HHMMSS.tar.gz (mode 600)
+# Output:    $PROJECT_DIR/backups/kataloghub-YYYYMMDD-HHMMSS.tar.gz (mode 600)
 # Retention: keeps the last $RETENTION_DAYS days, prunes older backups locally.
 #
 # Run via cron as root:
-#   30 3 * * * /opt/kataloghub-automation/scripts/backup.sh >> /opt/kataloghub-automation/logs/backup.log 2>&1
+#   30 3 * * * /opt/heyroya-automation/scripts/backup.sh >> /opt/heyroya-automation/logs/backup.log 2>&1
 
 set -euo pipefail
 
-PROJECT_DIR="/opt/kataloghub-automation"
+# Filesystem location is /opt/heyroya-automation for legacy reasons; the site
+# this serves is kataloghub.se, hence the "kataloghub-" backup prefix.
+PROJECT_DIR="/opt/heyroya-automation"
 VENV_DIR="$PROJECT_DIR/.venv"
 BACKUP_DIR="$PROJECT_DIR/backups"
 LOGS_DIR="$PROJECT_DIR/logs"
