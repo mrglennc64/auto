@@ -1,0 +1,11 @@
+work_id,title,writer_name,writer_ipi,role_code,share,agreement_type,iswc,isrc
+W-0001,Skär,Anna Holm,123456789,CA,100,E,T-200.001.001-1,SE-ABC-25-00001
+W-0002,Drottningens Klang,Erik Andersson,234567890,C,60,SE,T-200.002.002-2,
+W-0002,Drottningens Klang,Maria Lindqvist,345678901,A,40,SE,T-200.002.002-2,
+W-0003,Frusen Tid,Lars Petersen,,CA,100,E,T-200.003.003-3,
+W-0004,Bergslagen,Karin Olsson,456789012,WR,90,E,,
+W-0005,Glömda Dagar,Sofie Berg,567890123,CA,100,DOMESTIC,T-200.005.005-5,
+W-0006,Vinterns Ros,Mikael Östberg,678901234,CA,100,E,T-200.006.006-6,
+W-0007,Nordvinden,Tobias Schmidt,789012345,CA,150,AM,T-200.007.007-7,
+,Berlin Drömmar,Pierre Lambert,890123456,CA,100,SE,T-200.008.008-8,
+W-0009,Paris i Höst,Eva Nilsson,12345,CA,100,E,T-200.009.009-9,
