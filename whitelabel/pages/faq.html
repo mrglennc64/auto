@@ -4,70 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{PartnerBrand}} — Vanliga frågor</title>
-<meta name="description" content="Vanliga frågor om Kataloghub: definitioner, begränsningar, filstruktur.">
+<meta name="description" content="Vanliga frågor om Kataloghub.">
 <style>
   * { box-sizing: border-box; }
-  body {
-    background: #050505;
-    color: #f5f5f5;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    margin: 0; padding: 0;
-    line-height: 1.55;
-  }
+  body { background: #050505; color: #f5f5f5; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; line-height: 1.55; }
   a { color: inherit; text-decoration: none; }
 
-  header.topnav {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 18px 24px 14px;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 1rem;
-    border-bottom: 1px solid #222;
-  }
+  header.topnav { max-width: 1100px; margin: 0 auto; padding: 18px 24px 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid #222; }
   .brand { display: flex; align-items: center; gap: 0.65rem; }
   .brand-mark { width: 24px; height: 24px; border-radius: 999px; background: radial-gradient(circle at 30% 20%, #cfeed9 0, #1f7a3a 40%, #0c3f1d 100%); }
   .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: #aaaaaa; }
   nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: #aaaaaa; }
   nav.primary a:hover, nav.primary a.active { color: #ffffff; }
 
-  main { max-width: 880px; margin: 0 auto; padding: 0 24px 64px; }
+  main { max-width: 800px; margin: 0 auto; padding: 0 24px 64px; }
 
   section.hero { padding: 56px 0 24px; }
-  section.hero h1 { font-size: 28px; font-weight: 600; margin: 0 0 10px; letter-spacing: -0.01em; }
-  section.hero p { color: #cccccc; font-size: 15px; margin: 0; }
+  section.hero h1 { font-size: 28px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
 
-  .qa {
-    border-top: 1px solid #222;
-    padding: 18px 0;
-  }
-  .qa h3 {
-    font-size: 15px;
-    font-weight: 600;
-    margin: 0 0 8px;
-    color: #ffffff;
-  }
-  .qa p {
-    font-size: 14px;
-    color: #cccccc;
-    margin: 0;
-  }
-  .qa code {
-    background: #101010;
-    border: 1px solid #222;
-    border-radius: 3px;
-    padding: 1px 6px;
-    font-size: 13px;
-    color: #6dbe85;
-  }
+  .qa { border-top: 1px solid #222; padding: 18px 0; }
+  .qa h2 { font-size: 15px; font-weight: 600; margin: 0 0 8px; color: #ffffff; }
+  .qa p { font-size: 14px; color: #cccccc; margin: 0; }
 
-  footer.foot {
-    color: #888;
-    font-size: 12px;
-    text-align: center;
-    padding: 24px;
-    border-top: 1px solid #222;
-    margin-top: 32px;
-  }
+  footer.foot { color: #888; font-size: 12px; text-align: center; padding: 24px; border-top: 1px solid #222; margin-top: 32px; }
   footer.foot p { margin: 4px 0; }
   footer.foot a { color: #aaaaaa; }
 </style>
@@ -80,10 +39,10 @@
     <a href="index.html"><span class="brand-text">{{PartnerBrand}}</span></a>
   </div>
   <nav class="primary">
-    <a href="index.html">Validering</a>
-    <a href="portal.html">Historik</a>
+    <a href="index.html">Start</a>
+    <a href="validera.html">Validering</a>
+    <a href="faq.html" class="active">FAQ</a>
     <a href="pricing-kataloghub.html">Priser</a>
-    <a href="faq.html" class="active">Vanliga frågor</a>
     <a href="contact.html">Kontakt</a>
   </nav>
 </header>
@@ -92,53 +51,42 @@
 
   <section class="hero">
     <h1>Vanliga frågor</h1>
-    <p>Definitioner, begränsningar och avgränsningar för Kataloghub.</p>
   </section>
 
   <div class="qa">
-    <h3>Vad är en validering?</h3>
-    <p>En filbaserad kontroll av en katalogfils struktur, identifierare och format mot specificerade krav. Resultatet levereras som PDF-rapport och CSV-underlag. Inga ändringar görs i den inlämnade filen.</p>
+    <h2>Vad är en validering?</h2>
+    <p>En validering är en filbaserad kontroll av en exporterad katalogfil i CSV-format.</p>
   </div>
 
   <div class="qa">
-    <h3>Vad är en katalog?</h3>
-    <p>En CSV-fil med musikförlagsmetadata där varje rad anger ett verk och en upphovsperson. Verk identifieras via <code>work_id</code>; upphovspersoner via <code>writer_ipi</code>.</p>
+    <h2>Vad levereras?</h2>
+    <p>En PDF-rapport och ett CSV-underlag med strukturella avvikelser.</p>
   </div>
 
   <div class="qa">
-    <h3>Vilken filstruktur krävs?</h3>
-    <p>CSV-format (UTF-8) med kolumnerna <code>work_id, title, writer_name, writer_ipi, role_code, share, agreement_type, iswc, isrc</code>. En rad per upphovsperson per verk.</p>
+    <h2>Vad kontrolleras?</h2>
+    <p>Struktur, identifierare, format, roller, andelar, teckenkodning och dubbletter.</p>
   </div>
 
   <div class="qa">
-    <h3>Vilka är begränsningarna?</h3>
-    <p>Volymgränser per avtalsnivå: antal verk per validering, antal valideringar per period, antal kataloger per period. Aktuella nivåer redovisas på prissidan. Vid överskridande genomförs ingen validering.</p>
+    <h2>Är detta en korrigeringstjänst?</h2>
+    <p>Nej. Kataloghub utför endast validering. Korrigering sker via HeyRoya.</p>
   </div>
 
   <div class="qa">
-    <h3>Sker korrigeringar i Kataloghub?</h3>
-    <p>Nej. Kataloghub är en valideringstjänst. Korrigering av metadata erbjuds separat via HeyRoya.</p>
+    <h2>Lagras filer?</h2>
+    <p>Nej. Filer lagras inte efter leverans.</p>
   </div>
 
   <div class="qa">
-    <h3>Sker automation i Kataloghub?</h3>
-    <p>Nej. Tjänsten är manuell och filbaserad. Inga automatiska anrop, ingen ingest-pipeline, ingen schemalagd hantering utan föregående överenskommelse.</p>
-  </div>
-
-  <div class="qa">
-    <h3>Krävs systemåtkomst?</h3>
-    <p>Nej. Tjänsten är zero-trust. Filer skickas in och resultat skickas tillbaka. Ingen åtkomst till förlagets system, slutkundens system eller tredjepartsplattformar.</p>
-  </div>
-
-  <div class="qa">
-    <h3>Hur länge sparas filer?</h3>
-    <p>Inlämnade filer raderas efter leverans. Aggregerade räknare behålls för fakturaavstämning. Inga personuppgifter lämnar Kataloghub-miljön.</p>
+    <h2>Behövs integration?</h2>
+    <p>Nej. Ingen integration och ingen systemåtkomst krävs.</p>
   </div>
 
 </main>
 
 <footer class="foot">
-  <p>{{PartnerBrand}} · Validering av katalogmetadata, filbaserat</p>
+  <p>Kataloghub – Filbaserad validering av katalogmetadata</p>
   <p><a href="mailto:{{PartnerContact}}">{{PartnerContact}}</a> · {{PartnerDomain}}</p>
   <p>© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna</p>
 </footer>

@@ -34,11 +34,25 @@
 
   section.hero { padding: 56px 0 32px; max-width: 760px; }
   section.hero h1 { font-size: 32px; font-weight: 600; margin: 0 0 14px; letter-spacing: -0.01em; }
-  section.hero p.lede { color: #cccccc; font-size: 16px; margin: 0; }
+  section.hero p.lede { color: #cccccc; font-size: 16px; margin: 0 0 24px; }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 4px;
+    background: #1f7a3a;
+    border: 1px solid #1f7a3a;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-primary:hover { background: #249245; }
 
   section { padding: 32px 0; }
   section.divider { border-top: 1px solid #222; }
-  section h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: #1f7a3a; font-weight: 700; margin: 0 0 20px; }
+  section h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: #1f7a3a; font-weight: 700; margin: 0 0 12px; }
+  section .intro { color: #cccccc; font-size: 14px; margin: 0 0 20px; max-width: 720px; }
 
   .grid {
     display: grid;
@@ -94,26 +108,6 @@
     font-weight: 700; font-size: 12px;
   }
 
-  section.cta {
-    padding: 40px 0 24px;
-    border-top: 1px solid #222;
-    margin-top: 24px;
-  }
-  section.cta h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: #1f7a3a; font-weight: 700; margin: 0 0 12px; }
-  section.cta p { color: #cccccc; font-size: 14px; margin: 0 0 20px; }
-  .btn-primary {
-    display: inline-block;
-    padding: 12px 24px;
-    border-radius: 4px;
-    background: #1f7a3a;
-    border: 1px solid #1f7a3a;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .btn-primary:hover { background: #249245; }
-
   footer.foot {
     color: #888;
     font-size: 12px;
@@ -134,10 +128,10 @@
     <a href="index.html"><span class="brand-text">{{PartnerBrand}}</span></a>
   </div>
   <nav class="primary">
-    <a href="index.html" class="active">Validering</a>
-    <a href="portal.html">Historik</a>
+    <a href="index.html" class="active">Start</a>
+    <a href="validera.html">Validering</a>
+    <a href="faq.html">FAQ</a>
     <a href="pricing-kataloghub.html">Priser</a>
-    <a href="faq.html">Vanliga frågor</a>
     <a href="contact.html">Kontakt</a>
   </nav>
 </header>
@@ -146,20 +140,21 @@
 
   <section class="hero">
     <h1>Validering av katalogfil</h1>
-    <p class="lede">Filbaserad kontroll av struktur, identifierare och format.<br>
-      Ingen integration. Ingen automatisering. Ingen systemåtkomst.</p>
+    <p class="lede">Filbaserad kontroll av struktur, identifierare och format. Ingen integration. Ingen automatisering. Ingen systemåtkomst.</p>
+    <a href="validera.html" class="btn-primary">Starta validering</a>
   </section>
 
   <section class="divider">
-    <h2>Vad Kataloghub levererar</h2>
+    <h2>Vad Kataloghub gör</h2>
+    <p class="intro">Kataloghub validerar exporterade katalogfiler i CSV-format. Resultatet är en PDF-rapport och ett CSV-underlag som visar strukturella avvikelser.</p>
     <div class="grid">
       <div class="cap">
         <h3>PDF-rapport</h3>
-        <p>Sammanställning av strukturella avvikelser i katalogfilen. Visar saknade identifierare, felaktiga format och dubbletter.</p>
+        <p>Sammanställning av saknade identifierare, felaktiga format och dubbletter.</p>
       </div>
       <div class="cap">
         <h3>CSV-underlag</h3>
-        <p>Maskinläsbar lista över avvikelser per rad. Används som beslutsunderlag innan eventuell korrigering.</p>
+        <p>Maskinläsbar lista över avvikelser per rad. Används som beslutsunderlag.</p>
       </div>
       <div class="cap">
         <h3>Strukturkontroll</h3>
@@ -169,19 +164,11 @@
         <h3>Identifierarkontroll</h3>
         <p>Kontroll av work_id, writer_ipi, iswc och isrc.</p>
       </div>
-      <div class="cap">
-        <h3>Formatkontroll</h3>
-        <p>Kontroll av roller, andelar, teckenkodning och numeriska värden.</p>
-      </div>
-      <div class="cap">
-        <h3>Dubblettkontroll</h3>
-        <p>Identifiering av dubbletter baserat på work_id och writer_ipi.</p>
-      </div>
     </div>
   </section>
 
   <section class="divider">
-    <h2>Så fungerar valideringen</h2>
+    <h2>Arbetsflöde</h2>
     <ol class="steps">
       <li>Förlaget exporterar en katalogfil i CSV-format.</li>
       <li>Filen valideras mot strukturella krav.</li>
@@ -190,17 +177,10 @@
     </ol>
   </section>
 
-  <section class="cta">
-    <h2>Starta validering</h2>
-    <p>Ladda upp katalogfil för validering.<br>
-      Ingen inloggning. Ingen lagring av filer efter leverans.</p>
-    <a href="validera.html" class="btn-primary">Ladda upp katalogfil</a>
-  </section>
-
 </main>
 
 <footer class="foot">
-  <p>{{PartnerBrand}} · Validering av katalogmetadata, filbaserat</p>
+  <p>Kataloghub – Filbaserad validering av katalogmetadata</p>
   <p><a href="mailto:{{PartnerContact}}">{{PartnerContact}}</a> · {{PartnerDomain}}</p>
   <p>© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna</p>
 </footer>
