@@ -1,0 +1,7 @@
+work_id,field,original_value,validated_value,status,comment
+W-0003,writer_ipi,,,invalid,Ogiltigt IPI-format
+W-0004,role_code,WR,,invalid,Ogiltig rollkod
+W-0005,agreement_type,DOMESTIC,,invalid,Ogiltig avtalstyp
+W-0007,share,150,,invalid,Ogiltig delning
+,work_id,,,missing,Saknar work_id
+W-0009,writer_ipi,12345,,invalid,Ogiltigt IPI-format
