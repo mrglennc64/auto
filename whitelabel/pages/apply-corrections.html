@@ -100,7 +100,59 @@
     <button class="btn btn-primary" id="processBtn" disabled>Tillämpa korrigeringar</button>
     <button class="btn btn-secondary" id="downloadBtn" disabled>Ladda ner rensad CSV</button>
     <button class="btn btn-secondary" id="reportBtn" disabled>Generera rapport efter rensning (HTML)</button>
+    <button class="btn btn-secondary" id="cwrBtn" disabled>Generera CWR-paket (.v21)</button>
+    <button class="btn btn-secondary" id="cwrSettingsBtn" type="button" title="CWR-inställningar" style="padding:0.7rem 0.9rem;">⚙</button>
   </div>
+
+  <dialog id="cwrSettings" style="border:1px solid #1b2233; border-radius:12px; background:#0b0f18; color:#f5f7fb; padding:0; max-width:420px; width:90%;">
+    <form method="dialog" id="cwrSettingsForm" style="padding:1.5rem 1.7rem;">
+      <h3 style="font-size:13px; color:#1dd4b7; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:14px;">CWR-inställningar</h3>
+      <p style="color:#8f9bb3; font-size:12px; margin-bottom:16px;">Sparas lokalt i webbläsaren. Krävs för att generera CWR-paket via /api/cwr/generate.</p>
+      <label style="display:block; margin-bottom:10px;">
+        <span style="display:block; font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">API-nyckel (X-API-Key)</span>
+        <input id="cs-key" type="password" required style="width:100%; padding:8px 10px; background:#05070b; border:1px solid #1b2233; border-radius:6px; color:#f5f7fb; font-family:monospace; font-size:12px;">
+      </label>
+      <label style="display:block; margin-bottom:10px;">
+        <span style="display:block; font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Avsändarnamn (HDR)</span>
+        <input id="cs-name" type="text" required maxlength="45" style="width:100%; padding:8px 10px; background:#05070b; border:1px solid #1b2233; border-radius:6px; color:#f5f7fb; font-size:13px;">
+      </label>
+      <label style="display:block; margin-bottom:10px;">
+        <span style="display:block; font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Avsändar-IPI (9–11 siffror)</span>
+        <input id="cs-ipi" type="text" required pattern="[0-9]{9,11}" style="width:100%; padding:8px 10px; background:#05070b; border:1px solid #1b2233; border-radius:6px; color:#f5f7fb; font-family:monospace; font-size:13px;">
+      </label>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+        <label>
+          <span style="display:block; font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Mål-PRO</span>
+          <select id="cs-pro" style="width:100%; padding:8px 10px; background:#05070b; border:1px solid #1b2233; border-radius:6px; color:#f5f7fb; font-size:13px;">
+            <option value="STIM">STIM</option>
+            <option value="ASCAP">ASCAP</option>
+            <option value="BMI">BMI</option>
+            <option value="SESAC">SESAC</option>
+            <option value="PRS">PRS</option>
+            <option value="GEMA">GEMA</option>
+            <option value="SACEM">SACEM</option>
+            <option value="OTHER">Annat</option>
+          </select>
+        </label>
+        <label>
+          <span style="display:block; font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Insamling</span>
+          <select id="cs-scope" style="width:100%; padding:8px 10px; background:#05070b; border:1px solid #1b2233; border-radius:6px; color:#f5f7fb; font-size:13px;">
+            <option value="LOCAL">Lokalt (PRO-land)</option>
+            <option value="WORLDWIDE">Världen</option>
+            <option value="CUSTOM">Anpassat</option>
+          </select>
+        </label>
+      </div>
+      <label id="cs-share-wrap" style="display:none; margin-bottom:10px;">
+        <span style="display:block; font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Förlagsandel (basis points, 10000 = 100%)</span>
+        <input id="cs-share" type="number" min="0" max="10000" value="3333" style="width:100%; padding:8px 10px; background:#05070b; border:1px solid #1b2233; border-radius:6px; color:#f5f7fb; font-family:monospace; font-size:13px;">
+      </label>
+      <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:14px;">
+        <button type="button" id="cs-cancel" class="btn btn-secondary" style="padding:0.5rem 1rem; font-size:12px;">Avbryt</button>
+        <button type="submit" class="btn btn-primary" style="padding:0.5rem 1rem; font-size:12px;">Spara</button>
+      </div>
+    </form>
+  </dialog>
 
   <div class="status" id="status">Ladda upp båda filerna för att börja.</div>
 
@@ -357,6 +409,7 @@ $('processBtn').addEventListener('click', () => {
 
     $('downloadBtn').disabled = false;
     $('reportBtn').disabled = false;
+    $('cwrBtn').disabled = false;
 
   } catch (e) {
     status('<strong>✕ Fel:</strong> ' + e.message, 'error');
@@ -549,6 +602,105 @@ $('reportBtn').addEventListener('click', () => {
 const _origDownload = $('downloadBtn').onclick;
 $('downloadBtn').addEventListener('click', () => {
   if (cleanedCSV) saveExport('csv', 'catalog-cleaned-' + new Date().toISOString().slice(0, 10) + '.csv', cleanedCSV, 'text/csv');
+});
+
+// ─── CWR settings (localStorage-backed, per-browser) ────────────────────────
+var CWR_KEYS = ['cwr.api_key', 'cwr.submitter_name', 'cwr.submitter_ipi', 'cwr.target_pro', 'cwr.collection_scope', 'cwr.custom_share_bp'];
+function cwrSettingsLoad() {
+  return {
+    api_key: localStorage.getItem('cwr.api_key') || '',
+    submitter_name: localStorage.getItem('cwr.submitter_name') || '',
+    submitter_ipi: localStorage.getItem('cwr.submitter_ipi') || '',
+    target_pro: localStorage.getItem('cwr.target_pro') || 'STIM',
+    collection_scope: localStorage.getItem('cwr.collection_scope') || 'LOCAL',
+    custom_share_bp: localStorage.getItem('cwr.custom_share_bp') || '3333',
+  };
+}
+function cwrSettingsValid(s) {
+  return !!(s.api_key && s.submitter_name && /^[0-9]{9,11}$/.test(s.submitter_ipi));
+}
+function cwrSettingsOpen() {
+  var s = cwrSettingsLoad();
+  $('cs-key').value = s.api_key;
+  $('cs-name').value = s.submitter_name;
+  $('cs-ipi').value = s.submitter_ipi;
+  $('cs-pro').value = s.target_pro;
+  $('cs-scope').value = s.collection_scope;
+  $('cs-share').value = s.custom_share_bp;
+  $('cs-share-wrap').style.display = (s.collection_scope === 'CUSTOM') ? 'block' : 'none';
+  $('cwrSettings').showModal();
+}
+$('cwrSettingsBtn').addEventListener('click', cwrSettingsOpen);
+$('cs-scope').addEventListener('change', function(e){
+  $('cs-share-wrap').style.display = (e.target.value === 'CUSTOM') ? 'block' : 'none';
+});
+$('cs-cancel').addEventListener('click', function(){ $('cwrSettings').close(); });
+$('cwrSettingsForm').addEventListener('submit', function(e){
+  // Native dialog form 'submit' closes the dialog automatically
+  localStorage.setItem('cwr.api_key', $('cs-key').value.trim());
+  localStorage.setItem('cwr.submitter_name', $('cs-name').value.trim());
+  localStorage.setItem('cwr.submitter_ipi', $('cs-ipi').value.trim());
+  localStorage.setItem('cwr.target_pro', $('cs-pro').value);
+  localStorage.setItem('cwr.collection_scope', $('cs-scope').value);
+  localStorage.setItem('cwr.custom_share_bp', $('cs-share').value);
+});
+
+// ─── Generate CWR via /api/cwr/generate ─────────────────────────────────────
+$('cwrBtn').addEventListener('click', async function() {
+  if (!cleanedCSV) return;
+  var s = cwrSettingsLoad();
+  if (!cwrSettingsValid(s)) {
+    status('<strong>⚙ Inställningar krävs:</strong> öppna kugghjulet för att ange API-nyckel, avsändarnamn och IPI.', 'error');
+    cwrSettingsOpen();
+    return;
+  }
+
+  status('Genererar CWR-paket…');
+  $('cwrBtn').disabled = true;
+
+  var fd = new FormData();
+  fd.append('cleaned_catalog_csv', new Blob([cleanedCSV], { type: 'text/csv' }), 'catalog-cleaned.csv');
+  fd.append('submitter_name', s.submitter_name);
+  fd.append('submitter_ipi', s.submitter_ipi);
+  fd.append('target_pro', s.target_pro);
+  fd.append('collection_scope', s.collection_scope);
+  if (s.collection_scope === 'CUSTOM') fd.append('custom_share_bp', s.custom_share_bp);
+
+  try {
+    var r = await fetch('/api/cwr/generate', { method: 'POST', headers: { 'X-API-Key': s.api_key }, body: fd });
+    if (!r.ok) {
+      var msg;
+      try { var j = await r.json(); msg = j.message || j.detail || ('HTTP ' + r.status); }
+      catch (e) { msg = 'HTTP ' + r.status; }
+      status('<strong>✕ CWR-fel:</strong> ' + msg, 'error');
+      $('cwrBtn').disabled = false;
+      return;
+    }
+    var blob = await r.blob();
+    var filename = 'cwr-package-' + new Date().toISOString().slice(0, 10) + '.v21';
+    // Honor server's Content-Disposition if present
+    var cd = r.headers.get('content-disposition') || '';
+    var m = /filename="?([^";]+)"?/.exec(cd);
+    if (m) filename = m[1];
+
+    // Download
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+
+    // Save text content to localStorage so portal Exportfiler lists it
+    var text = await blob.text();
+    saveExport('cwr', filename, text, 'application/octet-stream');
+
+    status('<div class="row ok"><span>Status</span><strong>✓ CWR-paket genererat</strong></div>'+
+      '<div class="row"><span>Filnamn</span><strong>'+filename+'</strong></div>'+
+      '<div class="row"><span>Storlek</span><strong>'+blob.size+' byte</strong></div>'+
+      '<div class="row"><span>Mål-PRO</span><strong>'+s.target_pro+' · '+s.collection_scope+'</strong></div>', 'success');
+    $('cwrBtn').disabled = false;
+  } catch (e) {
+    status('<strong>✕ Nätverksfel:</strong> ' + e.message, 'error');
+    $('cwrBtn').disabled = false;
+  }
 });
 </script>
 </body>
