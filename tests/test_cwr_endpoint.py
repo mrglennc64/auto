@@ -23,14 +23,24 @@ HEADERS = {"X-API-Key": "test-key"}
 
 
 def _csv_file():
+    """Catalog with only title+name — triggers CwrValidationError (no IPI)."""
     return ("catalog.csv", b"title,name\nMidnight,Andersson\n", "text/csv")
+
+
+def _valid_csv_file():
+    """Complete catalog row with IPI + share — passes CWR validation."""
+    body = (
+        b"title,iswc,isrc,name,role,share_percent,ipi,society\n"
+        b"Midnight Sun,T-123456789-0,SE6QZ2401001,ERIK ANDERSSON,CA,100,00712984310,STIM\n"
+    )
+    return ("catalog.csv", body, "text/csv")
 
 
 def test_cwr_health_is_open() -> None:
     r = client.get("/api/cwr/health")
     assert r.status_code == 200
     body = r.json()
-    assert body["implemented"] == "no"
+    assert body["implemented"] == "yes"
 
 
 def test_cwr_generate_rejects_unknown_target_pro() -> None:
@@ -98,23 +108,60 @@ def test_cwr_generate_rejects_empty_catalog() -> None:
     assert "Empty" in r.json()["detail"]
 
 
-def test_cwr_generate_returns_501_until_builder_wired() -> None:
-    """When valid input arrives, the endpoint signals 'not yet implemented'
-    rather than returning a fake CWR. Removes this once the real builder ships."""
+def test_cwr_generate_validation_error_when_writer_has_no_ipi() -> None:
+    """Cleaned-CSV with title+name only triggers CwrValidationError → 422."""
     r = client.post(
         "/api/cwr/generate",
         files={"cleaned_catalog_csv": _csv_file()},
         data={
             "submitter_name": "Acme Publisher",
             "submitter_ipi": "00712984310",
-            "target_pro": "ASCAP",
-            "collection_scope": "WORLDWIDE",
+            "target_pro": "STIM",
         },
         headers=HEADERS,
     )
-    assert r.status_code == 501
+    assert r.status_code == 422
     body = r.json()
-    assert body["error"] == "not_implemented"
-    assert body["got"]["submitter_name"] == "Acme Publisher"
-    assert body["got"]["target_pro"] == "ASCAP"
-    assert body["got"]["catalog_bytes"] > 0
+    assert body["error"] == "cwr_validation_failed"
+    assert "IPI" in body["message"]
+
+
+def test_cwr_generate_rejects_csv_without_required_columns() -> None:
+    r = client.post(
+        "/api/cwr/generate",
+        files={"cleaned_catalog_csv": ("c.csv", b"foo,bar\n1,2\n", "text/csv")},
+        data={"submitter_name": "X", "submitter_ipi": "00712984310", "target_pro": "STIM"},
+        headers=HEADERS,
+    )
+    assert r.status_code == 400
+    assert "missing required columns" in r.json()["detail"]
+
+
+def test_cwr_generate_returns_real_cwr_for_complete_catalog() -> None:
+    r = client.post(
+        "/api/cwr/generate",
+        files={"cleaned_catalog_csv": _valid_csv_file()},
+        data={
+            "submitter_name": "Acme Publisher",
+            "submitter_ipi": "00712984310",
+            "target_pro": "STIM",
+            "collection_scope": "LOCAL",
+        },
+        headers=HEADERS,
+    )
+    assert r.status_code == 200
+    assert r.headers["content-type"] == "application/octet-stream"
+    assert "cwr-package.v21" in r.headers.get("content-disposition", "")
+    body = r.text
+    # CWR v2.1 record types — every packet must have these
+    assert body.startswith("HDR")
+    assert "NWR" in body
+    assert "SPU" in body
+    assert "SWR" in body
+    assert "PWR" in body
+    assert "GRT" in body
+    assert "TRL" in body
+    # Sweden territory (752) for LOCAL scope + STIM pro
+    assert "752" in body
+    # Submitter name appears in HDR
+    assert "ACME PUBLISHER" in body
