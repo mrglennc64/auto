@@ -57,7 +57,7 @@
       <a href="index.html"><span class="brand-text">{{PartnerBrand}}</span></a>
     </div>
     <nav class="primary">
-      <a href="scan-catalog.html">Validering</a>
+      <a href="index.html">Validering</a>
       <a href="portal.html" class="active">Historik</a>
       <a href="pricing-kataloghub.html">Priser</a>
       <a href="faq.html">Vanliga frågor</a>
@@ -87,11 +87,11 @@
 // Each entry: { date, catalog, works, status: "Validerad"|"Blockerad", reportUrl?, csvUrl?, blockCode? }
 window.KATALOGHUB_HISTORY = window.KATALOGHUB_HISTORY || [];
 window.KATALOGHUB_PERIOD = window.KATALOGHUB_PERIOD || {
-  period: '{{Period|}}',
-  validationsThisPeriod: {{UsageValidations|0}},
-  catalogsThisPeriod:    {{UsageCatalogs|0}},
-  maxValidationsPerPeriod: {{TierMaxValidations|0}},
-  maxCatalogsPerPeriod:    {{TierMaxCatalogs|0}}
+  period: '',
+  validationsThisPeriod: 0,
+  catalogsThisPeriod:    0,
+  maxValidationsPerPeriod: 0,
+  maxCatalogsPerPeriod:    0
 };
 
 (function renderMeta(){
