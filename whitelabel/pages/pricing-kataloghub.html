@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kataloghub — Priser</title>
-<meta name="description" content="Licensierad tjänst för filbaserad metadatahantering. Tre nivåer: Lite, Standard, Enterprise.">
+<meta name="description" content="Validering av musikförlagskataloger. PDF-rapport och CSV-underlag. Ingen korrigering, ingen CWR-generering.">
 <style>
   :root {
     --bg: #05070b; --bg-card: #0b0f18; --border: #1b2233; --border-strong: #2a3345;
@@ -31,6 +31,7 @@
   .hero { padding: 3rem 1.5rem 1rem; max-width: 880px; margin: 0 auto; text-align: center; }
   .hero h1 { font-size: 2.2rem; margin-bottom: 14px; letter-spacing: -0.01em; font-family: var(--font-mono); color: var(--text-strong); }
   .hero p.lede { color: var(--muted); max-width: 720px; margin: 0 auto 8px; font-size: 1rem; }
+  .hero p.note { color: var(--dim); font-size: 13px; margin-top: 14px; }
 
   .section { margin: 2.5rem auto; max-width: 1080px; padding: 0 1.5rem; }
   .section h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 700; margin-bottom: 12px; }
@@ -44,15 +45,17 @@
   .pricing-table .price { font-family: var(--font-mono); font-weight: 700; color: var(--accent); white-space: nowrap; }
   .pricing-table .desc { color: var(--muted); font-size: 12.5px; line-height: 1.5; }
 
-  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  @media (max-width: 760px) { .feature-grid { grid-template-columns: 1fr; } }
-  .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; }
-  .feature-card h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
-  .feature-card ul li { color: var(--muted); font-size: 13px; padding: 5px 0 5px 20px; position: relative; }
-  .feature-card ul li::before { content: '·'; color: var(--accent); position: absolute; left: 6px; font-weight: 700; }
+  .limits-card { background: var(--bg-card); border: 1px solid var(--border); border-left: 2px solid var(--accent); border-radius: 0 12px 12px 0; padding: 18px 22px; }
+  .limits-card h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+  .limits-card p { color: var(--muted); font-size: 13.5px; margin-bottom: 8px; }
+  .limits-card p:last-child { margin-bottom: 0; }
+  .limits-card ul { margin-top: 10px; }
+  .limits-card ul li { color: var(--muted); font-size: 13px; padding: 5px 0 5px 18px; position: relative; }
+  .limits-card ul li::before { content: '·'; color: var(--accent); position: absolute; left: 6px; font-weight: 700; }
 
   .billing-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; }
   .billing-card p { color: var(--muted); font-size: 13.5px; margin-bottom: 6px; }
+  .billing-card p:last-child { margin-bottom: 0; }
 
   .cta { text-align: center; padding: 3rem 1.5rem 4rem; border-top: 1px solid var(--border); margin-top: 3rem; }
   .cta h2 { font-size: 1.4rem; color: var(--text-strong); margin-bottom: 8px; font-family: var(--font); text-transform: none; letter-spacing: 0; }
@@ -72,19 +75,18 @@
     <span class="brand-text">Kataloghub</span>
   </div>
   <nav class="primary">
-    <a href="how-it-works.html">Så fungerar det</a>
+    <a href="how-it-works.html">Validering</a>
+    <a href="portal.html">Historik</a>
     <a href="pricing-kataloghub.html" class="active">Priser</a>
     <a href="faq.html">Vanliga frågor</a>
     <a href="contact.html">Kontakt</a>
-    <a href="portal.html" style="background:rgba(29,212,183,0.12); color:var(--accent); border:1px solid rgba(29,212,183,0.4); padding:6px 14px; border-radius:999px; font-weight:700; font-size:12px;">Portal →</a>
   </nav>
 </header>
 
 <section class="hero">
-  <h1>Kataloghub — Priser</h1>
-  <p class="lede">Kataloghub är en licensierad tjänst för filbaserad metadatahantering.</p>
-  <p class="lede">Licensen ger åtkomst till portal, katalogskanningar, arbetsblad och exportfiler.</p>
-  <p class="lede" style="color: var(--dim); font-size: 13px; margin-top: 14px;">Ingen systemåtkomst används. Ingen ingestion utförs.</p>
+  <h1>Kataloghub — validering av musikförlagskataloger</h1>
+  <p class="lede">Kataloghub validerar exporterade katalogfiler och levererar avvikelserapporter och CSV-underlag. Ingen korrigering, ingen CWR-generering.</p>
+  <p class="note">Korrigering av metadata erbjuds separat via HeyRoya.</p>
 </section>
 
 <section class="section">
@@ -98,79 +100,69 @@
         <td class="tier">Lite</td>
         <td class="audience">Mindre förlag / administratör</td>
         <td class="price">2 000 SEK</td>
-        <td class="desc">Åtkomst till portal, katalogskanningar, arbetsblad och exportfiler. Lämpligt för kataloger upp till ca 1 000 verk.</td>
+        <td class="desc">Validering av kataloger upp till ca 1 000 verk per inlämning. PDF-rapport och CSV-underlag.</td>
       </tr>
       <tr>
         <td class="tier">Standard</td>
         <td class="audience">Medelstort förlag / distributör</td>
         <td class="price">3 500 SEK</td>
-        <td class="desc">Högre skanningsvolym, flera slutkunder, prioriterad hantering.</td>
+        <td class="desc">Högre volymgräns, flera kataloger per period, prioriterad validering. PDF-rapport och CSV-underlag.</td>
       </tr>
       <tr>
         <td class="tier">Enterprise</td>
         <td class="audience">Större förlag / flera kataloger</td>
         <td class="price">5 000 SEK</td>
-        <td class="desc">Obegränsat antal slutkunder, stora kataloger, SLA och prioriterad kö.</td>
+        <td class="desc">Anpassad volym, schemalagd validering, prioriterad kö och administrativ kontakt.</td>
       </tr>
     </tbody>
   </table>
 </section>
 
 <section class="section">
-  <h2>Vad licensen omfattar</h2>
-  <div class="feature-grid">
-    <div class="feature-card">
-      <h3>Plattform</h3>
-      <ul>
-        <li>Åtkomst till Kataloghub under egen domän</li>
-        <li>Filbaserad katalogskanning (Del 1)</li>
-        <li>Arbetsblad för korrigeringar</li>
-        <li>Exportfiler (CWR-ready och CSV)</li>
-      </ul>
-    </div>
-    <div class="feature-card">
-      <h3>Drift</h3>
-      <ul>
-        <li>Metadatahälsa per katalog</li>
-        <li>Slutkundshantering</li>
-        <li>Zero-trust arbetsflöde</li>
-        <li>Full spårbarhet per verk</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <h2>Tilläggstjänster (valfritt)</h2>
-  <div class="feature-card">
+  <h2>Valideringsbegränsningar</h2>
+  <div class="limits-card">
+    <p>Kataloghub genomför validering enligt avtalad nivå.</p>
+    <p>Om inlämnad katalog överstiger volymgränsen kan valideringen inte genomföras. Volymen avser:</p>
     <ul>
-      <li>Korrigeringar per verk (Del 2)</li>
-      <li>CWR-kompatibla katalogfiler</li>
-      <li>Utökad support</li>
-      <li>Prioriterad leverans</li>
+      <li>Antal verk per validering</li>
+      <li>Antal valideringar per period</li>
+      <li>Antal kataloger per period</li>
     </ul>
-    <p style="color:var(--dim); font-size:12.5px; margin-top:14px;">Priser för tillägg baseras på volym och avtal.</p>
+    <p style="margin-top:12px;">Vid överskridande avbryts valideringen. Förlaget informeras om behov av avtalsjustering. Ingen automatisk uppgradering, inga delvalideringar.</p>
   </div>
 </section>
 
 <section class="section">
   <h2>Fakturering</h2>
   <div class="billing-card">
-    <p>Licensen faktureras månadsvis.</p>
-    <p>Skanningar och korrigeringar faktureras enligt avtalad wholesale-modell.</p>
+    <p>Licensen faktureras månadsvis i efterskott. 30 dagar netto.</p>
+    <p>Korrigering ingår inte. Korrigering faktureras separat av HeyRoya.</p>
+    <p>Ändring av nivå sker endast efter skriftlig överenskommelse. Valideringsvolymen återställs vid varje periodskifte.</p>
   </div>
 </section>
 
 <section class="cta">
-  <h2>Kom igång</h2>
+  <h2>Aktivering</h2>
   <p>Kontakta {{PartnerContact}} för aktivering av licens och domänkonfiguration.</p>
   <a href="mailto:{{PartnerContact}}?subject=Kataloghub%20licens" class="btn-primary">Kontakta {{PartnerContact}}</a>
 </section>
 
 <footer>
-  <p>Kataloghub · Licensierad metadatahantering</p>
+  <p>Kataloghub · Validering av musikförlagskataloger</p>
   <p><a href="mailto:{{PartnerContact}}" style="color:var(--dim);">{{PartnerContact}}</a></p>
 </footer>
 
+<!-- src-guard:v1 -->
+<script>
+(function(){
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, false);
+  document.addEventListener('keydown', function(e){
+    var k = (e.key || '').toLowerCase();
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && (k === 'u' || k === 's')) { e.preventDefault(); return false; }
+  }, false);
+})();
+</script>
 </body>
 </html>

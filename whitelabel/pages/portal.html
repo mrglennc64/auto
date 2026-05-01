@@ -1,934 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{PartnerBrand}} — Portal</title>
+<title>{{PartnerBrand}} — Historik</title>
+<meta name="description" content="Historik över genomförda valideringar och tillhörande rapporter.">
 <style>
-  :root {
-    --bg: #05070b;
-    --bg-elevated: #0a0d14;
-    --bg-card: #0b0f18;
-    --bg-row-hover: #11151c;
-    --border: #1a1f2c;
-    --border-strong: #2a3345;
-    --text: #e8eaed;
-    --text-strong: #ffffff;
-    --muted: #8993a3;
-    --dim: #5a6478;
-    --accent: #22d3ee;
-    --accent-soft: rgba(34,211,238,0.12);
-    --accent-border: rgba(34,211,238,0.4);
-    --green: #22c55e;
-    --green-soft: rgba(34,197,94,0.12);
-    --green-border: rgba(34,197,94,0.4);
-    --red: #ef4444;
-    --red-soft: rgba(239,68,68,0.12);
-    --red-border: rgba(239,68,68,0.4);
-    --yellow: #f59e0b;
-    --yellow-soft: rgba(245,158,11,0.12);
-    --yellow-border: rgba(245,158,11,0.4);
-    --purple: #a78bfa;
-    --purple-soft: rgba(167,139,250,0.12);
-    --purple-border: rgba(167,139,250,0.4);
-    --pill: 999px;
-    --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.5; -webkit-font-smoothing: antialiased; }
-  a { color: inherit; text-decoration: none; }
-  ul { list-style: none; }
+  body { background: #05070b; color: #f5f7fb; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.55; padding: 24px 20px 64px; }
+  a { color: #1dd4b7; text-decoration: none; }
+  .container { max-width: 1080px; margin: 0 auto; }
+  h1, h2, h3 { font-weight: 600; }
 
-  /* Top header */
-  .topbar {
-    height: 56px;
-    background: #000;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .topbar .left { display: flex; align-items: center; gap: 32px; }
-  .topbar .brand { display: flex; align-items: center; gap: 8px; }
-  .topbar .brand-mark {
-    width: 28px; height: 28px;
-    background: linear-gradient(135deg, var(--accent) 0%, #0e7490 100%);
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 11px; color: #000;
-    letter-spacing: 0.04em;
-  }
-  .topbar .brand-text { font-weight: 600; font-size: 13px; color: var(--text-strong); }
-  .topbar .portal-tabs { display: flex; gap: 6px; }
-  .portal-tab {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    color: var(--muted); padding: 6px 14px; border-radius: var(--pill);
-    font-size: 12px; font-weight: 600;
-  }
-  .portal-tab:hover { color: var(--text); border-color: var(--border-strong); }
-  .portal-tab.active { background: rgba(255,255,255,0.08); color: var(--text-strong); border-color: var(--border-strong); }
-  .topbar .right { display: flex; align-items: center; gap: 8px; }
-  .mode-pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 5px 12px; border-radius: var(--pill);
-    font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
-  }
-  .mode-pill.demo { background: var(--yellow-soft); color: var(--yellow); border: 1px solid var(--yellow-border); }
-  .mode-pill.live { background: var(--green-soft); color: var(--green); border: 1px solid var(--green-border); }
-  .mode-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  header.topnav { max-width: 1120px; margin: 0 auto 24px; padding: 0 0 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid #1b2233; }
+  .brand { display: flex; align-items: center; gap: 0.65rem; }
+  .brand-mark { width: 24px; height: 24px; border-radius: 999px; background: radial-gradient(circle at 30% 20%, #b0fbe9 0, #1dd4b7 40%, #0f6657 100%); }
+  .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: #8f9bb3; }
+  nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: #8f9bb3; }
+  nav.primary a:hover, nav.primary a.active { color: #1dd4b7; }
 
-  /* Layout */
-  .layout { display: flex; min-height: calc(100vh - 56px); }
+  .hero { padding: 0 0 1.25rem; }
+  .hero h1 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .hero p { color: #c3cad8; max-width: 760px; font-size: 0.95rem; }
 
-  /* Sidebar */
-  .sidebar {
-    width: 240px;
-    background: var(--bg);
-    border-right: 1px solid var(--border);
-    padding: 18px 14px;
-    flex-shrink: 0;
-    position: sticky;
-    top: 56px;
-    height: calc(100vh - 56px);
-    overflow-y: auto;
-  }
-  .sidebar .label-os { font-size: 9px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.12em; padding: 0 8px; margin-bottom: 4px; font-weight: 700; }
-  .sidebar h2 { font-size: 13px; color: var(--text-strong); padding: 0 8px 14px; font-weight: 600; }
-  .sidebar .nav-group { margin-bottom: 18px; }
-  .sidebar .group-label { font-size: 9px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em; padding: 0 8px 6px; font-weight: 700; }
-  .sidebar .nav-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 7px 8px; border-radius: 6px; margin-bottom: 1px;
-    font-size: 12.5px; color: var(--muted); font-weight: 500;
-    transition: 0.1s ease;
-    border: 1px solid transparent;
-  }
-  .sidebar .nav-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
-  .sidebar .nav-item.active {
-    background: var(--accent-soft); color: var(--accent);
-    border-color: var(--accent-border);
-    font-weight: 600;
-  }
-  .sidebar .nav-item .icon {
-    width: 14px; height: 14px; border-radius: 3px;
-    display: inline-flex; align-items: center; justify-content: center;
-    flex-shrink: 0; font-size: 9px;
-  }
-  .sidebar .nav-item .icon.cyan { background: var(--accent-soft); color: var(--accent); }
-  .sidebar .nav-item .icon.green { background: var(--green-soft); color: var(--green); }
-  .sidebar .nav-item .icon.red { background: var(--red-soft); color: var(--red); }
-  .sidebar .nav-item .icon.yellow { background: var(--yellow-soft); color: var(--yellow); }
-  .sidebar .nav-item .icon.purple { background: var(--purple-soft); color: var(--purple); }
-  .sidebar .footer-link { display: block; padding: 7px 8px; font-size: 11.5px; color: var(--dim); }
-  .sidebar .footer-link:hover { color: var(--accent); }
+  .meta-row { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.25rem 0; }
+  .meta-card { background: #0b0f18; border: 1px solid #1b2233; border-radius: 12px; padding: 0.85rem 1.1rem; min-width: 180px; }
+  .meta-card .label { font-size: 11px; color: #8f9bb3; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .meta-card .value { font-size: 18px; font-weight: 700; color: #f5f7fb; font-family: monospace; }
 
-  /* Workspace tools — colored button style like TRP screenshot */
-  .ws-tool {
-    display: flex; align-items: center; gap: 9px;
-    padding: 8px 10px; border-radius: 6px; margin-bottom: 4px;
-    font-size: 12px; color: var(--text); font-weight: 600;
-    border: 1px solid var(--border);
-    background: var(--bg-card);
-  }
-  .ws-tool:hover { border-color: var(--border-strong); background: var(--bg-row-hover); }
-  .ws-tool.active { border-color: var(--accent-border); background: var(--accent-soft); color: var(--accent); }
-  .ws-tool .icon { font-size: 11px; }
-  .ws-tool.t-green .icon { color: var(--green); }
-  .ws-tool.t-cyan .icon { color: var(--accent); }
-  .ws-tool.t-yellow .icon { color: var(--yellow); }
-  .ws-tool.t-red .icon { color: var(--red); }
-  .ws-tool.t-purple .icon { color: var(--purple); }
+  .history { background: #0b0f18; border: 1px solid #1b2233; border-radius: 12px; overflow: hidden; }
+  .history table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .history th { text-align: left; padding: 12px 16px; font-size: 11px; color: #8f9bb3; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; background: #0a0d14; border-bottom: 1px solid #1b2233; }
+  .history td { padding: 12px 16px; border-bottom: 1px solid #1b2233; color: #c3cad8; vertical-align: top; }
+  .history tr:last-child td { border-bottom: 0; }
+  .history .date { font-family: monospace; color: #8f9bb3; white-space: nowrap; }
+  .history .name { color: #f5f7fb; }
+  .history .num { font-family: monospace; color: #c3cad8; text-align: right; }
+  .history .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; background: rgba(29,212,183,0.12); color: #1dd4b7; border: 1px solid rgba(29,212,183,0.4); }
+  .history .pill.blocked { background: rgba(248,113,113,0.12); color: #f87171; border-color: rgba(248,113,113,0.4); }
+  .history .links a { display: inline-block; margin-right: 12px; font-size: 12px; }
+  .history .links a:last-child { margin-right: 0; }
 
-  /* Main content */
-  .content {
-    flex: 1;
-    padding: 28px 36px 60px;
-    max-width: 1480px;
-  }
-  .content section {
-    margin-bottom: 36px;
-    scroll-margin-top: 70px;
-  }
-  .content section .preheader {
-    font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
-    color: var(--accent); font-weight: 700; margin-bottom: 8px;
-  }
-  .content section h1 {
-    font-size: 1.9rem; color: var(--text-strong); font-weight: 700;
-    letter-spacing: -0.01em; margin-bottom: 8px;
-    font-family: var(--font-mono);
-  }
-  .content section .lede { color: var(--muted); font-size: 0.92rem; margin-bottom: 22px; max-width: 720px; }
-  .content section h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); font-weight: 700; margin: 24px 0 10px; }
+  .empty { background: #0b0f18; border: 1px solid #1b2233; border-radius: 12px; padding: 2rem 1.6rem; text-align: center; color: #8f9bb3; font-size: 13px; }
+  .empty p { margin-bottom: 0.4rem; }
 
-  /* Stat cards row */
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 8px; }
-  @media (max-width: 1100px) { .stats { grid-template-columns: repeat(2, 1fr); } }
-  .stat-card {
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 18px 20px;
-  }
-  .stat-card .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); font-weight: 700; margin-bottom: 6px; }
-  .stat-card .num { font-size: 1.9rem; font-weight: 700; line-height: 1; font-family: var(--font-mono); }
-  .stat-card .num.cyan { color: var(--accent); }
-  .stat-card .num.green { color: var(--green); }
-  .stat-card .num.red { color: var(--red); }
-  .stat-card .num.yellow { color: var(--yellow); }
-  .stat-card .num.purple { color: var(--purple); }
-  .stat-card .meta { color: var(--muted); font-size: 11px; margin-top: 6px; }
-
-  /* Detail cards row */
-  .detail-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
-  @media (max-width: 1000px) { .detail-row { grid-template-columns: 1fr; } }
-  .detail-card {
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 18px 20px;
-  }
-  .detail-card .h { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); font-weight: 700; margin-bottom: 10px; }
-  .detail-card .big { font-size: 2rem; font-weight: 700; font-family: var(--font-mono); line-height: 1; }
-  .detail-card .big.green { color: var(--green); }
-  .detail-card .big.red { color: var(--red); }
-  .detail-card .big.yellow { color: var(--yellow); }
-  .detail-card .sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
-  .detail-card .progress { height: 6px; background: var(--bg); border-radius: 4px; margin: 12px 0; overflow: hidden; }
-  .detail-card .progress > span { display: block; height: 100%; background: var(--green); }
-  .detail-card .progress.red > span { background: var(--red); }
-  .detail-card .progress.yellow > span { background: var(--yellow); }
-  .detail-card .row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12.5px; color: var(--muted); border-bottom: 1px solid var(--border); }
-  .detail-card .row:last-of-type { border-bottom: 0; }
-  .detail-card .row .v { color: var(--text); font-weight: 600; font-family: var(--font-mono); }
-  .detail-card .cta {
-    display: block; text-align: center; margin-top: 14px;
-    padding: 9px; border-radius: 8px; font-size: 12px; font-weight: 700;
-    border: 1px solid var(--accent-border); color: var(--accent);
-    background: rgba(34,211,238,0.04);
-  }
-  .detail-card .cta:hover { background: var(--accent-soft); }
-  .detail-card .cta.yellow { border-color: var(--yellow-border); color: var(--yellow); background: rgba(245,158,11,0.04); }
-  .detail-card .cta.yellow:hover { background: var(--yellow-soft); }
-  .detail-card .cta.green { border-color: var(--green-border); color: var(--green); background: rgba(34,197,94,0.04); }
-
-  /* Page-level toolbar */
-  .page-head {
-    display: flex; justify-content: space-between; align-items: flex-end;
-    border-bottom: 1px solid var(--border); padding-bottom: 14px; margin-bottom: 18px;
-  }
-  .page-head .actions { display: flex; gap: 8px; }
-  .btn-pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 7px 14px; border-radius: var(--pill);
-    background: var(--bg-card); border: 1px solid var(--border);
-    color: var(--text); font-size: 12px; font-weight: 600;
-  }
-  .btn-pill:hover { border-color: var(--border-strong); }
-  .btn-pill.primary { background: var(--accent); color: #000; border-color: var(--accent); }
-  .btn-pill.primary:hover { background: #67e8f9; }
-
-  /* Tables */
-  .data-table {
-    width: 100%; border-collapse: collapse; background: var(--bg-card);
-    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
-    font-size: 12.5px;
-  }
-  .data-table th { text-align: left; padding: 10px 16px; background: var(--bg-elevated); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dim); font-weight: 700; border-bottom: 1px solid var(--border); }
-  .data-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
-  .data-table tbody tr:last-child td { border-bottom: 0; }
-  .data-table tbody tr:hover { background: var(--bg-row-hover); }
-  .data-table .work-title { font-weight: 600; color: var(--text-strong); }
-  .data-table .work-sub { color: var(--accent); font-size: 12px; }
-  .data-table .work-codes { color: var(--dim); font-size: 11px; font-family: var(--font-mono); margin-top: 4px; }
-  .data-table .num { font-family: var(--font-mono); font-weight: 600; text-align: right; }
-  .data-table .num.green { color: var(--green); }
-  .data-table .num.red { color: var(--red); }
-  .data-table .center { text-align: center; }
-
-  /* Pills (status) */
-  .status-pill {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 3px 10px; border-radius: var(--pill);
-    font-size: 10.5px; font-weight: 700; letter-spacing: 0.02em;
-  }
-  .status-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-  .status-pill.active { background: var(--green-soft); color: var(--green); border: 1px solid var(--green-border); }
-  .status-pill.dispute { background: var(--red-soft); color: var(--red); border: 1px solid var(--red-border); }
-  .status-pill.pending { background: var(--yellow-soft); color: var(--yellow); border: 1px solid var(--yellow-border); }
-  .status-pill.collecting { background: var(--green-soft); color: var(--green); border: 1px solid var(--green-border); }
-  .status-pill.gap { background: var(--yellow-soft); color: var(--yellow); border: 1px solid var(--yellow-border); }
-  .status-pill.unclaimed { background: var(--red-soft); color: var(--red); border: 1px solid var(--red-border); }
-
-  .flag-num {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 22px; height: 22px; border-radius: 50%;
-    background: var(--red-soft); color: var(--red); border: 1px solid var(--red-border);
-    font-size: 11px; font-weight: 700;
-  }
-  .flag-check { color: var(--green); font-weight: 700; }
-  .dash { color: var(--dim); }
-
-  /* Country/case cards grid (Revenue Map style) */
-  .country-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
-  @media (max-width: 1200px) { .country-grid { grid-template-columns: repeat(2, 1fr); } }
-  .country-card {
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 16px 18px;
-    position: relative;
-  }
-  .country-card .code { font-size: 11px; color: var(--dim); font-weight: 700; letter-spacing: 0.06em; }
-  .country-card .pill-tr { position: absolute; top: 16px; right: 16px; }
-  .country-card .name { font-size: 13px; color: var(--text); margin-top: 14px; font-weight: 500; }
-  .country-card .amt { font-size: 1.5rem; font-weight: 700; font-family: var(--font-mono); margin-top: 4px; color: var(--text-strong); }
-  .country-card .amt.green { color: var(--green); }
-  .country-card .amt.red { color: var(--red); }
-  .country-card .amt.yellow { color: var(--yellow); }
-  .country-card .bar { height: 4px; background: var(--bg); border-radius: 2px; margin: 10px 0 6px; overflow: hidden; }
-  .country-card .bar > span { display: block; height: 100%; }
-  .country-card .bar > span.green { background: var(--green); }
-  .country-card .bar > span.red { background: var(--red); }
-  .country-card .bar > span.yellow { background: var(--yellow); }
-  .country-card .pct { font-size: 11px; color: var(--dim); }
-
-  /* Embedded wizard frame */
-  .wizard-shell {
-    background: #000; border: 1px solid var(--border);
-    border-radius: 12px; overflow: hidden;
-  }
-  .wizard-toolbar {
-    display: flex; justify-content: space-between; align-items: center;
-    background: var(--bg-elevated); border-bottom: 1px solid var(--border);
-    padding: 10px 16px;
-  }
-  .wizard-toolbar .meta { display: flex; align-items: center; gap: 10px; }
-  .wizard-toolbar .meta .url { font-family: var(--font-mono); font-size: 11px; color: var(--dim); }
-  .wizard-toolbar .meta .gate-pw { font-size: 10.5px; color: var(--yellow); padding: 2px 8px; background: var(--yellow-soft); border-radius: var(--pill); border: 1px solid var(--yellow-border); }
-  .wizard-toolbar a { font-size: 11.5px; color: var(--accent); font-weight: 600; }
-  .wizard-toolbar a:hover { text-decoration: underline; }
-  .wizard-frame { width: 100%; height: 760px; border: 0; background: #05070b; display: block; }
-
-  /* Search/filter bar */
-  .filter-bar { display: flex; gap: 10px; margin-bottom: 14px; align-items: center; }
-  .filter-bar input, .filter-bar select {
-    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
-    padding: 7px 12px; color: var(--text); font-family: inherit; font-size: 12.5px; outline: none;
-  }
-  .filter-bar input { flex: 1; max-width: 360px; }
-  .filter-bar input:focus, .filter-bar select:focus { border-color: var(--accent-border); }
-  .filter-bar .results-count { margin-left: auto; font-size: 11px; color: var(--dim); }
-
-  /* Catalog Ingest Engine */
-  .ingest-shell { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
-  .ingest-drop {
-    display: block; border: 2px dashed var(--border-strong); border-radius: 10px;
-    padding: 36px 20px; text-align: center; cursor: pointer; transition: 0.15s ease;
-    background: var(--bg);
-  }
-  .ingest-drop:hover, .ingest-drop.dragover { border-color: var(--accent); background: rgba(34,211,238,0.04); }
-  .ingest-icon { font-size: 1.8rem; color: var(--accent); margin-bottom: 8px; }
-  .ingest-label { font-size: 13.5px; color: var(--text); font-weight: 600; margin-bottom: 4px; }
-  .ingest-hint { font-size: 11.5px; color: var(--dim); margin-bottom: 14px; }
-  .ingest-buttons { display: inline-flex; gap: 8px; }
-  .ingest-summary { margin-top: 16px; }
-  .ingest-counts { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
-  .ingest-counts strong { color: var(--text); font-family: var(--font-mono); margin-right: 4px; }
-  .ingest-actions { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
-  .ingest-note { font-size: 12px; color: var(--green); }
-  .ingest-row-path { font-family: var(--font-mono); font-size: 11.5px; color: var(--text); }
-  .ingest-row-hash { font-family: var(--font-mono); font-size: 10.5px; color: var(--dim); }
-
-  /* Notice / warning banner */
-  .notice {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 12px 16px; border-radius: 8px;
-    background: var(--yellow-soft); border: 1px solid var(--yellow-border);
-    color: var(--yellow); font-size: 12.5px; margin-bottom: 18px;
-  }
-  .notice strong { color: var(--yellow); }
-  .notice .body { color: var(--text); flex: 1; }
-
-  /* Folder header (Master Catalog style) */
-  .folder-head { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
-  .folder-head .icon-folder { font-size: 1.6rem; }
-  .folder-head h1 { font-size: 1.9rem; }
-  .folder-head .count {
-    background: var(--accent-soft); color: var(--accent);
-    border: 1px solid var(--accent-border);
-    padding: 2px 12px; border-radius: var(--pill);
-    font-size: 11px; font-weight: 700; font-family: var(--font);
-  }
-
-  @media (max-width: 880px) {
-    .sidebar { display: none; }
-    .content { padding: 18px; }
-    .topbar { padding: 0 14px; }
-    .topbar .portal-tabs { display: none; }
-  }
+  .note { color: #8f9bb3; font-size: 12px; margin-top: 1.25rem; }
+  .note strong { color: #c3cad8; }
 </style>
 </head>
 <body>
+<div class="container">
 
-<!-- TOP HEADER -->
-<header class="topbar">
-  <div class="left">
+  <header class="topnav">
     <div class="brand">
-      <div class="brand-mark">PB</div>
-      <div class="brand-text">{{PartnerBrand}}</div>
+      <span class="brand-mark"></span>
+      <a href="index.html"><span class="brand-text">{{PartnerBrand}}</span></a>
     </div>
-    <div class="portal-tabs">
-      <a href="#" class="portal-tab active">⚖ Partner Portal</a>
-      <a href="index.html" class="portal-tab">▣ Website</a>
-    </div>
+    <nav class="primary">
+      <a href="scan-catalog.html">Validering</a>
+      <a href="portal.html" class="active">Historik</a>
+      <a href="pricing-kataloghub.html">Priser</a>
+      <a href="faq.html">Vanliga frågor</a>
+      <a href="contact.html">Kontakt</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Historik</h1>
+    <p>Översikt över genomförda valideringar och tillhörande rapporter. Endast läsning. Inga nya processer initieras härifrån.</p>
+  </section>
+
+  <div class="meta-row" id="metaRow" style="display:none;">
+    <div class="meta-card"><div class="label">Period</div><div class="value" id="metaPeriod">—</div></div>
+    <div class="meta-card"><div class="label">Valideringar denna period</div><div class="value" id="metaValidations">—</div></div>
+    <div class="meta-card"><div class="label">Kataloger denna period</div><div class="value" id="metaCatalogs">—</div></div>
   </div>
-  <div class="right">
-    <span class="mode-pill demo"><span class="dot"></span> Demo</span>
-    <span class="mode-pill live" style="opacity:0.45;"><span class="dot"></span> Live</span>
-  </div>
-</header>
 
-<div class="layout">
+  <div id="historyContainer"></div>
 
-  <aside class="sidebar">
-    <div class="label-os">{{PartnerBrand}} OS</div>
-    <h2>Operations Portal</h2>
+  <p class="note">Historiken levereras av {{PartnerBrand}}. Korrigeringar utförs via HeyRoya, separat. Ingen export av åtgärdade filer från denna sida.</p>
 
-    <div class="nav-group">
-      <a href="#overview" class="nav-item active" data-section="overview"><span class="icon cyan">▤</span> Overview</a>
-      <a href="#metadata-health" class="nav-item" data-section="metadata-health"><span class="icon red">⚑</span> Metadata Health</a>
-      <a href="#ingest" class="nav-item" data-section="ingest"><span class="icon cyan">⇪</span> Catalog Ingest Engine</a>
-    </div>
-
-    <div class="nav-group">
-      <div class="group-label">Workspace</div>
-      <a href="#part1-scan" class="ws-tool t-green" data-section="part1-scan"><span class="icon">①</span> Part 1 — Scan Catalog</a>
-      <a href="#part2-apply" class="ws-tool t-yellow" data-section="part2-apply"><span class="icon">②</span> Part 2 — Apply Corrections</a>
-      <a href="#master-catalog" class="ws-tool t-green" data-section="master-catalog"><span class="icon">▤</span> Master Catalog</a>
-      <a href="#reports" class="ws-tool t-cyan" data-section="reports"><span class="icon">▣</span> Reports</a>
-      <a href="#worksheets" class="ws-tool t-cyan" data-section="worksheets"><span class="icon">▦</span> Worksheets</a>
-      <a href="#exports" class="ws-tool t-green" data-section="exports"><span class="icon">↓</span> Export Files (CWR-ready)</a>
-      <a href="#audit-pdf" class="ws-tool t-red" data-section="audit-pdf"><span class="icon">⚑</span> Audit PDF</a>
-    </div>
-
-    <div class="nav-group">
-      <div class="group-label">Account</div>
-      <a href="#support" class="nav-item" data-section="support"><span class="icon cyan">?</span> Support</a>
-      <a href="#account" class="nav-item" data-section="account"><span class="icon purple">◐</span> Account</a>
-    </div>
-  </aside>
-
-  <main class="content">
-
-    <!-- OVERVIEW -->
-    <section id="overview">
-      <div class="preheader">Operations Portal</div>
-      <h1>Overview</h1>
-      <p class="lede">Automate your catalog. Track corrections. Deliver under {{PartnerBrand}}.</p>
-
-      <div class="detail-row">
-        <div class="detail-card">
-          <div class="h">Metadata Health (Average)</div>
-          <div class="big yellow">68%</div>
-          <div class="sub">Needs attention · 1,242 works scanned</div>
-          <div class="progress yellow"><span style="width:68%;"></span></div>
-          <a href="#metadata-health" class="cta yellow">View Metadata Health →</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- PART 1: SCAN -->
-    <section id="part1-scan">
-      <div class="preheader">Workspace · Part 1</div>
-      <h1>Scan Catalog</h1>
-      <p class="lede">Upload a catalog file for metadata analysis. The scan identifies missing identifiers, role/share inconsistencies, duplicates, and conflicts. You receive a health report, a list of affected works, and a worksheet.</p>
-      <a href="scan-catalog.html" class="btn-pill primary" style="display:inline-flex; padding:10px 22px;">Open Part 1 — Scan Catalog →</a>
-    </section>
-
-    <!-- PART 2: APPLY -->
-    <section id="part2-apply">
-      <div class="preheader">Workspace · Part 2</div>
-      <h1>Apply Corrections</h1>
-      <p class="lede">Once the end client has returned the completed worksheet, upload it here. You will receive an updated health report, CWR export, and CSV export.</p>
-      <a href="apply-corrections.html" class="btn-pill primary" style="display:inline-flex; padding:10px 22px;">Open Part 2 — Apply Corrections →</a>
-    </section>
-
-    <!-- MASTER CATALOG -->
-    <section id="master-catalog">
-      <div class="preheader">Workspace</div>
-      <div class="folder-head">
-        <span class="icon-folder">📁</span>
-        <h1>Master Catalog</h1>
-        <span class="count">8 works</span>
-      </div>
-      <p class="lede">Complete catalog review. Each work includes ISWC, ISRC, IPI, shares, rights holders, territory gaps, and review flags.</p>
-
-      <div class="stats" style="margin-bottom: 18px;">
-        <div class="stat-card"><div class="label">Total Works</div><div class="num cyan">8</div></div>
-        <div class="stat-card"><div class="label">Shares OK</div><div class="num green">5</div></div>
-        <div class="stat-card"><div class="label">Needs Attention</div><div class="num red">3</div></div>
-        <div class="stat-card"><div class="label">Review Flags</div><div class="num yellow">11 flags · 2 clean</div></div>
-      </div>
-
-      <div class="filter-bar">
-        <input type="text" placeholder="Search title, songwriter, ISRC, ISWC...">
-        <select><option>All statuses</option><option>Active</option><option>Disputed</option><option>Pending</option></select>
-        <select><option>All flags</option><option>Missing ISWC</option><option>Share error</option></select>
-        <span class="results-count">8 results</span>
-      </div>
-
-      <table class="data-table">
-        <thead><tr><th>Work</th><th>Updated</th><th class="num">Scanned Value</th><th class="num">Needs Attention</th><th class="center">Flags</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><div class="work-title">Midnight Sun</div><div class="work-sub">Erik Andersson · Anna Lindberg</div><div class="work-codes">ISWC T-123.456.789-0 · ISRC SE6QZ2401001</div></td>
-            <td class="dash">2026-04-29</td><td class="num green">€512</td><td class="num dash">—</td><td class="center"><span class="flag-check">✓</span></td><td><span class="status-pill active"><span class="dot"></span>Active</span></td>
-          </tr>
-          <tr>
-            <td><div class="work-title">Winter Light</div><div class="work-sub">Marta Svensson · Nordic Music AB</div><div class="work-codes">ISWC T-234.567.890-1 · ISRC SE6QZ2401002</div></td>
-            <td class="dash">2026-04-28</td><td class="num green">€284</td><td class="num red">€12</td><td class="center"><span class="flag-num">1</span></td><td><span class="status-pill active"><span class="dot"></span>Active</span></td>
-          </tr>
-          <tr>
-            <td><div class="work-title">Aurora</div><div class="work-sub">Johan Berg</div><div class="work-codes">ISWC T-345.678.901-2 · ISRC SE6QZ2401003</div></td>
-            <td class="dash">2026-04-25</td><td class="num green">€156</td><td class="num dash">—</td><td class="center"><span class="flag-num">1</span></td><td><span class="status-pill dispute"><span class="dot"></span>Disputed</span></td>
-          </tr>
-          <tr>
-            <td><div class="work-title">No Role Modelz</div><div class="work-sub">Lars Holm</div><div class="work-codes">ISWC T-456.789.012-3 · ISRC SE6QZ2401004</div></td>
-            <td class="dash">2026-04-22</td><td class="num green">€98</td><td class="num red">€22</td><td class="center"><span class="flag-num">2</span></td><td><span class="status-pill active"><span class="dot"></span>Active</span></td>
-          </tr>
-          <tr>
-            <td><div class="work-title">Antidote</div><div class="work-sub">Per Karlsson</div><div class="work-codes">ISWC <span style="color:var(--red);">missing</span> · ISRC SE6QZ2401005</div></td>
-            <td class="dash">2026-04-19</td><td class="num green">€88</td><td class="num red">€9</td><td class="center"><span class="flag-num">2</span></td><td><span class="status-pill dispute"><span class="dot"></span>Disputed</span></td>
-          </tr>
-          <tr>
-            <td><div class="work-title">Drip Too Hard</div><div class="work-sub">Lily &amp; Gunnar</div><div class="work-codes">ISWC <span style="color:var(--red);">missing</span> · ISRC SE6QZ2401006</div></td>
-            <td class="dash">2026-04-15</td><td class="num green">€74</td><td class="num red">€31</td><td class="center"><span class="flag-num">2</span></td><td><span class="status-pill active"><span class="dot"></span>Active</span></td>
-          </tr>
-          <tr>
-            <td><div class="work-title">Love Yourz</div><div class="work-sub">Lars Holm</div><div class="work-codes">ISWC T-789.012.345-6 · ISRC SE6QZ2401007</div></td>
-            <td class="dash">2026-04-12</td><td class="num green">€64</td><td class="num dash">—</td><td class="center"><span class="flag-check">✓</span></td><td><span class="status-pill active"><span class="dot"></span>Active</span></td>
-          </tr>
-          <tr>
-            <td><div class="work-title">Look Alive</div><div class="work-sub">Block &amp; Drake-trio</div><div class="work-codes">ISWC T-890.123.456-7 · ISRC SE6QZ2401008</div></td>
-            <td class="dash">2026-04-08</td><td class="num green">€41</td><td class="num red">€18</td><td class="center"><span class="flag-num">3</span></td><td><span class="status-pill pending"><span class="dot"></span>Pending</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- CATALOG INGEST ENGINE -->
-    <section id="ingest">
-      <div class="preheader">Operations Portal</div>
-      <h1>Catalog Ingest Engine</h1>
-      <p class="lede">Drop entire folders, nested directories, mixed formats. Auto-detect, hash, parse, and merge into your Master Catalog.</p>
-
-      <div class="ingest-shell">
-        <label class="ingest-drop" id="ingestDrop">
-          <div class="ingest-icon">⇪</div>
-          <div class="ingest-label">Drag and drop files or folders here</div>
-          <div class="ingest-hint">Nested directories supported · CSV · XLSX · CWR · max 50 MB per file</div>
-          <div class="ingest-buttons">
-            <button type="button" class="btn-pill" id="ingestPickFiles">Choose files</button>
-            <button type="button" class="btn-pill" id="ingestPickDir">Choose folder</button>
-          </div>
-          <input type="file" id="ingestFiles" multiple accept=".csv,.xlsx,.cwr,.v21,.v22" hidden>
-          <input type="file" id="ingestDir" multiple webkitdirectory hidden>
-        </label>
-
-        <div class="ingest-summary" id="ingestSummary" style="display:none;">
-          <div class="ingest-counts">
-            <span><strong id="cntTotal">0</strong> files</span>
-            <span><strong id="cntCsv">0</strong> CSV</span>
-            <span><strong id="cntXlsx">0</strong> XLSX</span>
-            <span><strong id="cntCwr">0</strong> CWR</span>
-            <span><strong id="cntOther">0</strong> ignored</span>
-            <span><strong id="cntBytes">0 B</strong> total</span>
-          </div>
-          <table class="data-table" style="margin-top:12px;">
-            <thead><tr><th>Path</th><th>Format</th><th class="num">Size</th><th>SHA-256</th><th>Status</th></tr></thead>
-            <tbody id="ingestRows"></tbody>
-          </table>
-          <div class="ingest-actions">
-            <button type="button" class="btn-pill primary" id="ingestMerge">Merge into Master Catalog</button>
-            <button type="button" class="btn-pill" id="ingestClear">Clear</button>
-            <span class="ingest-note" id="ingestNote"></span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- METADATA HEALTH -->
-    <section id="metadata-health">
-      <div class="preheader">Operations Portal</div>
-      <h1>Metadatahälsa</h1>
-      <p class="lede">Aggregated health assessment per end client. Identifiers, roles, shares, and duplicates.</p>
-
-      <div class="detail-row">
-        <div class="detail-card">
-          <div class="h">End Client A</div>
-          <div class="big green">92%</div>
-          <div class="sub">CWR-ready · 0 blocking deviations</div>
-          <div class="progress"><span style="width:92%;"></span></div>
-        </div>
-        <div class="detail-card">
-          <div class="h">End Client B</div>
-          <div class="big yellow">68%</div>
-          <div class="sub">Needs attention · 12 affected works</div>
-          <div class="progress yellow"><span style="width:68%;"></span></div>
-        </div>
-        <div class="detail-card">
-          <div class="h">End Client C</div>
-          <div class="big red">41%</div>
-          <div class="sub">Critical · 31 affected works</div>
-          <div class="progress red"><span style="width:41%;"></span></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- REPORTS -->
-    <section id="reports">
-      <div class="preheader">Workspace</div>
-      <h1>Reports</h1>
-      <p class="lede">Health reports under {{PartnerBrand}}.</p>
-      <table class="data-table">
-        <thead><tr><th>Case</th><th>Type</th><th>Date</th><th class="num">Download</th></tr></thead>
-        <tbody>
-          <tr><td>End Client A · v1</td><td class="dash">Health Report (Before)</td><td class="dash">2026-04-29</td><td class="num"><a href="#" style="color:var(--accent);">HTML ↓</a></td></tr>
-          <tr><td>End Client A · v1</td><td class="dash">Health Report (After)</td><td class="dash">2026-04-29</td><td class="num"><a href="#" style="color:var(--accent);">HTML ↓</a></td></tr>
-          <tr><td>End Client B · v3</td><td class="dash">Health Report (Before)</td><td class="dash">2026-04-28</td><td class="num"><a href="#" style="color:var(--accent);">HTML ↓</a></td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- WORKSHEETS -->
-    <section id="worksheets">
-      <div class="preheader">Workspace</div>
-      <h1>Worksheets</h1>
-      <p class="lede">Correction selection worksheets. The end client marks Approve / Modify / Reject.</p>
-      <table class="data-table">
-        <thead><tr><th>Case</th><th>Format</th><th>Status</th><th class="num">Download</th></tr></thead>
-        <tbody>
-          <tr><td>End Client A · v1</td><td class="dash">XLSX</td><td><span class="status-pill active"><span class="dot"></span>Returned</span></td><td class="num"><a href="#" style="color:var(--accent);">XLSX ↓</a></td></tr>
-          <tr><td>End Client B · v3</td><td class="dash">XLSX</td><td><span class="status-pill pending"><span class="dot"></span>Pending</span></td><td class="num"><a href="#" style="color:var(--accent);">XLSX ↓</a></td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- EXPORTS -->
-    <section id="exports">
-      <div class="preheader">Workspace</div>
-      <h1>Export Files (CWR-ready)</h1>
-      <p class="lede">Files generated in Part 2 (Apply Corrections). Download to forward to the rights organization of your choice.</p>
-      <table class="data-table">
-        <thead><tr><th>Filename</th><th>Format</th><th>Date</th><th class="num">Size</th><th class="num">Download</th></tr></thead>
-        <tbody id="exportsTbody">
-          <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--dim);">No exports yet — go to <a href="apply-corrections.html" style="color:var(--accent);">Part 2</a> to generate CWR / CSV / report.</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- AUDIT PDF -->
-    <section id="audit-pdf">
-      <div class="preheader">Workspace</div>
-      <h1>Audit PDF</h1>
-      <p class="lede">Compiled audit per case in PDF format. Ready for the partner's legal archive.</p>
-      <table class="data-table">
-        <thead><tr><th>Case</th><th>Pages</th><th>Date</th><th class="num">Download</th></tr></thead>
-        <tbody>
-          <tr><td>End Client A · v1</td><td class="dash">14</td><td class="dash">2026-04-29</td><td class="num"><a href="#" style="color:var(--accent);">PDF ↓</a></td></tr>
-          <tr><td>End Client B · v2</td><td class="dash">11</td><td class="dash">2026-04-22</td><td class="num"><a href="#" style="color:var(--accent);">PDF ↓</a></td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- SUPPORT -->
-    <section id="support">
-      <div class="preheader">Account</div>
-      <h1>Support</h1>
-      <p class="lede">For questions regarding active cases or deliveries.</p>
-      <div class="detail-card">
-        <div class="row"><span>Email</span><span class="v"><a href="mailto:{{PartnerContact}}" style="color:var(--accent);">{{PartnerContact}}</a></span></div>
-        <div class="row"><span>Response Time</span><span class="v">1–2 business days</span></div>
-        <div class="row"><span>Frequently Asked Questions</span><span class="v"><a href="faq.html" style="color:var(--accent);">→ FAQ</a></span></div>
-      </div>
-    </section>
-
-    <!-- ACCOUNT -->
-    <section id="account">
-      <div class="preheader">Account</div>
-      <h1>Account</h1>
-      <p class="lede">Manage license, users, and settings.</p>
-      <div class="detail-card">
-        <div class="row"><span>Partner</span><span class="v">{{PartnerBrand}}</span></div>
-        <div class="row"><span>Contact Address</span><span class="v">{{PartnerContact}}</span></div>
-        <div class="row"><span>Domain</span><span class="v">{{PartnerDomain}}</span></div>
-        <div class="row"><span>License Tier</span><span class="v">Standard (monthly)</span></div>
-        <div class="row"><span>Volume This Month</span><span class="v">9 scans</span></div>
-        <div class="row"><span>Next Invoice</span><span class="v">2026-05-01</span></div>
-      </div>
-    </section>
-
-  </main>
 </div>
 
 <script>
-(function() {
-  var navItems = document.querySelectorAll('.sidebar [data-section]');
-  var sections = document.querySelectorAll('.content section');
+// Backend may inject scan history via window.KATALOGHUB_HISTORY before this script runs.
+// Each entry: { date, catalog, works, status: "Validerad"|"Blockerad", reportUrl?, csvUrl?, blockCode? }
+window.KATALOGHUB_HISTORY = window.KATALOGHUB_HISTORY || [];
+window.KATALOGHUB_PERIOD = window.KATALOGHUB_PERIOD || {
+  period: '{{Period|}}',
+  validationsThisPeriod: {{UsageValidations|0}},
+  catalogsThisPeriod:    {{UsageCatalogs|0}},
+  maxValidationsPerPeriod: {{TierMaxValidations|0}},
+  maxCatalogsPerPeriod:    {{TierMaxCatalogs|0}}
+};
 
-  function setActive(id) {
-    navItems.forEach(function(a){ a.classList.toggle('active', a.dataset.section === id); });
-  }
-
-  setActive((location.hash || '#overview').replace('#',''));
-  window.addEventListener('hashchange', function(){ setActive((location.hash || '#overview').replace('#','')); });
-
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){ if (e.isIntersecting) setActive(e.target.id); });
-    }, { rootMargin: '-30% 0px -60% 0px' });
-    sections.forEach(function(s){ io.observe(s); });
-  }
+(function renderMeta(){
+  var p = window.KATALOGHUB_PERIOD || {};
+  if (!p.period) return;
+  document.getElementById('metaRow').style.display = 'flex';
+  document.getElementById('metaPeriod').textContent = p.period;
+  document.getElementById('metaValidations').textContent = (p.validationsThisPeriod || 0) + ' / ' + (p.maxValidationsPerPeriod || '—');
+  document.getElementById('metaCatalogs').textContent = (p.catalogsThisPeriod || 0) + ' / ' + (p.maxCatalogsPerPeriod || '—');
 })();
 
-// CWR / CSV download for Exportfiler section. Same record pattern as the
-// internal cleaning-wizard CWR builder (HDR/GRH/NWR/SPU/SWR/PWR/GRT/TRL).
-(function() {
-  function pad(s, n) { s = String(s == null ? '' : s); return (s + ' '.repeat(n)).slice(0, n); }
-
-  function buildCwrPacket(submitter, caseSlug) {
-    var stamp = new Date().toISOString().slice(0,10).replace(/-/g,'');
-    var sub = pad((submitter || 'PARTNER').toUpperCase(), 45);
-    var pid = (caseSlug || 'CASE').toUpperCase().replace(/[^A-Z0-9]/g,'-').slice(0, 14);
-    return [
-      'HDR ROYA-' + stamp + '-001  ' + sub + '01.10     ' + stamp + '14:30:00',
-      'GRHNWR                                                   0000001',
-      'NWR00000001MIDNIGHT SUN                                                         T0043553311               UNC Y       ',
-      'SPU0000000100000002010000712984310' + sub + '011',
-      'SWR0000000100000003007129843100050ANDERSSON                                  ERIK                  CA 011',
-      'PWR0000000100000004007129843100  ' + sub,
-      'NWR00000002VINTERLJUS                                                          T3456789012               UNC Y       ',
-      'SPU0000000200000002010000988777101' + sub + '011',
-      'SWR0000000200000003001234567890050SVENSSON                                   MARIA                 CA 011',
-      'PWR0000000200000004001234567890  ' + sub,
-      'GRT0000001000000010',
-      'TRL0000000200000012'
-    ].join('\n');
+(function renderHistory(){
+  var rows = window.KATALOGHUB_HISTORY || [];
+  var container = document.getElementById('historyContainer');
+  if (rows.length === 0) {
+    container.innerHTML = '<div class="empty"><p>Inga genomförda valideringar.</p><p>Genomförda valideringar visas här när de finns tillgängliga.</p></div>';
+    return;
   }
-
-  function buildCsvExport() {
-    return [
-      'work_id,title,iswc,writer_name,writer_ipi,writer_role,share_pct,publisher_ipi,decision',
-      '00000001,Midnight Sun,T0043553311,ANDERSSON ERIK,00712984310,CA,50,00712984310,accept',
-      '00000002,Winter Light,T3456789012,SVENSSON MARIA,01234567890,CA,50,00988777101,accept'
-    ].join('\n');
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+  var html = '<div class="history"><table>' +
+    '<thead><tr><th>Datum</th><th>Katalognamn</th><th style="text-align:right;">Antal verk</th><th>Status</th><th>Rapporter</th></tr></thead><tbody>';
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    var pillClass = r.status === 'Blockerad' ? 'pill blocked' : 'pill';
+    var statusLabel = r.status || 'Validerad';
+    var links = [];
+    if (r.reportUrl) links.push('<a href="' + esc(r.reportUrl) + '">PDF-rapport</a>');
+    if (r.csvUrl)    links.push('<a href="' + esc(r.csvUrl) + '">CSV-underlag</a>');
+    var linkCell = links.length ? links.join('') : '<span style="color:#5a6478;font-size:12px;">' + esc(r.blockCode || '—') + '</span>';
+    html += '<tr>' +
+      '<td class="date">' + esc(r.date) + '</td>' +
+      '<td class="name">' + esc(r.catalog) + '</td>' +
+      '<td class="num">' + esc(r.works) + '</td>' +
+      '<td><span class="' + pillClass + '">' + esc(statusLabel) + '</span></td>' +
+      '<td class="links">' + linkCell + '</td>' +
+      '</tr>';
   }
-
-  function downloadBlob(content, filename, mime) {
-    var blob = new Blob([content], { type: mime });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a'); a.href = url; a.download = filename;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
-  }
-
-  function brand() {
-    var b = document.querySelector('.topbar .brand-text');
-    return b ? b.textContent.trim() : 'Partner';
-  }
-
-  document.querySelectorAll('a[data-download]').forEach(function(a){
-    a.addEventListener('click', function(e){
-      e.preventDefault();
-      var kind = a.dataset.download;
-      var slug = a.dataset.case || 'case';
-      if (kind === 'cwr') {
-        downloadBlob(buildCwrPacket(brand(), slug), slug + '.v21', 'text/plain');
-      } else if (kind === 'csv') {
-        downloadBlob(buildCsvExport(), slug + '.csv', 'text/csv');
-      }
-    });
-  });
-
-  // Render real exports from localStorage (populated by apply-corrections page).
-  // Falls back to the placeholder row when nothing has been generated yet.
-  function fmtSize(n) { if (n < 1024) return n + ' B'; if (n < 1024*1024) return (n/1024).toFixed(1) + ' KB'; return (n/1024/1024).toFixed(1) + ' MB'; }
-  function kindLabel(k) { return ({csv:'CSV', cwr:'CWR v2.1', report:'HTML report'})[k] || k; }
-  function renderExports() {
-    var tbody = document.getElementById('exportsTbody');
-    if (!tbody) return;
-    var raw;
-    try { raw = JSON.parse(localStorage.getItem('kataloghub_exports') || '[]'); } catch(e) { raw = []; }
-    if (!raw.length) return; // keep the empty-state placeholder row
-    tbody.innerHTML = '';
-    raw.forEach(function(item, i){
-      var tr = document.createElement('tr');
-      tr.innerHTML =
-        '<td><span style="font-family:var(--font-mono);font-size:11.5px;">' + (item.filename || '?') + '</span></td>' +
-        '<td class="dash">' + kindLabel(item.kind) + '</td>' +
-        '<td class="dash">' + (item.date || '') + '</td>' +
-        '<td class="num">' + fmtSize(item.size || 0) + '</td>' +
-        '<td class="num"><a href="#" data-export-i="' + i + '" style="color:var(--accent);">↓</a></td>';
-      tbody.appendChild(tr);
-    });
-    tbody.querySelectorAll('a[data-export-i]').forEach(function(a){
-      a.addEventListener('click', function(e){
-        e.preventDefault();
-        var item = raw[parseInt(a.dataset.exportI, 10)];
-        if (item && item.content) downloadBlob(item.content, item.filename, item.mime || 'text/plain');
-      });
-    });
-  }
-  renderExports();
-  // Re-render when the user navigates back to the portal tab (in case
-  // they generated something in apply-corrections in the meantime).
-  window.addEventListener('focus', renderExports);
-  window.addEventListener('storage', function(e){ if (e.key === 'kataloghub_exports') renderExports(); });
-})();
-
-// Catalog Ingest Engine — folder drag-drop, format detection, SHA-256 hashing.
-(function() {
-  var drop = document.getElementById('ingestDrop');
-  if (!drop) return;
-  var pickFiles = document.getElementById('ingestPickFiles');
-  var pickDir = document.getElementById('ingestPickDir');
-  var inputFiles = document.getElementById('ingestFiles');
-  var inputDir = document.getElementById('ingestDir');
-  var summary = document.getElementById('ingestSummary');
-  var rowsEl = document.getElementById('ingestRows');
-  var btnMerge = document.getElementById('ingestMerge');
-  var btnClear = document.getElementById('ingestClear');
-  var note = document.getElementById('ingestNote');
-
-  var entries = []; // {path, file, fmt, status, hash}
-  var FMT = { csv:'CSV', xlsx:'XLSX', cwr:'CWR', v21:'CWR v2.1', v22:'CWR v2.2' };
-  var MAX = 50 * 1024 * 1024;
-
-  function fmtSize(n) { if (n < 1024) return n + ' B'; if (n < 1024*1024) return (n/1024).toFixed(1) + ' KB'; return (n/1024/1024).toFixed(1) + ' MB'; }
-  function detect(name) {
-    var ext = (name.split('.').pop() || '').toLowerCase();
-    return FMT[ext] || null;
-  }
-  async function sha256(buf) {
-    var h = await crypto.subtle.digest('SHA-256', buf);
-    return Array.from(new Uint8Array(h)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
-  }
-
-  function refresh() {
-    rowsEl.innerHTML = '';
-    var t = 0, c = 0, x = 0, w = 0, o = 0, b = 0;
-    entries.forEach(function(e){
-      t++;
-      if (!e.fmt) { o++; return; }
-      if (e.fmt === 'CSV') c++;
-      else if (e.fmt === 'XLSX') x++;
-      else w++;
-      b += e.file.size;
-    });
-    document.getElementById('cntTotal').textContent = t;
-    document.getElementById('cntCsv').textContent = c;
-    document.getElementById('cntXlsx').textContent = x;
-    document.getElementById('cntCwr').textContent = w;
-    document.getElementById('cntOther').textContent = o;
-    document.getElementById('cntBytes').textContent = fmtSize(b);
-
-    entries.forEach(function(e){
-      var tr = document.createElement('tr');
-      var statusHtml = e.status === 'ok'
-        ? '<span class="status-pill active"><span class="dot"></span>Ready</span>'
-        : e.status === 'too-big'
-          ? '<span class="status-pill dispute"><span class="dot"></span>Too large</span>'
-          : e.status === 'unsupported'
-            ? '<span class="status-pill pending"><span class="dot"></span>Ignored</span>'
-            : '<span class="status-pill pending"><span class="dot"></span>Hashing…</span>';
-      tr.innerHTML =
-        '<td><span class="ingest-row-path">' + e.path + '</span></td>' +
-        '<td class="dash">' + (e.fmt || '—') + '</td>' +
-        '<td class="num">' + fmtSize(e.file.size) + '</td>' +
-        '<td><span class="ingest-row-hash">' + (e.hash ? e.hash.slice(0, 16) + '…' : '—') + '</span></td>' +
-        '<td>' + statusHtml + '</td>';
-      rowsEl.appendChild(tr);
-    });
-    summary.style.display = entries.length ? 'block' : 'none';
-    btnMerge.disabled = !entries.some(function(e){ return e.status === 'ok'; });
-  }
-
-  async function ingest(file, path) {
-    var fmt = detect(file.name);
-    var entry = { path: path || file.name, file: file, fmt: fmt, status: 'queued', hash: null };
-    if (!fmt) entry.status = 'unsupported';
-    else if (file.size > MAX) entry.status = 'too-big';
-    entries.push(entry);
-    refresh();
-    if (entry.status !== 'queued') return;
-    try {
-      var buf = await file.arrayBuffer();
-      entry.hash = await sha256(buf);
-      entry.status = 'ok';
-    } catch (err) { entry.status = 'unsupported'; }
-    refresh();
-  }
-
-  function walkEntry(entry, basePath) {
-    return new Promise(function(resolve) {
-      if (entry.isFile) {
-        entry.file(function(f){
-          ingest(f, basePath + entry.name);
-          resolve();
-        }, function(){ resolve(); });
-      } else if (entry.isDirectory) {
-        var reader = entry.createReader();
-        var all = [];
-        function readBatch() {
-          reader.readEntries(function(batch){
-            if (!batch.length) {
-              Promise.all(all.map(function(e){ return walkEntry(e, basePath + entry.name + '/'); })).then(resolve);
-            } else {
-              all = all.concat(batch);
-              readBatch();
-            }
-          }, function(){ resolve(); });
-        }
-        readBatch();
-      } else { resolve(); }
-    });
-  }
-
-  pickFiles.addEventListener('click', function(e){ e.preventDefault(); inputFiles.click(); });
-  pickDir.addEventListener('click', function(e){ e.preventDefault(); inputDir.click(); });
-  inputFiles.addEventListener('change', function(e){
-    Array.prototype.forEach.call(e.target.files, function(f){ ingest(f, f.name); });
-    e.target.value = '';
-  });
-  inputDir.addEventListener('change', function(e){
-    Array.prototype.forEach.call(e.target.files, function(f){
-      ingest(f, f.webkitRelativePath || f.name);
-    });
-    e.target.value = '';
-  });
-  ['dragenter','dragover'].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add('dragover'); }); });
-  ['dragleave','drop'].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.remove('dragover'); }); });
-  drop.addEventListener('drop', function(e){
-    var items = e.dataTransfer && e.dataTransfer.items;
-    if (items && items.length && items[0].webkitGetAsEntry) {
-      Array.prototype.forEach.call(items, function(it){
-        var entry = it.webkitGetAsEntry();
-        if (entry) walkEntry(entry, '');
-      });
-    } else if (e.dataTransfer && e.dataTransfer.files) {
-      Array.prototype.forEach.call(e.dataTransfer.files, function(f){ ingest(f, f.name); });
-    }
-  });
-
-  btnClear.addEventListener('click', function(){ entries = []; note.textContent = ''; refresh(); });
-  btnMerge.addEventListener('click', function(){
-    var ready = entries.filter(function(e){ return e.status === 'ok'; });
-    note.textContent = 'Merged ' + ready.length + ' file(s) into Master Catalog · ' + fmtSize(ready.reduce(function(s,e){ return s+e.file.size; }, 0));
-    btnMerge.disabled = true;
-  });
+  html += '</tbody></table></div>';
+  container.innerHTML = html;
 })();
 </script>
-
+<!-- src-guard:v1 -->
+<script>
+(function(){
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, false);
+  document.addEventListener('keydown', function(e){
+    var k = (e.key || '').toLowerCase();
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && (k === 'u' || k === 's')) { e.preventDefault(); return false; }
+  }, false);
+})();
+</script>
 </body>
 </html>

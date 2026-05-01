@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="title">{{PartnerBrand}} — Terms of service</title>
-<meta name="description" data-i18n-attr="content" data-i18n="meta_desc" content="Wholesale terms of service between {{PartnerBrand}} and the partner.">
+<title>{{PartnerBrand}} — Villkor</title>
+<meta name="description" content="Villkor mellan {{PartnerBrand}} och partnern. Validering enligt avtalad nivå.">
 <style>
   :root {
     --bg: #05070b; --bg-card: #0b0f18; --border: #1b2233; --border-strong: #2a3345;
@@ -25,11 +25,6 @@
   .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: var(--dim); }
   nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: var(--dim); }
   nav.primary a:hover, nav.primary a.active { color: var(--accent); }
-  nav.primary a.demo { background: var(--amber-soft); color: var(--amber); border: 1px solid rgba(242,179,106,0.4); padding: 6px 12px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 700; }
-  .lang-toggle { display: inline-flex; gap: 4px; padding: 4px; border-radius: var(--radius-pill); border: 1px solid rgba(143,155,179,0.35); }
-  .lang-toggle button { background: transparent; color: var(--dim); border: 0; padding: 3px 9px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 0.04em; }
-  .lang-toggle button.active { background: var(--accent); color: #020308; }
-  .lang-toggle button:hover:not(.active) { color: var(--text); }
 
   .hero { padding: 3rem 1.5rem 1rem; max-width: var(--max-width); margin: 0 auto; }
   .hero h1 { font-size: 2rem; margin-bottom: 0.6rem; letter-spacing: -0.01em; }
@@ -62,220 +57,155 @@
 <header class="topnav">
   <div class="brand">
     <span class="brand-mark"></span>
-    <a href="index.html"><span class="brand-text" data-i18n="brand_label">{{PartnerBrand}}</span></a>
+    <a href="index.html"><span class="brand-text">{{PartnerBrand}}</span></a>
   </div>
   <nav class="primary">
-    <a href="how-it-works.html" data-i18n="nav_how">How it works</a>
-    <a href="pricing-kataloghub.html" data-i18n="nav_pricing">Pricing</a>
-    <a href="partner.html" data-i18n="nav_partner">Become a partner</a>
-    <a href="faq.html" data-i18n="nav_faq">FAQ</a>
-    <a href="contact.html" data-i18n="nav_contact">Contact</a>
-    <a href="portal.html" class="demo" data-i18n="nav_portal">Portal →</a>
-    <div class="lang-toggle">
-      <button data-lang="en" class="active">EN</button>
-      <button data-lang="sv">SV</button>
-    </div>
+    <a href="scan-catalog.html">Validering</a>
+    <a href="portal.html">Historik</a>
+    <a href="pricing-kataloghub.html">Priser</a>
+    <a href="faq.html">Vanliga frågor</a>
+    <a href="contact.html">Kontakt</a>
   </nav>
 </header>
 
 <section class="hero">
-  <h1 data-i18n="hero_h1">Terms of service</h1>
-  <div class="meta"><span data-i18n="version_l">Version</span> 1.0 · <span data-i18n="effective_l">Effective</span> 2026-04-30</div>
+  <h1>Villkor</h1>
+  <div class="meta">Version 2.0 · Giltig från 2026-05-01</div>
 </section>
 
 <div class="toc">
-  <div class="toc-label" data-i18n="toc_l">Contents</div>
+  <div class="toc-label">Innehåll</div>
   <ol>
-    <li><a href="#s1" data-i18n="t1">Definitions</a></li>
-    <li><a href="#s2" data-i18n="t2">Scope of service</a></li>
-    <li><a href="#s3" data-i18n="t3">Partner obligations</a></li>
-    <li><a href="#s4" data-i18n="t4">Branding rights</a></li>
-    <li><a href="#s5" data-i18n="t5">Confidentiality</a></li>
-    <li><a href="#s6" data-i18n="t6">Data handling and retention</a></li>
-    <li><a href="#s7" data-i18n="t7">Fees and invoicing</a></li>
-    <li><a href="#s8" data-i18n="t8">Liability and disclaimer</a></li>
-    <li><a href="#s9" data-i18n="t9">Term and termination</a></li>
-    <li><a href="#s10" data-i18n="t10">Governing law</a></li>
+    <li><a href="#s1">Definitioner</a></li>
+    <li><a href="#s2">Tjänstens omfattning</a></li>
+    <li><a href="#s3">Valideringsvolym</a></li>
+    <li><a href="#s4">Begränsningar</a></li>
+    <li><a href="#s5">Periodisering</a></li>
+    <li><a href="#s6">Ingen automatisk uppgradering</a></li>
+    <li><a href="#s7">Separat korrigeringstjänst</a></li>
+    <li><a href="#s8">Partnerns skyldigheter</a></li>
+    <li><a href="#s9">Datahantering och lagring</a></li>
+    <li><a href="#s10">Avgifter och fakturering</a></li>
+    <li><a href="#s11">Ansvar och friskrivning</a></li>
+    <li><a href="#s12">Löptid och uppsägning</a></li>
+    <li><a href="#s13">Tillämplig lag</a></li>
   </ol>
 </div>
 
 <section class="section">
 
   <div class="clause" id="s1">
-    <h2 data-i18n="c1_h">1. Definitions</h2>
+    <h2>1. Definitioner</h2>
     <ul>
-      <li data-i18n="c1_1"><strong>{{PartnerBrand}}</strong> means the entity providing the service described in these terms.</li>
-      <li data-i18n="c1_2"><strong>Partner</strong> means the counterparty that has executed a partner agreement with {{PartnerBrand}}.</li>
-      <li data-i18n="c1_3"><strong>End-client</strong> means a customer of the Partner whose catalog is processed under the partner agreement. {{PartnerBrand}} has no direct contractual relationship with the End-client.</li>
-      <li data-i18n="c1_4"><strong>Catalog</strong> means a metadata file submitted by the Partner for processing.</li>
-      <li data-i18n="c1_5"><strong>Deliverable</strong> means any file produced by {{PartnerBrand}} and returned to the Partner: Health Report, Worksheet, corrected Catalog, or export template.</li>
-      <li data-i18n="c1_6"><strong>Case</strong> means a single end-to-end engagement on a Catalog from intake through final Deliverable.</li>
+      <li><strong>{{PartnerBrand}}</strong> avser den enhet som tillhandahåller tjänsten som beskrivs i dessa villkor.</li>
+      <li><strong>Partner</strong> avser den motpart som har ingått ett avtal med {{PartnerBrand}}.</li>
+      <li><strong>Slutkund</strong> avser en kund till partnern vars katalog hanteras enligt avtalet. {{PartnerBrand}} har ingen direkt avtalsrelation med slutkunden.</li>
+      <li><strong>Katalog</strong> avser en metadatafil som skickats in av partnern för validering.</li>
+      <li><strong>Validering</strong> avser en skanning av en enskild katalog med leverans av PDF-rapport och CSV-underlag.</li>
+      <li><strong>Period</strong> avser den faktureringsperiod som anges i avtalet (månads- eller kvartalsbasis).</li>
     </ul>
   </div>
 
   <div class="clause" id="s2">
-    <h2 data-i18n="c2_h">2. Scope of service</h2>
-    <p data-i18n="c2_p1">{{PartnerBrand}} provides file-based catalog metadata validation and correction. The service consists of two phases: a Part 1 scan that produces a Health Report and Worksheet, and a Part 2 correction that produces a corrected Catalog and export templates.</p>
-    <p data-i18n="c2_p2">The service is exclusively file-based. {{PartnerBrand}} does not access the Partner's systems, the End-client's systems, or any third-party platform. {{PartnerBrand}} does not act as a data ingestion pipeline, does not expose APIs to the Partner or the End-client, and does not provide a dashboard.</p>
+    <h2>2. Tjänstens omfattning</h2>
+    <p>{{PartnerBrand}} tillhandahåller filbaserad validering av katalogmetadata. Tjänsten består av en skanning som identifierar avvikelser och returnerar två filer: hälsorapport (PDF) och CSV-underlag.</p>
+    <p>Tjänsten är validerande. Inga korrigeringar utförs i tjänsten. Inga CWR-genereringar. Inga ändringar av ägaruppgifter.</p>
+    <p>Tjänsten är uteslutande filbaserad. {{PartnerBrand}} har inte åtkomst till partnerns system, slutkundens system eller någon tredjepartsplattform. {{PartnerBrand}} fungerar inte som dataingest-pipeline, exponerar inga API:er till partnern eller slutkunden och tillhandahåller ingen instrumentpanel.</p>
   </div>
 
   <div class="clause" id="s3">
-    <h2 data-i18n="c3_h">3. Partner obligations</h2>
-    <ol>
-      <li data-i18n="c3_1">The Partner is solely responsible for the legal basis on which any Catalog is shared with {{PartnerBrand}}, including (where applicable) consent of the End-client and any data-protection requirements.</li>
-      <li data-i18n="c3_2">The Partner must include the brand-neutral disclaimer text supplied by {{PartnerBrand}} on every Deliverable forwarded to an End-client.</li>
-      <li data-i18n="c3_3">The Partner must not represent {{PartnerBrand}} as having any direct relationship with the End-client.</li>
-      <li data-i18n="c3_4">The Partner must not represent the service as offering live system access, royalty recovery, or any guaranteed financial outcome.</li>
-    </ol>
+    <h2>3. Valideringsvolym</h2>
+    <p>Tjänsten omfattar validering av kataloger enligt avtalad nivå. Volym avser:</p>
+    <ul>
+      <li>Antal verk per validering</li>
+      <li>Antal valideringar per period</li>
+      <li>Antal kataloger per period</li>
+    </ul>
+    <p>Avtalad nivå anges i partneravtalet.</p>
   </div>
 
   <div class="clause" id="s4">
-    <h2 data-i18n="c4_h">4. Branding rights</h2>
-    <p data-i18n="c4_p">{{PartnerBrand}} grants the Partner a non-exclusive, worldwide, royalty-free license to apply the Partner's own brand to all Deliverables produced under these terms, for the duration of the partner agreement. {{PartnerBrand}} retains no branding rights over the Deliverables once produced.</p>
+    <h2>4. Begränsningar</h2>
+    <p>Om inlämnad katalog eller antal valideringar överstiger avtalad nivå genomförs ingen validering. Förlaget informeras om behov av avtalsjustering.</p>
+    <p>Inga delvalideringar genomförs. Antingen full validering eller ingen validering.</p>
   </div>
 
   <div class="clause" id="s5">
-    <h2 data-i18n="c5_h">5. Confidentiality</h2>
-    <p data-i18n="c5_p">Each party agrees to treat the other's non-public information as confidential and to use it only for the purpose of performing under these terms. This obligation survives termination for three years.</p>
+    <h2>5. Periodisering</h2>
+    <p>Valideringsvolymen återställs vid varje periodskifte enligt avtalet.</p>
   </div>
 
   <div class="clause" id="s6">
-    <h2 data-i18n="c6_h">6. Data handling and retention</h2>
-    <ol>
-      <li data-i18n="c6_1">Catalog files submitted by the Partner are retained for ninety (90) days from receipt to enable re-scan eligibility, then deleted from active storage.</li>
-      <li data-i18n="c6_2">Aggregate counts (number of works scanned, number of issues identified) are retained indefinitely for billing reconciliation. These counts contain no personal data.</li>
-      <li data-i18n="c6_3">{{PartnerBrand}} does not export, share, sell, or use the contents of any Catalog for any purpose other than producing Deliverables for the Partner.</li>
-      <li data-i18n="c6_4">The Partner may request immediate deletion of any specific Catalog by written notice to {{PartnerContact}}. Deletion is completed within five business days.</li>
-    </ol>
+    <h2>6. Ingen automatisk uppgradering</h2>
+    <p>Tjänsten justeras endast efter skriftlig överenskommelse. Ingen automatisk uppgradering, ingen prorering, ingen utökning av nivå.</p>
   </div>
 
   <div class="clause" id="s7">
-    <h2 data-i18n="c7_h">7. Fees and invoicing</h2>
-    <p data-i18n="c7_p">Fees are set out in the partner agreement. Invoicing is monthly in arrears, payable net thirty (30) days from invoice date. {{PartnerBrand}} bills the Partner only — never the End-client. The Partner sets the retail price charged to End-clients independently.</p>
+    <h2>7. Separat korrigeringstjänst</h2>
+    <p>Korrigering av metadata ingår inte i {{PartnerBrand}}. Korrigering erbjuds separat via HeyRoya och faktureras separat.</p>
   </div>
 
   <div class="clause" id="s8">
-    <h2 data-i18n="c8_h">8. Liability and disclaimer</h2>
-    <p data-i18n="c8_p1">Deliverables are provided as a metadata analysis and correction artifact. {{PartnerBrand}} makes no representation, warranty, or guarantee regarding any downstream financial outcome, royalty recovery, acceptance by any rights organization, or compliance with any specific regulatory regime.</p>
-    <p data-i18n="c8_p2">To the maximum extent permitted by applicable law, {{PartnerBrand}}'s aggregate liability under these terms is limited to the fees paid by the Partner in the twelve (12) months preceding the event giving rise to the claim.</p>
+    <h2>8. Partnerns skyldigheter</h2>
+    <ol>
+      <li>Partnern ansvarar ensam för den rättsliga grunden på vilken någon katalog delas med {{PartnerBrand}}, inklusive (där tillämpligt) slutkundens samtycke och eventuella dataskyddskrav.</li>
+      <li>Partnern ska inkludera den varumärkesneutrala friskrivningstext som tillhandahålls av {{PartnerBrand}} på varje leverans som vidarebefordras till en slutkund.</li>
+      <li>Partnern får inte framställa {{PartnerBrand}} som om denna har någon direkt relation med slutkunden.</li>
+      <li>Partnern får inte framställa tjänsten som att den erbjuder live-systemåtkomst, korrigering, royaltyåtervinning eller något garanterat finansiellt utfall.</li>
+    </ol>
   </div>
 
   <div class="clause" id="s9">
-    <h2 data-i18n="c9_h">9. Term and termination</h2>
-    <p data-i18n="c9_p">These terms remain in effect for the duration of the partner agreement. Either party may terminate the partner agreement on thirty (30) days' written notice. {{PartnerBrand}} may terminate immediately for material breach (including any breach of clauses 3 or 5). Open Cases at the time of termination will be completed and delivered.</p>
+    <h2>9. Datahantering och lagring</h2>
+    <ol>
+      <li>Katalogfiler som skickats in av partnern sparas i nittio (90) dagar från mottagandet, därefter raderas de från aktiv lagring.</li>
+      <li>Aggregerade räknare (antal verk skannade, antal avvikelser identifierade) sparas på obestämd tid för fakturaavstämning. Dessa räknare innehåller ingen personlig data.</li>
+      <li>Loggning vid blockerad validering omfattar tidsstämpel, användar-ID, antal verk och blockorsak. Inga analyser, inga aggregat utöver fakturaavstämning, inga instrumentpaneler.</li>
+      <li>{{PartnerBrand}} exporterar, delar, säljer eller använder inte innehållet i någon katalog i något annat syfte än att producera leveranser till partnern.</li>
+      <li>Partnern kan begära omedelbar radering av en specifik katalog genom skriftligt meddelande till {{PartnerContact}}. Radering slutförs inom fem arbetsdagar.</li>
+    </ol>
   </div>
 
   <div class="clause" id="s10">
-    <h2 data-i18n="c10_h">10. Governing law</h2>
-    <p data-i18n="c10_p">These terms are governed by the law of the jurisdiction stated in the partner agreement. Disputes are subject to the exclusive jurisdiction of the courts of that jurisdiction.</p>
+    <h2>10. Avgifter och fakturering</h2>
+    <p>Avgifter anges i partneravtalet. Fakturering sker månadsvis i efterskott, betalbart 30 dagar netto från fakturadatum. {{PartnerBrand}} fakturerar endast partnern — aldrig slutkunden.</p>
+  </div>
+
+  <div class="clause" id="s11">
+    <h2>11. Ansvar och friskrivning</h2>
+    <p>Leveranser tillhandahålls som ett metadatavalideringsartefakt. {{PartnerBrand}} lämnar inga utfästelser, garantier eller åtaganden avseende något nedströms finansiellt utfall, royaltyåtervinning, godkännande av någon rättighetsorganisation eller efterlevnad av någon specifik regulatorisk ordning.</p>
+    <p>I den utsträckning tillämplig lag tillåter är {{PartnerBrand}}s sammanlagda ansvar enligt dessa villkor begränsat till de avgifter som partnern betalat under de tolv (12) månader som föregått den händelse som ger upphov till anspråket.</p>
+  </div>
+
+  <div class="clause" id="s12">
+    <h2>12. Löptid och uppsägning</h2>
+    <p>Dessa villkor gäller under partneravtalets löptid. Vardera parten kan säga upp partneravtalet med trettio (30) dagars skriftligt varsel. {{PartnerBrand}} kan säga upp omedelbart vid väsentligt avtalsbrott. Öppna valideringar vid tidpunkten för uppsägning slutförs och levereras.</p>
+  </div>
+
+  <div class="clause" id="s13">
+    <h2>13. Tillämplig lag</h2>
+    <p>Dessa villkor regleras av lagen i den jurisdiktion som anges i partneravtalet. Tvister är föremål för exklusiv jurisdiktion för domstolarna i den jurisdiktionen.</p>
   </div>
 
 </section>
 
 <footer>
-  <p data-i18n="footer_brand">{{PartnerBrand}} · Catalog metadata validation, file-based</p>
+  <p>{{PartnerBrand}} · Validering av katalogmetadata, filbaserat</p>
   <p><a href="mailto:{{PartnerContact}}">{{PartnerContact}}</a> · {{PartnerDomain}}</p>
-  <p data-i18n="footer_copy">© 2026 {{PartnerBrand}} · All rights reserved</p>
+  <p>© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna</p>
 </footer>
 
+<!-- src-guard:v1 -->
 <script>
-window.TRANSLATIONS = {
-  en: {
-    title: "{{PartnerBrand}} — Terms of service",
-    meta_desc: "Wholesale terms of service between {{PartnerBrand}} and the partner.",
-    brand_label: "{{PartnerBrand}}",
-    nav_how: "How it works", nav_pricing: "Pricing", nav_partner: "Become a partner", nav_faq: "FAQ", nav_contact: "Contact", nav_portal: "Portal →",
-    hero_h1: "Terms of service",
-    version_l: "Version", effective_l: "Effective",
-    toc_l: "Contents",
-    t1: "Definitions", t2: "Scope of service", t3: "Partner obligations", t4: "Branding rights",
-    t5: "Confidentiality", t6: "Data handling and retention", t7: "Fees and invoicing",
-    t8: "Liability and disclaimer", t9: "Term and termination", t10: "Governing law",
-    c1_h: "1. Definitions",
-    c1_1: "{{PartnerBrand}} means the entity providing the service described in these terms.",
-    c1_2: "Partner means the counterparty that has executed a partner agreement with {{PartnerBrand}}.",
-    c1_3: "End-client means a customer of the Partner whose catalog is processed under the partner agreement. {{PartnerBrand}} has no direct contractual relationship with the End-client.",
-    c1_4: "Catalog means a metadata file submitted by the Partner for processing.",
-    c1_5: "Deliverable means any file produced by {{PartnerBrand}} and returned to the Partner: Health Report, Worksheet, corrected Catalog, or export template.",
-    c1_6: "Case means a single end-to-end engagement on a Catalog from intake through final Deliverable.",
-    c2_h: "2. Scope of service",
-    c2_p1: "{{PartnerBrand}} provides file-based catalog metadata validation and correction. The service consists of two phases: a Part 1 scan that produces a Health Report and Worksheet, and a Part 2 correction that produces a corrected Catalog and export templates.",
-    c2_p2: "The service is exclusively file-based. {{PartnerBrand}} does not access the Partner's systems, the End-client's systems, or any third-party platform. {{PartnerBrand}} does not act as a data ingestion pipeline, does not expose APIs to the Partner or the End-client, and does not provide a dashboard.",
-    c3_h: "3. Partner obligations",
-    c3_1: "The Partner is solely responsible for the legal basis on which any Catalog is shared with {{PartnerBrand}}, including (where applicable) consent of the End-client and any data-protection requirements.",
-    c3_2: "The Partner must include the brand-neutral disclaimer text supplied by {{PartnerBrand}} on every Deliverable forwarded to an End-client.",
-    c3_3: "The Partner must not represent {{PartnerBrand}} as having any direct relationship with the End-client.",
-    c3_4: "The Partner must not represent the service as offering live system access, royalty recovery, or any guaranteed financial outcome.",
-    c4_h: "4. Branding rights",
-    c4_p: "{{PartnerBrand}} grants the Partner a non-exclusive, worldwide, royalty-free license to apply the Partner's own brand to all Deliverables produced under these terms, for the duration of the partner agreement. {{PartnerBrand}} retains no branding rights over the Deliverables once produced.",
-    c5_h: "5. Confidentiality",
-    c5_p: "Each party agrees to treat the other's non-public information as confidential and to use it only for the purpose of performing under these terms. This obligation survives termination for three years.",
-    c6_h: "6. Data handling and retention",
-    c6_1: "Catalog files submitted by the Partner are retained for ninety (90) days from receipt to enable re-scan eligibility, then deleted from active storage.",
-    c6_2: "Aggregate counts (number of works scanned, number of issues identified) are retained indefinitely for billing reconciliation. These counts contain no personal data.",
-    c6_3: "{{PartnerBrand}} does not export, share, sell, or use the contents of any Catalog for any purpose other than producing Deliverables for the Partner.",
-    c6_4: "The Partner may request immediate deletion of any specific Catalog by written notice to {{PartnerContact}}. Deletion is completed within five business days.",
-    c7_h: "7. Fees and invoicing",
-    c7_p: "Fees are set out in the partner agreement. Invoicing is monthly in arrears, payable net thirty (30) days from invoice date. {{PartnerBrand}} bills the Partner only — never the End-client. The Partner sets the retail price charged to End-clients independently.",
-    c8_h: "8. Liability and disclaimer",
-    c8_p1: "Deliverables are provided as a metadata analysis and correction artifact. {{PartnerBrand}} makes no representation, warranty, or guarantee regarding any downstream financial outcome, royalty recovery, acceptance by any rights organization, or compliance with any specific regulatory regime.",
-    c8_p2: "To the maximum extent permitted by applicable law, {{PartnerBrand}}'s aggregate liability under these terms is limited to the fees paid by the Partner in the twelve (12) months preceding the event giving rise to the claim.",
-    c9_h: "9. Term and termination",
-    c9_p: "These terms remain in effect for the duration of the partner agreement. Either party may terminate the partner agreement on thirty (30) days' written notice. {{PartnerBrand}} may terminate immediately for material breach (including any breach of clauses 3 or 5). Open Cases at the time of termination will be completed and delivered.",
-    c10_h: "10. Governing law",
-    c10_p: "These terms are governed by the law of the jurisdiction stated in the partner agreement. Disputes are subject to the exclusive jurisdiction of the courts of that jurisdiction.",
-    footer_brand: "{{PartnerBrand}} · Catalog metadata validation, file-based",
-    footer_copy: "© 2026 {{PartnerBrand}} · All rights reserved"
-  },
-  sv: {
-    title: "{{PartnerBrand}} — Villkor",
-    meta_desc: "Grossistvillkor mellan {{PartnerBrand}} och partnern.",
-    brand_label: "{{PartnerBrand}}",
-    nav_how: "Så fungerar det", nav_pricing: "Priser", nav_partner: "Bli partner", nav_faq: "Vanliga frågor", nav_contact: "Kontakt", nav_portal: "Portal →",
-    hero_h1: "Användarvillkor",
-    version_l: "Version", effective_l: "Giltig från",
-    toc_l: "Innehåll",
-    t1: "Definitioner", t2: "Tjänstens omfattning", t3: "Partnerns skyldigheter", t4: "Varumärkesrättigheter",
-    t5: "Konfidentialitet", t6: "Datahantering och lagring", t7: "Avgifter och fakturering",
-    t8: "Ansvar och friskrivning", t9: "Löptid och uppsägning", t10: "Tillämplig lag",
-    c1_h: "1. Definitioner",
-    c1_1: "{{PartnerBrand}} avser den enhet som tillhandahåller tjänsten som beskrivs i dessa villkor.",
-    c1_2: "Partner avser den motpart som har ingått ett partneravtal med {{PartnerBrand}}.",
-    c1_3: "Slutkund avser en kund till partnern vars katalog hanteras enligt partneravtalet. {{PartnerBrand}} har ingen direkt avtalsrelation med slutkunden.",
-    c1_4: "Katalog avser en metadatafil som skickats in av partnern för bearbetning.",
-    c1_5: "Leverans avser varje fil som producerats av {{PartnerBrand}} och returnerats till partnern: hälsorapport, arbetsblad, korrigerad katalog eller exportmall.",
-    c1_6: "Fall avser ett enskilt uppdrag från intag till slutleverans på en katalog.",
-    c2_h: "2. Tjänstens omfattning",
-    c2_p1: "{{PartnerBrand}} tillhandahåller filbaserad validering och korrigering av katalogmetadata. Tjänsten består av två faser: en del 1-skanning som producerar en hälsorapport och ett arbetsblad, och en del 2-korrigering som producerar en korrigerad katalog och exportmallar.",
-    c2_p2: "Tjänsten är uteslutande filbaserad. {{PartnerBrand}} har inte åtkomst till partnerns system, slutkundens system eller någon tredjepartsplattform. {{PartnerBrand}} fungerar inte som dataingest-pipeline, exponerar inga API:er till partnern eller slutkunden och tillhandahåller ingen instrumentpanel.",
-    c3_h: "3. Partnerns skyldigheter",
-    c3_1: "Partnern ansvarar ensam för den rättsliga grunden på vilken någon katalog delas med {{PartnerBrand}}, inklusive (där tillämpligt) slutkundens samtycke och eventuella dataskyddskrav.",
-    c3_2: "Partnern ska inkludera den varumärkesneutrala friskrivningstext som tillhandahålls av {{PartnerBrand}} på varje leverans som vidarebefordras till en slutkund.",
-    c3_3: "Partnern får inte framställa {{PartnerBrand}} som om denna har någon direkt relation med slutkunden.",
-    c3_4: "Partnern får inte framställa tjänsten som att den erbjuder live-systemåtkomst, royaltyåtervinning eller något garanterat finansiellt utfall.",
-    c4_h: "4. Varumärkesrättigheter",
-    c4_p: "{{PartnerBrand}} beviljar partnern en icke-exklusiv, världsomspännande, royaltyfri licens att applicera partnerns egen varumärke på alla leveranser som produceras enligt dessa villkor, under partneravtalets löptid. {{PartnerBrand}} behåller inga varumärkesrättigheter över leveranserna när de väl har producerats.",
-    c5_h: "5. Konfidentialitet",
-    c5_p: "Varje part åtar sig att behandla den andra partens icke-offentliga information som konfidentiell och att använda den endast i syfte att fullgöra åtagandena enligt dessa villkor. Denna skyldighet kvarstår i tre år efter uppsägning.",
-    c6_h: "6. Datahantering och lagring",
-    c6_1: "Katalogfiler som skickats in av partnern sparas i nittio (90) dagar från mottagandet för att möjliggöra ny skanning, därefter raderas de från aktiv lagring.",
-    c6_2: "Aggregerade räknare (antal verk skannade, antal avvikelser identifierade) sparas på obestämd tid för fakturaavstämning. Dessa räknare innehåller ingen personlig data.",
-    c6_3: "{{PartnerBrand}} exporterar, delar, säljer eller använder inte innehållet i någon katalog i något annat syfte än att producera leveranser till partnern.",
-    c6_4: "Partnern kan begära omedelbar radering av en specifik katalog genom skriftligt meddelande till {{PartnerContact}}. Radering slutförs inom fem arbetsdagar.",
-    c7_h: "7. Avgifter och fakturering",
-    c7_p: "Avgifter anges i partneravtalet. Fakturering sker månadsvis i efterskott, betalbart 30 dagar netto från fakturadatum. {{PartnerBrand}} fakturerar endast partnern — aldrig slutkunden. Partnern bestämmer slutkundspriset till slutkunder oberoende.",
-    c8_h: "8. Ansvar och friskrivning",
-    c8_p1: "Leveranser tillhandahålls som ett metadataanalys- och korrigeringsartefakt. {{PartnerBrand}} lämnar inga utfästelser, garantier eller åtaganden avseende något nedströms finansiellt utfall, royaltyåtervinning, godkännande av någon rättighetsorganisation eller efterlevnad av någon specifik regulatorisk ordning.",
-    c8_p2: "I den utsträckning tillämplig lag tillåter är {{PartnerBrand}}s sammanlagda ansvar enligt dessa villkor begränsat till de avgifter som partnern betalat under de tolv (12) månader som föregått den händelse som ger upphov till anspråket.",
-    c9_h: "9. Löptid och uppsägning",
-    c9_p: "Dessa villkor gäller under partneravtalets löptid. Vardera parten kan säga upp partneravtalet med trettio (30) dagars skriftligt varsel. {{PartnerBrand}} kan säga upp omedelbart vid väsentligt avtalsbrott (inklusive brott mot klausul 3 eller 5). Öppna fall vid tidpunkten för uppsägning kommer att slutföras och levereras.",
-    c10_h: "10. Tillämplig lag",
-    c10_p: "Dessa villkor regleras av lagen i den jurisdiktion som anges i partneravtalet. Tvister är föremål för exklusiv jurisdiktion för domstolarna i den jurisdiktionen.",
-    footer_brand: "{{PartnerBrand}} · Validering av katalogmetadata, filbaserat",
-    footer_copy: "© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna"
-  }
-};
-(function(){function apply(lang){var d=window.TRANSLATIONS[lang]||window.TRANSLATIONS.en;document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');var a=el.getAttribute('data-i18n-attr');if(d[k]===undefined)return;if(a)el.setAttribute(a,d[k]);else el.textContent=d[k];});document.querySelectorAll('.lang-toggle button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-lang')===lang);});try{localStorage.setItem('wl_lang',lang);}catch(e){}}var s=null;try{s=localStorage.getItem('wl_lang');}catch(e){}apply(s||'en');document.querySelectorAll('.lang-toggle button').forEach(function(b){b.addEventListener('click',function(){apply(b.getAttribute('data-lang'));});});})();
+(function(){
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, false);
+  document.addEventListener('keydown', function(e){
+    var k = (e.key || '').toLowerCase();
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && (k === 'u' || k === 's')) { e.preventDefault(); return false; }
+  }, false);
+})();
 </script>
 </body>
 </html>

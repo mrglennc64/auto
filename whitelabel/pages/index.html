@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="title">{{PartnerBrand}} — Catalog Metadata Validation</title>
-<meta name="description" data-i18n-attr="content" data-i18n="meta_desc" content="File-based metadata analysis and correction workflow, delivered under your brand.">
+<title>{{PartnerBrand}} — Validering av katalogmetadata</title>
+<meta name="description" content="Filbaserad metadatavalidering. Två leveranser per skanning: hälsorapport (PDF) och CSV-mall. Inga korrigeringar i tjänsten.">
 <style>
   :root {
     --bg: #05070b;
@@ -31,7 +31,6 @@
   ul { list-style: none; }
   .container { max-width: var(--max-width); margin: 0 auto; padding: 0 1.5rem; }
 
-  /* nav */
   header.topnav { max-width: 1120px; margin: 0 auto; padding: 1.4rem 1.5rem 0.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
   .brand { display: flex; align-items: center; gap: 0.65rem; }
   .brand-mark { width: 28px; height: 28px; border-radius: var(--radius-pill); background: radial-gradient(circle at 30% 20%, #b0fbe9 0, var(--accent) 40%, #0f6657 100%); }
@@ -40,12 +39,7 @@
   nav.primary a:hover { color: var(--accent); }
   nav.primary a.demo { background: var(--amber-soft); color: var(--amber); border: 1px solid rgba(242,179,106,0.4); padding: 6px 12px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 700; }
   nav.primary a.demo:hover { color: var(--amber); border-color: var(--amber); }
-  .lang-toggle { display: inline-flex; gap: 4px; padding: 4px; border-radius: var(--radius-pill); border: 1px solid rgba(143,155,179,0.35); }
-  .lang-toggle button { background: transparent; color: var(--dim); border: 0; padding: 3px 9px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 0.04em; }
-  .lang-toggle button.active { background: var(--accent); color: #020308; }
-  .lang-toggle button:hover:not(.active) { color: var(--text); }
 
-  /* hero */
   .hero { padding: 4rem 1.5rem 1.5rem; text-align: center; max-width: 880px; margin: 0 auto; }
   .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; letter-spacing: -0.01em; }
   .hero h1 .accent { color: var(--accent); }
@@ -57,12 +51,10 @@
   .btn-secondary:hover { border-color: #4b5a7a; }
   .hero-trustline { color: var(--dim); font-size: 12px; margin-top: 1.5rem; }
 
-  /* sections */
   .section { margin: 3rem auto; max-width: var(--max-width); padding: 0 1.5rem; }
   .section h2 { font-size: 1.7rem; margin-bottom: 0.65rem; }
   .section .lede { color: var(--muted); max-width: 720px; margin-bottom: 1.5rem; font-size: 0.95rem; }
 
-  /* feature grid */
   .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
   @media (max-width: 720px) { .feature-grid { grid-template-columns: 1fr; } }
   .feature { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.5rem 1.6rem; }
@@ -72,26 +64,13 @@
   .feature li { color: var(--muted); font-size: 0.9rem; padding: 4px 0 4px 18px; position: relative; }
   .feature li::before { content: '·'; color: var(--accent); position: absolute; left: 6px; font-weight: 700; }
 
-  /* steps */
   .steps { display: flex; flex-direction: column; gap: 1rem; }
   .step { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem; display: flex; gap: 1rem; align-items: flex-start; }
   .step-num { width: 32px; height: 32px; background: var(--accent-soft); color: var(--accent); border: 1px solid rgba(29,212,183,0.4); border-radius: var(--radius-pill); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; flex-shrink: 0; }
   .step h3 { font-size: 1rem; margin-bottom: 0.2rem; }
   .step p { color: var(--muted); font-size: 0.92rem; }
+  .steps-note { color: var(--dim); font-size: 0.9rem; margin-top: 1.25rem; padding: 0.9rem 1.1rem; border-left: 2px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; }
 
-  /* pricing */
-  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-  @media (max-width: 760px) { .pricing-grid { grid-template-columns: 1fr; } }
-  .tier { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.5rem 1.6rem; }
-  .tier.featured { border-color: var(--accent); }
-  .tier-name { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 700; margin-bottom: 0.4rem; }
-  .tier-price { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.2rem; }
-  .tier-price .unit { font-size: 0.8rem; color: var(--dim); font-weight: 400; margin-left: 4px; }
-  .tier-meta { color: var(--dim); font-size: 0.85rem; margin-bottom: 1rem; }
-  .tier ul li { color: var(--muted); font-size: 0.88rem; padding: 4px 0 4px 18px; position: relative; }
-  .tier ul li::before { content: '✓'; color: var(--accent); position: absolute; left: 0; font-weight: 700; }
-
-  /* boundaries / disclaimer */
   .boundaries { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 1.75rem 2rem; }
   .boundaries h2 { font-size: 1.3rem; margin-bottom: 0.5rem; }
   .boundaries-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
@@ -99,12 +78,10 @@
   .boundaries-grid h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 0.5rem; }
   .boundaries-grid li { color: var(--muted); font-size: 0.92rem; padding: 4px 0; }
 
-  /* CTA */
   .cta { text-align: center; padding: 3rem 1.5rem 4rem; border-top: 1px solid var(--border); margin-top: 4rem; }
   .cta h2 { font-size: 1.8rem; margin-bottom: 0.6rem; }
   .cta p { color: var(--muted); max-width: 580px; margin: 0 auto 1.5rem; }
 
-  /* footer */
   footer { color: var(--dim); font-size: 12px; text-align: center; padding: 2rem 1.5rem 3rem; border-top: 1px solid var(--border); }
   footer p { margin: 0.3rem 0; }
   footer a { color: var(--dim); }
@@ -116,114 +93,86 @@
 <header class="topnav">
   <div class="brand">
     <span class="brand-mark"></span>
-    <a href="/"><span class="brand-text" data-i18n="brand_label">{{PartnerBrand}}</span></a>
+    <a href="/"><span class="brand-text">{{PartnerBrand}}</span></a>
   </div>
   <nav class="primary">
-    <a href="#how-it-works" data-i18n="nav_how">How it works</a>
-    <a href="pricing-kataloghub.html" data-i18n="nav_pricing">Pricing</a>
-    <a href="#boundaries" data-i18n="nav_boundaries">Boundaries</a>
-    <a href="portal.html" class="demo" data-i18n="nav_portal">Portal →</a>
-    <div class="lang-toggle">
-      <button data-lang="en" class="active">EN</button>
-      <button data-lang="sv">SV</button>
-    </div>
+    <a href="scan-catalog.html">Validering</a>
+    <a href="portal.html">Historik</a>
+    <a href="pricing-kataloghub.html">Priser</a>
+    <a href="faq.html">Vanliga frågor</a>
+    <a href="contact.html">Kontakt</a>
   </nav>
 </header>
 
 <section class="hero">
-  <h1><span data-i18n="hero_h1_a">Your brand.</span> <span data-i18n="hero_h1_b" class="accent">Your catalog tools.</span> <span data-i18n="hero_h1_c">Your file exchange.</span></h1>
-  <p class="lede" data-i18n="hero_lede">A file-based metadata analysis and correction workflow, delivered end-to-end under {{PartnerBrand}}. No partner-side integration. No system access required. Deliverables only via file exchange.</p>
+  <h1>Validering av <span class="accent">katalogmetadata</span>.</h1>
+  <p class="lede">Filbaserad metadatavalidering, levererad under {{PartnerBrand}}. Tjänsten skannar katalogfiler och returnerar två filer per skanning: hälsorapport (PDF) och CSV-mall med identifierade avvikelser. Korrigeringar utförs via HeyRoya.</p>
   <div class="hero-buttons">
-    <a href="mailto:{{PartnerContact}}" class="btn-primary" data-i18n="hero_cta_primary">Request a partner walkthrough</a>
-    <a href="#how-it-works" class="btn-secondary" data-i18n="hero_cta_secondary">See the workflow</a>
+    <a href="scan-catalog.html" class="btn-primary">Starta validering</a>
+    <a href="#how-it-works" class="btn-secondary">Se arbetsflödet</a>
   </div>
-  <p class="hero-trustline" data-i18n="hero_trust">File-based · Metadata-only · Zero-trust · No automated changes to ownership data</p>
+  <p class="hero-trustline">Filbaserat · Endast metadata · Zero-trust · Inga korrigeringar i tjänsten</p>
 </section>
 
 <section class="section" id="what-you-get">
-  <h2 data-i18n="features_h2">What {{PartnerBrand}} delivers</h2>
-  <p class="lede" data-i18n="features_lede">Six branded outputs your partners receive. The backend stays hidden — they only see {{PartnerBrand}}.</p>
+  <h2>Leveranser</h2>
+  <p class="lede">Två filer per skanning, formaterade under {{PartnerBrand}}.</p>
   <div class="feature-grid">
     <div class="feature">
-      <h3 data-i18n="feat1_h">Branded health report</h3>
-      <p data-i18n="feat1_p">A structured HTML report identifying metadata issues, formatted under {{PartnerBrand}} colors and contact details.</p>
+      <h3>Hälsorapport (PDF)</h3>
+      <p>Strukturerad PDF med identifierade metadataavvikelser. Innehåller hälsobetyg, identifierartäckning, andelsvalidering och avvikelselista per verk.</p>
     </div>
     <div class="feature">
-      <h3 data-i18n="feat2_h">Branded worksheet</h3>
-      <p data-i18n="feat2_p">XLSX worksheet (CSV fallback) listing affected works with proposed corrections. The partner reviews and confirms each row before any change is applied.</p>
-    </div>
-    <div class="feature">
-      <h3 data-i18n="feat3_h">Branded export files</h3>
-      <p data-i18n="feat3_p">CWR-format and CSV export templates produced after correction, ready to forward into the partner's downstream system.</p>
-    </div>
-    <div class="feature">
-      <h3 data-i18n="feat4_h">Partner instructions</h3>
-      <p data-i18n="feat4_p">A short, brand-neutral PDF the partner sends to their own clients explaining how the file exchange works.</p>
-    </div>
-    <div class="feature">
-      <h3 data-i18n="feat5_h">Onboarding kit</h3>
-      <p data-i18n="feat5_p">A checklist + sample files the partner uses internally to validate their first 1–3 cases before going live.</p>
-    </div>
-    <div class="feature">
-      <h3 data-i18n="feat6_h">Reseller documentation</h3>
-      <p data-i18n="feat6_p">Wholesale pricing, scope boundaries, and the partner-safe disclaimer text required on all branded outputs.</p>
+      <h3>CSV-mall</h3>
+      <p>CSV-fil som listar varje avvikelse: verk, fält, nuvarande värde, föreslagen åtgärd. Filen används som indata vid korrigering via HeyRoya.</p>
     </div>
   </div>
 </section>
 
 <section class="section" id="how-it-works">
-  <h2 data-i18n="steps_h2">How the workflow runs</h2>
-  <p class="lede" data-i18n="steps_lede">Six steps, all file-based. {{PartnerBrand}} stays the only name your end-clients see.</p>
+  <h2>Arbetsflöde</h2>
+  <p class="lede">Tre steg, filbaserat.</p>
   <div class="steps">
     <div class="step">
       <div class="step-num">1</div>
-      <div><h3 data-i18n="step1_h">Partner receives a catalog file</h3><p data-i18n="step1_p">Accepted formats: CSV, XLSX, CWR.</p></div>
+      <div><h3>Partnern tar emot en katalogfil</h3><p>Format: CSV.</p></div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
-      <div><h3 data-i18n="step2_h">Part 1 scan</h3><p data-i18n="step2_p">Identifier checks, role and share validation, duplicate and conflict detection.</p></div>
+      <div><h3>Skanning</h3><p>Identifierarkontroller, validering av roll och andelar, identifiering av dubbletter och konflikter.</p></div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
-      <div><h3 data-i18n="step3_h">Branded report + worksheet returned</h3><p data-i18n="step3_p">Health report and worksheet are generated under {{PartnerBrand}} and sent back to the partner.</p></div>
-    </div>
-    <div class="step">
-      <div class="step-num">4</div>
-      <div><h3 data-i18n="step4_h">Partner returns the worksheet</h3><p data-i18n="step4_p">With selected corrections confirmed by their client. No automatic changes.</p></div>
-    </div>
-    <div class="step">
-      <div class="step-num">5</div>
-      <div><h3 data-i18n="step5_h">Part 2 corrections applied</h3><p data-i18n="step5_p">Only the rows the partner explicitly approved are written to the working catalog.</p></div>
-    </div>
-    <div class="step">
-      <div class="step-num">6</div>
-      <div><h3 data-i18n="step6_h">Branded corrected report + exports</h3><p data-i18n="step6_p">A second health report, the corrected catalog, and the CWR/CSV export templates — all under {{PartnerBrand}}.</p></div>
+      <div><h3>Leverans</h3><p>Hälsorapport (PDF) och CSV-mall returneras under {{PartnerBrand}}.</p></div>
     </div>
   </div>
+  <p class="steps-note">Korrigeringar utförs via HeyRoya. Ingen ändringslogik finns i {{PartnerBrand}}.</p>
 </section>
 
 <section class="section" id="boundaries">
   <div class="boundaries">
-    <h2 data-i18n="bounds_h2">Boundaries</h2>
-    <p class="lede" data-i18n="bounds_lede">{{PartnerBrand}} is a file-exchange service. The boundaries below are what makes it partner-safe.</p>
+    <h2>Avgränsningar</h2>
+    <p class="lede">{{PartnerBrand}} är en validerings- och filutbytestjänst. Avgränsningarna nedan definierar omfattningen.</p>
     <div class="boundaries-grid">
       <div>
-        <h3 data-i18n="bounds_no_h">Not included</h3>
+        <h3>Ingår inte</h3>
         <ul>
-          <li data-i18n="bounds_no_1">No live system access</li>
-          <li data-i18n="bounds_no_2">No API endpoints</li>
-          <li data-i18n="bounds_no_3">No ingestion pipelines</li>
-          <li data-i18n="bounds_no_4">No automated changes to ownership data</li>
-          <li data-i18n="bounds_no_5">No claims of recovery or financial outcomes</li>
+          <li>Inga korrigeringar i tjänsten</li>
+          <li>Inga CWR-genereringar</li>
+          <li>Ingen live-systemåtkomst</li>
+          <li>Inga API-endpoints</li>
+          <li>Inga ingest-pipelines</li>
+          <li>Ingen automatisk ändring av ägaruppgifter</li>
+          <li>Inga påståenden om återvinning eller finansiella utfall</li>
         </ul>
       </div>
       <div>
-        <h3 data-i18n="bounds_yes_h">Always included</h3>
+        <h3>Ingår alltid</h3>
         <ul>
-          <li data-i18n="bounds_yes_1">Explicit confirmation required for every correction</li>
-          <li data-i18n="bounds_yes_2">All deliverables file-based</li>
-          <li data-i18n="bounds_yes_3">Brand-neutral disclaimer text on every output</li>
-          <li data-i18n="bounds_yes_4">Wholesale pricing — partner controls retail</li>
+          <li>Endast metadatavalidering</li>
+          <li>Alla leveranser filbaserat</li>
+          <li>Varumärkesneutral friskrivningstext på varje leverans</li>
+          <li>Grossistpriser — partnern bestämmer slutpris</li>
         </ul>
       </div>
     </div>
@@ -231,189 +180,27 @@
 </section>
 
 <section class="cta">
-  <h2 data-i18n="cta_h2">Run your first partner case</h2>
-  <p data-i18n="cta_p">A short walkthrough on a sample catalog, under {{PartnerBrand}}. Confidential. No commitment.</p>
-  <a href="mailto:{{PartnerContact}}" class="btn-primary" data-i18n="cta_btn">Contact {{PartnerContact}}</a>
+  <h2>Första partnerfallet</h2>
+  <p>En genomgång med exempelkatalog, under {{PartnerBrand}}. Konfidentiellt.</p>
+  <a href="mailto:{{PartnerContact}}" class="btn-primary">Kontakta {{PartnerContact}}</a>
 </section>
 
 <footer>
-  <p data-i18n="footer_brand">{{PartnerBrand}} · Catalog metadata validation, file-based</p>
+  <p>{{PartnerBrand}} · Validering av katalogmetadata, filbaserat</p>
   <p><a href="mailto:{{PartnerContact}}">{{PartnerContact}}</a> · {{PartnerDomain}}</p>
-  <p data-i18n="footer_copy">© 2026 {{PartnerBrand}} · All rights reserved</p>
+  <p>© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna</p>
 </footer>
 
+<!-- src-guard:v1 -->
 <script>
-window.TRANSLATIONS = {
-  en: {
-    title: "{{PartnerBrand}} — Catalog Metadata Validation",
-    meta_desc: "File-based metadata analysis and correction workflow, delivered under your brand.",
-    brand_label: "{{PartnerBrand}}",
-    nav_how: "How it works",
-    nav_pricing: "Pricing",
-    nav_boundaries: "Boundaries",
-    nav_portal: "Portal →",
-    hero_h1_a: "Your brand.",
-    hero_h1_b: "Your catalog tools.",
-    hero_h1_c: "Your file exchange.",
-    hero_lede: "A file-based metadata analysis and correction workflow, delivered end-to-end under {{PartnerBrand}}. No partner-side integration. No system access required. Deliverables only via file exchange.",
-    hero_cta_primary: "Request a partner walkthrough",
-    hero_cta_secondary: "See the workflow",
-    hero_trust: "File-based · Metadata-only · Zero-trust · No automated changes to ownership data",
-    features_h2: "What {{PartnerBrand}} delivers",
-    features_lede: "Six branded outputs your partners receive. The backend stays hidden — they only see {{PartnerBrand}}.",
-    feat1_h: "Branded health report",
-    feat1_p: "A structured HTML report identifying metadata issues, formatted under {{PartnerBrand}} colors and contact details.",
-    feat2_h: "Branded worksheet",
-    feat2_p: "XLSX worksheet (CSV fallback) listing affected works with proposed corrections. The partner reviews and confirms each row before any change is applied.",
-    feat3_h: "Branded export files",
-    feat3_p: "CWR-format and CSV export templates produced after correction, ready to forward into the partner's downstream system.",
-    feat4_h: "Partner instructions",
-    feat4_p: "A short, brand-neutral PDF the partner sends to their own clients explaining how the file exchange works.",
-    feat5_h: "Onboarding kit",
-    feat5_p: "A checklist + sample files the partner uses internally to validate their first 1–3 cases before going live.",
-    feat6_h: "Reseller documentation",
-    feat6_p: "Wholesale pricing, scope boundaries, and the partner-safe disclaimer text required on all branded outputs.",
-    steps_h2: "How the workflow runs",
-    steps_lede: "Six steps, all file-based. {{PartnerBrand}} stays the only name your end-clients see.",
-    step1_h: "Partner receives a catalog file",
-    step1_p: "Accepted formats: CSV, XLSX, CWR.",
-    step2_h: "Part 1 scan",
-    step2_p: "Identifier checks, role and share validation, duplicate and conflict detection.",
-    step3_h: "Branded report + worksheet returned",
-    step3_p: "Health report and worksheet are generated under {{PartnerBrand}} and sent back to the partner.",
-    step4_h: "Partner returns the worksheet",
-    step4_p: "With selected corrections confirmed by their client. No automatic changes.",
-    step5_h: "Part 2 corrections applied",
-    step5_p: "Only the rows the partner explicitly approved are written to the working catalog.",
-    step6_h: "Branded corrected report + exports",
-    step6_p: "A second health report, the corrected catalog, and the CWR/CSV export templates — all under {{PartnerBrand}}.",
-    pricing_h2: "Wholesale tiers",
-    pricing_lede: "Wholesale to {{PartnerBrand}}. Partner sets the retail price to their own clients.",
-    tier1_name: "Starter", tier1_price: "[wholesale]", tier1_unit: "/scan",
-    tier1_meta: "Single-catalog engagements",
-    tier1_b1: "Branded health report", tier1_b2: "Branded worksheet", tier1_b3: "CSV/CWR export templates",
-    tier2_name: "Standard", tier2_price: "[wholesale]", tier2_unit: "/month",
-    tier2_meta: "Recurring monthly volume",
-    tier2_b1: "Everything in Starter", tier2_b2: "Onboarding kit", tier2_b3: "Reseller documentation", tier2_b4: "Partner-safe disclaimer pack",
-    tier3_name: "Volume", tier3_price: "Custom", tier3_unit: "",
-    tier3_meta: "High-volume / multi-region partners",
-    tier3_b1: "Everything in Standard", tier3_b2: "Custom export schemas", tier3_b3: "Dedicated partner contact",
-    bounds_h2: "Boundaries",
-    bounds_lede: "{{PartnerBrand}} is a file-exchange service. The boundaries below are what makes it partner-safe.",
-    bounds_no_h: "Not included",
-    bounds_no_1: "No live system access",
-    bounds_no_2: "No API endpoints",
-    bounds_no_3: "No ingestion pipelines",
-    bounds_no_4: "No automated changes to ownership data",
-    bounds_no_5: "No claims of recovery or financial outcomes",
-    bounds_yes_h: "Always included",
-    bounds_yes_1: "Explicit confirmation required for every correction",
-    bounds_yes_2: "All deliverables file-based",
-    bounds_yes_3: "Brand-neutral disclaimer text on every output",
-    bounds_yes_4: "Wholesale pricing — partner controls retail",
-    cta_h2: "Run your first partner case",
-    cta_p: "A short walkthrough on a sample catalog, under {{PartnerBrand}}. Confidential. No commitment.",
-    cta_btn: "Contact {{PartnerContact}}",
-    footer_brand: "{{PartnerBrand}} · Catalog metadata validation, file-based",
-    footer_copy: "© 2026 {{PartnerBrand}} · All rights reserved"
-  },
-  sv: {
-    title: "{{PartnerBrand}} — Validering av katalogmetadata",
-    meta_desc: "Filbaserad metadataanalys och korrigeringsflöde, levererat under er varumärke.",
-    brand_label: "{{PartnerBrand}}",
-    nav_how: "Så fungerar det",
-    nav_pricing: "Priser",
-    nav_boundaries: "Avgränsningar",
-    nav_portal: "Portal →",
-    hero_h1_a: "Ert varumärke.",
-    hero_h1_b: "Era katalogverktyg.",
-    hero_h1_c: "Ert filutbyte.",
-    hero_lede: "Ett filbaserat metadataanalys- och korrigeringsflöde, levererat helt under {{PartnerBrand}}. Ingen integration hos partnern. Ingen systemåtkomst krävs. Leveranser sker endast via filutbyte.",
-    hero_cta_primary: "Boka en partnergenomgång",
-    hero_cta_secondary: "Se arbetsflödet",
-    hero_trust: "Filbaserat · Endast metadata · Zero-trust · Ingen automatisk ändring av ägaruppgifter",
-    features_h2: "Vad {{PartnerBrand}} levererar",
-    features_lede: "Sex varumärkta leveranser till era partners. Backend förblir dold — de ser endast {{PartnerBrand}}.",
-    feat1_h: "Varumärkt hälsorapport",
-    feat1_p: "En strukturerad HTML-rapport som identifierar metadataavvikelser, formaterad med {{PartnerBrand}}s färger och kontaktuppgifter.",
-    feat2_h: "Varumärkt arbetsblad",
-    feat2_p: "XLSX-arbetsblad (CSV som reserv) som listar berörda verk med föreslagna korrigeringar. Partnern granskar och bekräftar varje rad innan någon ändring tillämpas.",
-    feat3_h: "Varumärkta exportfiler",
-    feat3_p: "CWR- och CSV-exportmallar som genereras efter korrigering, klara att vidarebefordras till partnerns nedströmssystem.",
-    feat4_h: "Partnerinstruktioner",
-    feat4_p: "En kort, varumärkesneutral PDF som partnern skickar till sina egna kunder för att förklara hur filutbytet fungerar.",
-    feat5_h: "Onboarding-paket",
-    feat5_p: "En checklista och exempelfiler som partnern använder internt för att validera sina första 1–3 fall före driftstart.",
-    feat6_h: "Återförsäljardokumentation",
-    feat6_p: "Grossistpriser, omfattningsavgränsningar och den varumärkesneutrala friskrivningstext som krävs på alla leveranser.",
-    steps_h2: "Så fungerar arbetsflödet",
-    steps_lede: "Sex steg, alla filbaserade. {{PartnerBrand}} förblir det enda namn era slutkunder ser.",
-    step1_h: "Partnern tar emot en katalogfil",
-    step1_p: "Format som accepteras: CSV, XLSX, CWR.",
-    step2_h: "Skanning – del 1",
-    step2_p: "Identifierarkontroller, validering av roll och andelar, identifiering av dubbletter och konflikter.",
-    step3_h: "Varumärkt rapport + arbetsblad returneras",
-    step3_p: "Hälsorapport och arbetsblad genereras under {{PartnerBrand}} och skickas tillbaka till partnern.",
-    step4_h: "Partnern returnerar arbetsbladet",
-    step4_p: "Med utvalda korrigeringar bekräftade av deras kund. Inga automatiska ändringar.",
-    step5_h: "Korrigeringar tillämpas – del 2",
-    step5_p: "Endast de rader som partnern uttryckligen godkänt skrivs till arbetskatalogen.",
-    step6_h: "Varumärkt korrigerad rapport + exporter",
-    step6_p: "En andra hälsorapport, den korrigerade katalogen och CWR/CSV-exportmallarna — allt under {{PartnerBrand}}.",
-    pricing_h2: "Grossistnivåer",
-    pricing_lede: "Grossist till {{PartnerBrand}}. Partnern sätter slutkundspriset.",
-    tier1_name: "Bas", tier1_price: "[grossist]", tier1_unit: "/skanning",
-    tier1_meta: "Enskilda kataloguppdrag",
-    tier1_b1: "Varumärkt hälsorapport", tier1_b2: "Varumärkt arbetsblad", tier1_b3: "CSV/CWR-exportmallar",
-    tier2_name: "Standard", tier2_price: "[grossist]", tier2_unit: "/månad",
-    tier2_meta: "Återkommande månadsvolym",
-    tier2_b1: "Allt i Bas", tier2_b2: "Onboarding-paket", tier2_b3: "Återförsäljardokumentation", tier2_b4: "Partnerslip-friskrivningar",
-    tier3_name: "Volym", tier3_price: "Offert", tier3_unit: "",
-    tier3_meta: "Högvolyms- och multi-regionspartners",
-    tier3_b1: "Allt i Standard", tier3_b2: "Anpassade exportscheman", tier3_b3: "Dedikerad partnerkontakt",
-    bounds_h2: "Avgränsningar",
-    bounds_lede: "{{PartnerBrand}} är en filutbytestjänst. Avgränsningarna nedan är det som gör den partnertrygg.",
-    bounds_no_h: "Ingår inte",
-    bounds_no_1: "Ingen live-systemåtkomst",
-    bounds_no_2: "Inga API-endpoints",
-    bounds_no_3: "Inga ingest-pipelines",
-    bounds_no_4: "Ingen automatisk ändring av ägaruppgifter",
-    bounds_no_5: "Inga påståenden om återvinning eller finansiella utfall",
-    bounds_yes_h: "Ingår alltid",
-    bounds_yes_1: "Uttryckligt godkännande krävs för varje korrigering",
-    bounds_yes_2: "Alla leveranser sker filbaserat",
-    bounds_yes_3: "Varumärkesneutral friskrivningstext på varje leverans",
-    bounds_yes_4: "Grossistpriser — partnern bestämmer slutpris",
-    cta_h2: "Kör ert första partnerfall",
-    cta_p: "En kort genomgång med en exempelkatalog, under {{PartnerBrand}}. Konfidentiellt. Ingen förpliktelse.",
-    cta_btn: "Kontakta {{PartnerContact}}",
-    footer_brand: "{{PartnerBrand}} · Validering av katalogmetadata, filbaserat",
-    footer_copy: "© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna"
-  }
-};
-
-(function setLang() {
-  function apply(lang) {
-    var dict = window.TRANSLATIONS[lang] || window.TRANSLATIONS.en;
-    document.documentElement.lang = lang;
-    document.querySelectorAll('[data-i18n]').forEach(function(el){
-      var key = el.getAttribute('data-i18n');
-      var attr = el.getAttribute('data-i18n-attr');
-      if (dict[key] === undefined) return;
-      if (attr) el.setAttribute(attr, dict[key]);
-      else el.textContent = dict[key];
-    });
-    document.querySelectorAll('.lang-toggle button').forEach(function(b){
-      b.classList.toggle('active', b.getAttribute('data-lang') === lang);
-    });
-    try { localStorage.setItem('wl_lang', lang); } catch(e) {}
-  }
-  var saved = null;
-  try { saved = localStorage.getItem('wl_lang'); } catch(e) {}
-  apply(saved || 'en');
-  document.querySelectorAll('.lang-toggle button').forEach(function(b){
-    b.addEventListener('click', function(){ apply(b.getAttribute('data-lang')); });
-  });
+(function(){
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, false);
+  document.addEventListener('keydown', function(e){
+    var k = (e.key || '').toLowerCase();
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && (k === 'u' || k === 's')) { e.preventDefault(); return false; }
+  }, false);
 })();
 </script>
 

@@ -2,808 +2,504 @@
 <html lang="sv">
 <head>
 <meta charset="UTF-8" />
-<title>Skanna katalog → arbetsblad — {{PartnerBrand}}</title>
+<title>Validering av katalog — {{PartnerBrand}}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Filbaserad validering av katalogmetadata. Leverans: hälsorapport (PDF) och CSV-underlag.">
 <style>
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:#05070b; color:#f5f7fb; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; padding:32px 20px 64px; }
+  body { background:#05070b; color:#f5f7fb; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; padding:24px 20px 64px; }
   a { color:#1dd4b7; text-decoration:none; }
   .container { max-width:1080px; margin:0 auto; }
   h1, h2, h3 { font-weight:600; }
 
-  header.top { display:flex; align-items:center; justify-content:space-between; padding:0 0 24px; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #1b2233; margin-bottom:24px; }
-  .brand { display:flex; align-items:center; gap:0.65rem; font-weight:700; color:#1dd4b7; }
-  .meta { font-size:12px; color:#8f9bb3; }
-  .meta a { color:#1dd4b7; }
+  header.topnav { max-width:1120px; margin:0 auto 24px; padding:0 0 14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #1b2233; }
+  .brand { display:flex; align-items:center; gap:0.65rem; }
+  .brand-mark { width:24px; height:24px; border-radius:999px; background:radial-gradient(circle at 30% 20%, #b0fbe9 0, #1dd4b7 40%, #0f6657 100%); }
+  .brand-text { font-weight:600; letter-spacing:0.06em; text-transform:uppercase; font-size:12px; color:#8f9bb3; }
+  nav.primary { display:flex; align-items:center; gap:1.1rem; flex-wrap:wrap; font-size:13px; color:#8f9bb3; }
+  nav.primary a:hover, nav.primary a.active { color:#1dd4b7; }
 
   .hero h1 { font-size:1.6rem; margin-bottom:0.5rem; }
-  .hero p { color:#c3cad8; max-width:760px; margin-bottom:1.5rem; font-size:0.95rem; }
+  .hero p { color:#c3cad8; max-width:760px; margin-bottom:1.25rem; font-size:0.95rem; }
 
-  .upload-card { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:1.5rem 1.6rem; margin-bottom:1.5rem; }
-  .upload-card h3 { font-size:0.95rem; color:#1dd4b7; margin-bottom:0.5rem; }
-  .upload-card .hint { font-size:12px; color:#8f9bb3; margin-bottom:0.85rem; }
+  .limit-card { background:#0b0f18; border:1px solid #1b2233; border-left:2px solid #1dd4b7; border-radius:0 12px 12px 0; padding:1rem 1.25rem; margin-bottom:1.25rem; }
+  .limit-card h3 { font-size:0.78rem; color:#1dd4b7; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.4rem; }
+  .limit-card p { color:#c3cad8; font-size:13px; }
+  .limit-card .limits { display:flex; gap:1.25rem; flex-wrap:wrap; margin-top:0.6rem; font-size:12px; color:#8f9bb3; font-family:monospace; }
+  .limit-card .limits span { color:#c3cad8; }
+
+  .upload-card { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:1.5rem 1.6rem; margin-bottom:1.25rem; display:flex; flex-direction:column; gap:0.85rem; }
+  .upload-card label { font-size:0.78rem; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; }
   .upload-card input[type="file"] { width:100%; padding:8px; background:#0a0d14; border:1px dashed #2a3345; border-radius:8px; color:#c3cad8; font-size:13px; cursor:pointer; }
-  .upload-card .filename { font-family:monospace; font-size:12px; color:#1dd4b7; margin-top:6px; min-height:1.2em; }
+  .upload-card .filename { font-family:monospace; font-size:12px; color:#1dd4b7; min-height:1.2em; }
+  .upload-card .row { display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; }
 
-  .actions { display:flex; gap:0.75rem; margin-bottom:1.5rem; flex-wrap:wrap; }
   .btn { padding:0.7rem 1.4rem; border-radius:999px; font-weight:600; cursor:pointer; font-family:inherit; font-size:0.9rem; border:0; text-decoration:none; display:inline-block; }
   .btn-primary { background:#1dd4b7; color:#020308; }
-  .btn-primary:hover { background:#18bfa5; }
+  .btn-primary:hover:not(:disabled) { background:#18bfa5; }
   .btn-primary:disabled { background:#1b2233; color:#5a6478; cursor:not-allowed; }
   .btn-secondary { background:transparent; color:#f5f7fb; border:1px solid #2a3345; }
-  .btn-secondary:hover { border-color:#4b5a7a; }
+  .btn-secondary:hover:not(:disabled) { border-color:#4b5a7a; }
+  .btn-secondary:disabled { color:#5a6478; cursor:not-allowed; opacity:0.6; }
 
-  .status { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:1.25rem 1.5rem; margin-bottom:1.5rem; font-size:13px; color:#c3cad8; min-height:60px; }
-  .status.error { border-color:#f87171; color:#fbbf77; }
-  .status.success { border-color:#1dd4b7; color:#86efac; }
-  .status .row { display:flex; justify-content:space-between; padding:4px 0; }
+  .status { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:1rem 1.25rem; margin-bottom:1.25rem; font-size:13px; color:#c3cad8; }
+  .status.error    { border-color:#f87171; color:#fbbf77; }
+  .status.success  { border-color:#1dd4b7; color:#86efac; }
+  .status.blocked  { border-color:#f87171; color:#f87171; }
+  .status .row { display:flex; justify-content:space-between; padding:3px 0; }
   .status .row strong { color:#f5f7fb; }
-  .status .row.ok strong { color:#1dd4b7; }
+  .status .code { display:inline-block; font-family:monospace; font-size:11px; color:#8f9bb3; margin-left:0.5rem; padding:1px 8px; border:1px solid #2a3345; border-radius:999px; }
 
-  .summary-cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:1.5rem; }
-  .summary-card { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:14px 18px; }
-  .summary-card .label { font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
-  .summary-card .value { font-size:24px; font-weight:700; color:#f5f7fb; }
-  .summary-card.red .value { color:#f87171; }
-  .summary-card.amber .value { color:#f2b36a; }
-  .summary-card.green .value { color:#1dd4b7; }
+  .actions { display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.25rem; }
 
-  .preview { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; overflow:hidden; }
+  .preview { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; overflow:auto; }
   .preview-header { padding:0.85rem 1.25rem; border-bottom:1px solid #1b2233; display:flex; justify-content:space-between; align-items:center; }
-  .preview-header h3 { font-size:0.85rem; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; }
+  .preview-header h3 { font-size:0.78rem; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; }
   .preview-header .count { font-size:12px; color:#1dd4b7; font-family:monospace; }
   .preview table { width:100%; border-collapse:collapse; font-size:12px; }
-  .preview th, .preview td { text-align:left; padding:8px 14px; border-bottom:1px solid #1b2233; color:#c3cad8; }
+  .preview th, .preview td { text-align:left; padding:8px 12px; border-bottom:1px solid #1b2233; color:#c3cad8; white-space:nowrap; }
   .preview th { background:#0a0d14; font-size:10px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; }
-  .preview .field { color:#1dd4b7; font-family:monospace; font-size:11px; }
-  .preview .severity { font-family:monospace; font-size:10px; padding:1px 8px; border-radius:999px; font-weight:700; }
-  .preview .blocking { background:rgba(248,113,113,0.12); color:#f87171; border:1px solid rgba(248,113,113,0.3); }
-  .preview .resolvable { background:rgba(242,179,106,0.12); color:#f2b36a; border:1px solid rgba(242,179,106,0.3); }
+  .preview td.wid { color:#1dd4b7; font-family:monospace; }
 
-  .docs { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:1.25rem 1.5rem; margin-top:1.5rem; }
-  .docs h3 { font-size:0.85rem; color:#1dd4b7; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.75rem; font-weight:700; }
-  .docs p { color:#c3cad8; font-size:13px; margin-bottom:0.5rem; }
-  .docs ol { margin-left:1.5rem; color:#c3cad8; font-size:13px; }
-  .docs li { margin-bottom:0.4rem; }
-  .docs code { background:#0a0d14; padding:1px 6px; border-radius:4px; font-size:12px; color:#1dd4b7; }
-</style>
-</head>
-<body>
-<div class="container">
-
-  <header class="top">
-    <div class="brand">{{PartnerBrand}}</div>
-    <div class="meta">
-      <a href="portal.html" style="color:#8f9bb3;margin-right:12px;">← tillbaka till portalen</a>
-    </div>
-  </header>
-
-  <div style="background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:0.85rem 1.25rem; margin-bottom:1.5rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center; font-size:13px;">
-    <span style="color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-size:11px; font-weight:700; margin-right:0.5rem;">Arbetsflöde:</span>
-    <a href="scan-catalog.html" style="color:#1dd4b7; font-weight:700;">1. Skanna katalog</a>
-    <span style="color:#2a3345;">→</span>
-    <a href="apply-corrections.html" style="color:#8f9bb3;">2. Tillämpa korrigeringar</a>
-  </div>
-
-  <section class="hero">
-    <h1>Generera arbetsblad för korrigeringar från en katalog</h1>
-    <p>Ladda upp förlagets katalog-CSV. Verktyget kör standardskanningen, identifierar metadataavvikelser och skapar en <code style="background:#0b0f18;padding:1px 6px;border-radius:4px;font-size:12px;color:#1dd4b7;">corrections-worksheet.csv</code> som kan skickas till förlaget för deras beslut.</p>
-  </section>
-
-  <div class="upload-card">
-    <h3>Katalog-CSV</h3>
-    <p class="hint">Kolumner: title, iswc, isrc, name, role, share_percent, ipi, society</p>
-    <input type="file" id="catalogFile" accept=".csv" />
-    <div class="filename" id="catalogName"></div>
-  </div>
-
-  <div class="actions">
-    <button class="btn btn-primary" id="scanBtn" disabled>Kör skanning</button>
-    <button class="btn btn-secondary" id="downloadWorksheetBtn" disabled>Ladda ner arbetsblad (Excel)</button>
-    <button class="btn btn-secondary" id="downloadInstructionsBtn" disabled>Ladda ner instructions.txt</button>
-    <button class="btn btn-secondary" id="generateReportBtn" disabled>Generera hälsorapport (HTML/PDF)</button>
-  </div>
-
-  <div class="status" id="status">Ladda upp en katalog-CSV för att börja.</div>
-
-  <div class="summary-cards" id="summaryCards" style="display:none;">
-    <div class="summary-card"><div class="label">Verk analyserade</div><div class="value" id="cWorks">0</div></div>
-    <div class="summary-card amber"><div class="label">Avvikelser funna</div><div class="value" id="cIssues">0</div></div>
-    <div class="summary-card red"><div class="label">Blockerande</div><div class="value" id="cBlocking">0</div></div>
-    <div class="summary-card amber"><div class="label">Åtgärdbara</div><div class="value" id="cResolvable">0</div></div>
-    <div class="summary-card"><div class="label">Hälsopoäng</div><div class="value" id="cScore">—</div></div>
-  </div>
-
-  <div class="preview" id="preview" style="display:none;">
-    <div class="preview-header">
-      <h3>Identifierade avvikelser (förhandsvisning av arbetsblad)</h3>
-      <span class="count" id="previewCount"></span>
-    </div>
-    <table>
-      <thead>
-        <tr><th>ID</th><th>Work</th><th>Field</th><th>Current</th><th>Suggested</th><th>Severity</th></tr>
-      </thead>
-      <tbody id="previewBody"></tbody>
-    </table>
-  </div>
-
-  <div class="docs">
-    <h3>Arbetsflöde</h3>
-    <ol>
-      <li>Ladda upp förlagets katalog → klicka <strong>Kör skanning</strong></li>
-      <li><strong>Ladda ner arbetsblad (CSV)</strong> + <strong>Ladda ner instructions.txt</strong></li>
-      <li>Email both attachments to the publisher</li>
-      <li>Skicka båda filerna till förlaget</li>
-      <li>När de skickar tillbaka ifyllt arbetsblad → gå till <a href="apply-corrections.html">apply-corrections</a> för att slå ihop det med katalogen</li>
-    </ol>
-    <p style="margin-top:0.75rem;">Exempelkatalog för test: <a href="/samples/test-20-works.csv">/samples/test-20-works.csv</a></p>
-  </div>
-
-</div>
-
-<script>
-let catalogText = null;
-let worksheetCSV = null;
-let instructionsText = null;
-let lastScan = null; // { titles, issues, blocking, resolvable, score, totalContribs }
-const $ = id => document.getElementById(id);
-const status = (msg, cls) => { const s = $('status'); s.className = 'status' + (cls ? ' ' + cls : ''); s.innerHTML = msg; };
-
-$('catalogFile').addEventListener('change', e => {
-  const f = e.target.files[0]; if (!f) return;
-  $('catalogName').textContent = f.name;
-  const r = new FileReader();
-  r.onload = ev => { catalogText = ev.target.result; $('scanBtn').disabled = false; status('Fil inläst — klicka <strong>Kör skanning</strong>.'); };
-  r.readAsText(f);
-});
-
-function parseCSV(text) {
-  const rows = [];
-  const lines = text.replace(/\r\n/g, '\n').split('\n');
-  for (const line of lines) {
-    if (!line.trim()) continue;
-    const cells = []; let cur = '', inQ = false;
-    for (let i = 0; i < line.length; i++) {
-      const c = line[i];
-      if (inQ) {
-        if (c === '"' && line[i+1] === '"') { cur += '"'; i++; }
-        else if (c === '"') inQ = false; else cur += c;
-      } else {
-        if (c === '"') inQ = true;
-        else if (c === ',') { cells.push(cur); cur = ''; }
-        else cur += c;
-      }
-    }
-    cells.push(cur); rows.push(cells);
-  }
-  return rows;
-}
-function csvEscape(v) { v = (v == null) ? '' : String(v); if (/[",\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"'; return v; }
-
-const VALID_ROLES = new Set(['CA','C','A','AR','AD','SR','SA','TR','PA','E','SE','AM']);
-const HOME_SOCIETY = 'STIM';
-const FOREIGN_SOCIETIES = new Set(['TONO','GEMA','SACEM','PRS','BMI','ASCAP','SOCAN','ICE','MLC','SIAE','BUMA','SUISA','ZAIKS','AKM','AUSTRO','SABAM','SACM','SADAIC','SUISA','APRA','JASRAC']);
-
-$('scanBtn').addEventListener('click', () => {
-  try {
-    const rows = parseCSV(catalogText);
-    if (rows.length < 2) throw new Error('CSV must have a header + at least 1 row.');
-    const h = rows[0].map(x => x.trim().toLowerCase());
-    const idx = name => h.indexOf(name);
-    const ti = idx('title'), iswc = idx('iswc'), isrc = idx('isrc');
-    const ni = idx('name'), ri = idx('role'), si = idx('share_percent'), ii = idx('ipi'), soi = idx('society');
-    if (ti < 0 || ni < 0) throw new Error('Katalogen måste ha kolumnerna title + name.');
-
-    // Group by title
-    const works = {};
-    for (let i = 1; i < rows.length; i++) {
-      const r = rows[i]; const t = (r[ti] || '').trim(); if (!t) continue;
-      works[t] = works[t] || { contribs: [] };
-      works[t].contribs.push({
-        name: (r[ni] || '').trim(),
-        role: (r[ri] || '').trim(),
-        share: parseFloat((r[si] || '0').replace(',', '.').replace('%','').trim()) || 0,
-        ipi: (r[ii] || '').trim(),
-        society: (r[soi] || '').trim(),
-        iswc: (r[iswc] || '').trim(),
-        isrc: (r[isrc] || '').trim(),
-      });
-    }
-
-    const titles = Object.keys(works);
-    const issues = [];
-    let id = 1;
-    const nextId = () => 'HR-' + String(id++).padStart(3, '0');
-
-    // Build a name canonicalization candidate set
-    const allNames = new Set();
-    for (const t of titles) for (const c of works[t].contribs) if (c.name) allNames.add(c.name);
-
-    // Pass 1: per-work checks
-    for (const t of titles) {
-      const w = works[t];
-      const c0 = w.contribs[0] || {};
-      // ISWC
-      if (!c0.iswc) issues.push({ id: nextId(), work: t, field: 'iswc', current: 'missing', suggested: 'external lookup match', severity: 'resolvable' });
-      // Split total
-      const sum = w.contribs.reduce((s, c) => s + (c.share || 0), 0);
-      if (Math.abs(sum - 100) > 0.5) {
-        issues.push({ id: nextId(), work: t, field: 'split_total', current: sum.toFixed(2) + '%', suggested: 'normalize to 100%', severity: 'blocking' });
-      }
-    }
-
-    // Pass 2: per-contributor checks
-    for (const t of titles) {
-      for (const c of works[t].contribs) {
-        // IPI missing
-        if (c.name && !c.ipi) {
-          issues.push({ id: nextId(), work: t, field: 'writer_ipi', current: c.name + ' has no IPI', suggested: 'publisher to provide', severity: 'blocking' });
-        }
-        // Society missing
-        if (c.name && !c.society) {
-          issues.push({ id: nextId(), work: t, field: 'society', current: c.name + ' — missing society', suggested: 'publisher to confirm', severity: 'resolvable' });
-        }
-        // Foreign society without E/SE/AM
-        if (c.society && FOREIGN_SOCIETIES.has(c.society.toUpperCase())) {
-          // Check if there's already an E/SE/AM role in the work — heuristic
-          const hasDeclaration = works[t].contribs.some(x => ['E','SE','AM'].includes((x.role || '').toUpperCase()));
-          if (!hasDeclaration) {
-            issues.push({ id: nextId(), work: t, field: 'foreign_writer', current: c.name + ' (' + c.society + ') — no E/SE/AM declaration', suggested: 'add E declaration', severity: 'blocking' });
-          }
-        }
-        // Invalid role
-        if (c.role && !VALID_ROLES.has(c.role.toUpperCase())) {
-          issues.push({ id: nextId(), work: t, field: 'role', current: c.role + ' (' + c.name + ')', suggested: 'change to CA (CWR-valid)', severity: 'blocking' });
-        }
-        // Name variant — flag if name has a single-letter initial that matches another full name
-        if (c.name && /^[A-ZÅÄÖ]\.?\s+[A-Za-zÅÄÖåäö]+$/.test(c.name.trim())) {
-          const initial = c.name.trim().charAt(0).toLowerCase();
-          const surname = c.name.trim().split(/\s+/).slice(-1)[0].toLowerCase();
-          for (const other of allNames) {
-            if (other === c.name) continue;
-            const otherParts = other.toLowerCase().split(/\s+/);
-            if (otherParts.length >= 2 && otherParts[0].charAt(0) === initial && otherParts[otherParts.length - 1] === surname) {
-              issues.push({ id: nextId(), work: t, field: 'writer_name', current: c.name, suggested: other + ' (canonical)', severity: 'resolvable' });
-              break;
-            }
-          }
-        }
-      }
-    }
-
-    // Score: 100 - 6*blocking - 1*resolvable, floored at 0
-    const blocking = issues.filter(i => i.severity === 'blocking').length;
-    const resolvable = issues.filter(i => i.severity === 'resolvable').length;
-    const score = Math.max(0, Math.min(100, 100 - 6 * blocking - 1 * resolvable));
-
-    // Build worksheet CSV
-    const worksheetRows = ['issue_id,work,field,current_value,suggested,decision,publisher_value,note'];
-    for (const i of issues) {
-      worksheetRows.push([i.id, i.work, i.field, i.current, i.suggested, '', '', ''].map(csvEscape).join(','));
-    }
-    worksheetCSV = worksheetRows.join('\n');
-
-    // Build instructions
-    instructionsText = [
-      'HEYROYA · CORRECTIONS WORKSHEET — INSTRUCTIONS',
-      '================================================',
-      '',
-      'Attached: corrections-worksheet.csv (' + issues.length + ' issues)',
-      '',
-      'For each row, fill in the "decision" column with one of three values:',
-      '',
-      '  accept   — apply the suggested fix as-is',
-      '  reject   — keep the original value',
-      '  edit     — apply your own value (fill in "publisher_value" too)',
-      '',
-      'For split_total edits, format as "60 / 40" or "33 / 33 / 34".',
-      'External metadata is used only as a suggestion — nothing is applied without your confirmation.',
-      'Return the filled CSV by reply email.',
-      '',
-      'Catalog scanned: ' + titles.length + ' works · ' + issues.length + ' issues found · health score ' + score + '/100',
-      '',
-      'Questions? {{PartnerContact}}'
-    ].join('\n');
-
-    // Render preview + summary
-    $('cWorks').textContent = titles.length;
-    $('cIssues').textContent = issues.length;
-    $('cBlocking').textContent = blocking;
-    $('cResolvable').textContent = resolvable;
-    $('cScore').textContent = score + '/100';
-    const scoreCard = $('cScore').parentElement;
-    scoreCard.classList.remove('green','amber','red');
-    scoreCard.classList.add(score >= 80 ? 'green' : score >= 50 ? 'amber' : 'red');
-    $('summaryCards').style.display = 'grid';
-
-    const tbody = $('previewBody'); tbody.innerHTML = '';
-    issues.forEach(i => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = '<td><code style="color:#1dd4b7;font-family:monospace;">'+i.id+'</code></td>'
-        + '<td>' + i.work + '</td>'
-        + '<td class="field">' + i.field + '</td>'
-        + '<td>' + i.current + '</td>'
-        + '<td>' + i.suggested + '</td>'
-        + '<td><span class="severity ' + i.severity + '">' + i.severity + '</span></td>';
-      tbody.appendChild(tr);
-    });
-    $('preview').style.display = 'block';
-    $('previewCount').textContent = issues.length + ' issues · ' + blocking + ' blocking · ' + resolvable + ' resolvable';
-
-    status('<div class="row ok"><span>Status</span><strong>✓ Skanning klar</strong></div>'+
-      '<div class="row"><span>Verk analyserade</span><strong>'+titles.length+'</strong></div>'+
-      '<div class="row"><span>Avvikelser funna</span><strong>'+issues.length+'</strong></div>'+
-      '<div class="row"><span>Hälsopoäng</span><strong>'+score+' / 100</strong></div>'+
-      '<div class="row"><span>Arbetsblad klart</span><strong style="color:#1dd4b7;">klicka "Ladda ner arbetsblad"</strong></div>', 'success');
-
-    // Save for report generation
-    const totalContribs = Object.values(works).reduce((s, w) => s + w.contribs.length, 0);
-    const scanDate = new Date().toISOString().slice(0, 10);
-    const scanId = 'HR-' + scanDate.replace(/-/g, '') + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
-    lastScan = { titles, issues, blocking, resolvable, score, totalContribs, scanId, scanDate };
-
-    $('downloadWorksheetBtn').disabled = false;
-    $('downloadInstructionsBtn').disabled = false;
-    $('generateReportBtn').disabled = false;
-
-  } catch (e) {
-    status('<strong>✕ Fel:</strong> ' + e.message, 'error');
-    console.error(e);
-  }
-});
-
-function downloadFile(content, filename, mime) {
-  const blob = new Blob([content], { type: mime + ';charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filename; a.click();
-  URL.revokeObjectURL(url);
-}
-
-let _exceljsPromise = null;
-function loadExcelJS() {
-  if (!_exceljsPromise) {
-    _exceljsPromise = new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = 'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
-      s.onload = () => resolve(window.ExcelJS);
-      s.onerror = () => reject(new Error('Failed to load ExcelJS library'));
-      document.head.appendChild(s);
-    });
-  }
-  return _exceljsPromise;
-}
-
-async function buildWorksheetXLSX(scan) {
-  await loadExcelJS();
-  const wb = new ExcelJS.Workbook();
-  wb.creator = '{{PartnerBrand}}';
-  wb.created = new Date();
-  const ws = wb.addWorksheet('Corrections', {
-    views: [{ state: 'frozen', xSplit: 0, ySplit: 7 }]
-  });
-
-  ws.columns = [
-    { width: 11 },  // A: issue_id
-    { width: 26 },  // B: Work
-    { width: 18 },  // C: Field
-    { width: 36 },  // D: Current value
-    { width: 30 },  // E: Suggested fix
-    { width: 24 },  // F: Decision
-    { width: 28 },  // G: Your value
-    { width: 26 },  // H: Note
-  ];
-
-  // Row 1: title
-  ws.mergeCells('A1:H1');
-  const t = ws.getCell('A1');
-  t.value = '{{PartnerBrand}} · Corrections Worksheet';
-  t.font = { name: 'Calibri', size: 16, bold: true, color: { argb: 'FF0F6657' } };
-  t.alignment = { vertical: 'middle', horizontal: 'left' };
-  ws.getRow(1).height = 28;
-
-  // Row 2: scan info
-  ws.mergeCells('A2:H2');
-  const info = ws.getCell('A2');
-  info.value = `Scan ID: ${scan.scanId}    ·    Generated: ${scan.scanDate}    ·    Works analyzed: ${scan.titles.length}    ·    Issues found: ${scan.issues.length}`;
-  info.font = { size: 10, color: { argb: 'FF555555' } };
-  ws.getRow(2).height = 16;
-
-  // Row 4: instructions
-  ws.mergeCells('A4:H4');
-  const instr = ws.getCell('A4');
-  instr.value = 'For each row below, fill in the Decision column (accept / reject / edit). If you choose "edit", also enter your value in "Your value (if edit)". Add an optional Note. Save the file and reply by email to {{PartnerContact}}. Nothing is applied to your catalog without your confirmation.';
-  instr.font = { size: 10, italic: true, color: { argb: 'FF333333' } };
-  instr.alignment = { wrapText: true, vertical: 'middle' };
-  ws.getRow(4).height = 42;
-
-  // Row 6: column-group labels
-  ws.mergeCells('A6:E6');
-  const lbl1 = ws.getCell('A6');
-  lbl1.value = 'IDENTIFIED BY HEYROYA SCAN';
-  lbl1.font = { bold: true, size: 9, color: { argb: 'FF666666' } };
-  ws.mergeCells('F6:H6');
-  const lbl2 = ws.getCell('F6');
-  lbl2.value = 'PUBLISHER FILLS IN';
-  lbl2.font = { bold: true, size: 9, color: { argb: 'FF0F6657' } };
-
-  // Row 7: column headers
-  const hdr = ws.getRow(7);
-  hdr.values = ['Issue ID', 'Work', 'Field', 'Current value', 'Suggested fix', 'Decision (accept / reject / edit)', 'Your value (if edit)', 'Note'];
-  hdr.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 11 };
-  hdr.alignment = { vertical: 'middle', wrapText: true, horizontal: 'left' };
-  hdr.height = 34;
-  for (let c = 1; c <= 8; c++) {
-    hdr.getCell(c).fill = {
-      type: 'pattern', pattern: 'solid',
-      fgColor: { argb: c >= 6 ? 'FF0F6657' : 'FF2A3345' }
-    };
-    hdr.getCell(c).border = { bottom: { style: 'medium', color: { argb: 'FF1DD4B7' } } };
-  }
-
-  // Data rows
-  scan.issues.forEach((issue, i) => {
-    const r = ws.getRow(8 + i);
-    r.values = [issue.id, issue.work, issue.field, issue.current, issue.suggested, '', '', ''];
-    r.alignment = { vertical: 'top', wrapText: true };
-    r.height = 22;
-    // Highlight publisher-fill columns
-    for (let c = 6; c <= 8; c++) {
-      r.getCell(c).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF8E1' } };
-      r.getCell(c).border = {
-        top: { style: 'thin', color: { argb: 'FFEEDDB0' } },
-        bottom: { style: 'thin', color: { argb: 'FFEEDDB0' } },
-        left: { style: 'thin', color: { argb: 'FFEEDDB0' } },
-        right: { style: 'thin', color: { argb: 'FFEEDDB0' } }
-      };
-    }
-    // Subtle row separator
-    for (let c = 1; c <= 5; c++) {
-      r.getCell(c).border = { bottom: { style: 'hair', color: { argb: 'FFCCCCCC' } } };
-    }
-  });
-
-  // Data validation dropdown on Decision column
-  const lastRow = 7 + scan.issues.length;
-  if (scan.issues.length > 0) {
-    for (let row = 8; row <= lastRow; row++) {
-      ws.getCell(`F${row}`).dataValidation = {
-        type: 'list',
-        allowBlank: true,
-        formulae: ['"accept,reject,edit"'],
-        showErrorMessage: true,
-        errorStyle: 'warning',
-        errorTitle: 'Invalid value',
-        error: 'Please choose accept, reject, or edit from the dropdown.'
-      };
-    }
-  }
-
-  const buf = await wb.xlsx.writeBuffer();
-  return new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-}
-
-$('downloadWorksheetBtn').addEventListener('click', async () => {
-  if (!lastScan) return;
-  const btn = $('downloadWorksheetBtn');
-  const orig = btn.textContent;
-  btn.disabled = true; btn.textContent = 'Building Excel file…';
-  try {
-    const blob = await buildWorksheetXLSX(lastScan);
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = '{{PartnerBrand}}-Corrections-Worksheet-' + lastScan.scanId + '.xlsx';
-    a.click();
-    URL.revokeObjectURL(url);
-  } catch (e) {
-    alert('Failed to generate Excel file: ' + e.message);
-    console.error(e);
-  } finally {
-    btn.disabled = false; btn.textContent = orig;
-  }
-});
-$('downloadInstructionsBtn').addEventListener('click', () => { if (instructionsText) downloadFile(instructionsText, 'corrections-worksheet-instructions.txt', 'text/plain'); });
-$('generateReportBtn').addEventListener('click', () => {
-  if (!lastScan) return;
-  const html = buildHealthReport(lastScan);
-  const w = window.open('', '_blank');
-  if (!w) { alert('Pop-up blocked — please allow pop-ups for this page.'); return; }
-  w.document.open();
-  w.document.write(html);
-  w.document.close();
-});
-
-function escapeHtml(s) {
-  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-function buildHealthReport(scan) {
-  const { titles, issues, blocking, resolvable, score, totalContribs } = scan;
-  const date = scan.scanDate || new Date().toISOString().slice(0, 10);
-  const scanId = scan.scanId || 'HR-' + date.replace(/-/g, '') + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
-  const total = issues.length;
-
-  // Adaptive tone based on score
-  const tone = score >= 80 ? 'good' : score >= 50 ? 'warn' : 'bad';
-  const heroBg = tone === 'good'
-    ? 'linear-gradient(135deg, #0d3a2a 0%, #0f5d3f 100%)'
-    : tone === 'warn'
-      ? 'linear-gradient(135deg, #3a2810 0%, #5d4220 100%)'
-      : 'linear-gradient(135deg, #2a1810 0%, #4a2820 100%)';
-  const heroBorder = tone === 'good' ? '#1f7a4a' : tone === 'warn' ? '#7a5a30' : '#6b3a30';
-  const heroAccent = tone === 'good' ? '#86efac' : tone === 'warn' ? '#fbbf77' : '#fbbf77';
-  const tagBg = tone === 'good' ? 'rgba(29,212,183,0.18)' : 'rgba(248,113,113,0.18)';
-  const tagColor = tone === 'good' ? '#1dd4b7' : tone === 'warn' ? '#f2b36a' : '#f87171';
-  const sectionH2Color = tone === 'good' ? '#1dd4b7' : tone === 'warn' ? '#f2b36a' : '#f87171';
-  const scoreColor = tone === 'good' ? '#1dd4b7' : tone === 'warn' ? '#f2b36a' : '#f87171';
-  const tagText = tone === 'good' ? '✓ För-rensning' : '⚠ För rensning';
-  const heroH1 = tone === 'good'
-    ? 'Katalogen är i stort sett CWR-ready'
-    : tone === 'warn'
-      ? 'Åtgärdbara avvikelser identifierade'
-      : 'Stora åtgärder krävs — katalog ej CWR-ready';
-
-  // Group issues per work
-  const byWork = {};
-  for (const i of issues) {
-    if (!byWork[i.work]) byWork[i.work] = [];
-    byWork[i.work].push(i);
-  }
-
-  // Group issues by field for the breakdown sections
-  const byField = {};
-  for (const i of issues) {
-    if (!byField[i.field]) byField[i.field] = [];
-    byField[i.field].push(i);
-  }
-
-  const fieldLabel = {
-    iswc: 'Saknad ISWC',
-    isrc: 'Saknad ISRC',
-    split_total: 'Felaktiga andelsummor',
-    writer_ipi: 'Saknad upphovspersons-IPI',
-    society: 'Saknad sällskap',
-    foreign_writer: 'Utländsk upphovsperson — inget avtal angivet',
-    role: 'Ogiltig roll',
-    writer_name: 'Namnvarianter',
-  };
-
-  // Per-work table rows
-  const workRows = titles.map(t => {
-    const workIssues = byWork[t] || [];
-    const status = workIssues.length === 0 ? 'Clean' : 'Major fixes';
-    const keyIssues = workIssues.map(i => {
-      if (i.field === 'split_total') return `andelar ${i.current}`;
-      if (i.field === 'iswc') return 'saknad ISWC';
-      if (i.field === 'isrc') return 'saknad ISRC';
-      if (i.field === 'writer_ipi') return 'saknad IPI';
-      if (i.field === 'society') return 'saknad sällskap';
-      if (i.field === 'foreign_writer') return 'saknar E/SE/AM-deklaration';
-      if (i.field === 'role') return 'ogiltig roll';
-      if (i.field === 'writer_name') return 'namnvariant';
-      return i.field;
-    }).join(', ') || '—';
-    const pillClass = workIssues.length === 0 ? 'pill clean' : 'pill major';
-    return `<tr><td class="title">${escapeHtml(t)}</td><td><span class="${pillClass}">${escapeHtml(status)}</span></td><td>${escapeHtml(keyIssues)}</td></tr>`;
-  }).join('');
-
-  // Most common problems list
-  const mostCommon = Object.entries(byField)
-    .sort((a, b) => b[1].length - a[1].length)
-    .slice(0, 8)
-    .map(([f, list]) => `<li><strong>${escapeHtml(fieldLabel[f] || f)}:</strong> ${list.length} ${list.length === 1 ? 'work' : 'works'}</li>`)
-    .join('');
-
-  // ISWC coverage
-  const iswcMissing = (byField.iswc || []).length;
-  const iswcCovered = titles.length - iswcMissing;
-
-  // ISRC coverage
-  const isrcMissing = (byField.isrc || []).length;
-  const isrcCovered = titles.length - isrcMissing;
-
-  // Split issues list
-  const splitIssues = (byField.split_total || []).map(i =>
-    `<li>${escapeHtml(i.work)} → <strong>${escapeHtml(i.current)}</strong></li>`
-  ).join('');
-
-  // IPI issues list
-  const ipiIssues = (byField.writer_ipi || []).map(i =>
-    `<li>${escapeHtml(i.current)}</li>`
-  ).join('');
-
-  // Society issues
-  const societyIssues = (byField.society || []).map(i =>
-    `<li class="amber">${escapeHtml(i.current)}</li>`
-  ).join('');
-
-  // Role issues
-  const roleIssues = (byField.role || []).map(i =>
-    `<li>${escapeHtml(i.current)} → not CWR-valid</li>`
-  ).join('');
-
-  // Name variants
-  const nameVariants = (byField.writer_name || []).map(i =>
-    `<li class="amber">"${escapeHtml(i.current)}" → ${escapeHtml(i.suggested)}</li>`
-  ).join('');
-
-  // Foreign writer agreements
-  const foreignWriter = (byField.foreign_writer || []).map(i =>
-    `<li>${escapeHtml(i.current)} → STIM will reject packet</li>`
-  ).join('');
-
-  // Sequential section numbering (skip conditional sections)
-  let sectionN = 1;
-  const sSummary = sectionN++;
-  const sCoverage = sectionN++;
-  const sSplit = splitIssues ? sectionN++ : null;
-  const sRoleWriter = (roleIssues || nameVariants || foreignWriter) ? sectionN++ : null;
-  const sPerWork = sectionN++;
-
-  return `<!DOCTYPE html>
-<html lang="sv">
-<head>
-<meta charset="UTF-8">
-<title>Metadatahälsorapport (för rensning) — {{PartnerBrand}}</title>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background:#05070b; color:#f5f7fb; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; -webkit-font-smoothing:antialiased; padding:32px 20px 64px; }
-.container { max-width:1080px; margin:0 auto; }
-h1, h2, h3 { font-weight:600; }
-header.topnav { display:flex; align-items:center; justify-content:space-between; padding:0 0 24px; flex-wrap:wrap; gap:1rem; border-bottom:1px solid rgba(27,34,51,0.8); margin-bottom:28px; }
-.brand { display:flex; align-items:center; gap:0.65rem; font-weight:700; color:#1dd4b7; }
-.meta { font-size:12px; color:#8f9bb3; text-align:right; }
-.print-btn { background:#1dd4b7; color:#020308; border:0; border-radius:999px; padding:8px 16px; font-weight:700; cursor:pointer; font-size:12px; font-family:inherit; }
-.hero { background:${heroBg}; border:1px solid ${heroBorder}; border-radius:18px; padding:28px 32px; margin-bottom:24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:24px; }
-.hero-left h1 { font-size:24px; font-weight:800; margin-bottom:6px; color:#fff; }
-.hero-left p { color:${heroAccent}; font-size:14px; }
-.pre-tag { display:inline-block; background:${tagBg}; color:${tagColor}; border:1px solid ${tagColor}; border-radius:999px; padding:3px 12px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; }
-.score-circle { width:100px; height:100px; border-radius:999px; background:rgba(0,0,0,0.3); border:4px solid ${scoreColor}; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.score-num { font-size:32px; font-weight:800; color:${scoreColor}; line-height:1; }
-.score-label { font-size:10px; color:${heroAccent}; margin-top:4px; text-transform:uppercase; letter-spacing:0.06em; }
-.summary-row { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:24px; }
-.summary-card { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:16px 18px; }
-.summary-card .label { font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
-.summary-card .value { font-size:26px; font-weight:700; color:#f5f7fb; }
-.summary-card .sub { font-size:12px; color:#c3cad8; margin-top:2px; }
-.summary-card.red .value { color:#f87171; }
-.summary-card.amber .value { color:#f2b36a; }
-.summary-card.gray .value { color:#8f9bb3; }
-.section { margin-bottom:28px; }
-.section h2 { font-size:14px; font-weight:700; color:${sectionH2Color}; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; }
-.section .lede { color:#c3cad8; font-size:14px; margin-bottom:12px; }
-.panel { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:18px 22px; }
-.panel ul { list-style:none; padding:0; margin:0; }
-.panel li { color:#c3cad8; font-size:14px; padding:6px 0 6px 24px; position:relative; }
-.panel li::before { content:'✕'; color:#f87171; font-weight:700; position:absolute; left:0; }
-.panel li.amber::before { content:'!'; color:#f2b36a; }
-.panel li.green::before { content:'✓'; color:#1dd4b7; }
-.panel li strong { color:#f5f7fb; }
-.panel .group-h { font-weight:700; color:#f5f7fb; margin-top:12px; margin-bottom:6px; font-size:13px; }
-.panel .group-h:first-child { margin-top:0; }
-.impact-note { color:#fbbf77; font-size:13px; margin-top:12px; padding-top:10px; border-top:1px solid rgba(242,179,106,0.2); font-style:italic; }
-.works-table { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; overflow:hidden; }
-.works-table table { width:100%; border-collapse:collapse; font-size:13px; }
-.works-table th { text-align:left; padding:12px 16px; font-size:11px; color:#8f9bb3; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; background:#0a0d14; border-bottom:1px solid #1b2233; }
-.works-table td { padding:12px 16px; border-bottom:1px solid #1b2233; color:#c3cad8; vertical-align:top; }
-.works-table tr:last-child td { border-bottom:0; }
-.works-table .title { color:#f5f7fb; font-weight:500; }
-.pill { display:inline-block; padding:2px 10px; border-radius:999px; font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; white-space:nowrap; }
-.pill.major { background:rgba(248,113,113,0.12); color:#f87171; border:1px solid rgba(248,113,113,0.4); }
-.pill.clean { background:rgba(29,212,183,0.12); color:#1dd4b7; border:1px solid rgba(29,212,183,0.4); }
-.disclaimer { background:#0b0f18; border:1px solid #1b2233; border-radius:12px; padding:18px 22px; margin-top:16px; }
-.disclaimer .label { font-size:12px; font-weight:700; color:#1dd4b7; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
-.disclaimer p { color:#c3cad8; font-size:13px; margin:0; }
-@media print {
-  body { background:#fff; color:#000; padding:20px; }
-  header.topnav, .print-btn { display:none; }
-  .hero, .panel, .summary-card, .works-table, .disclaimer { background:#fff !important; border:1px solid #ccc !important; color:#000 !important; }
-  .hero-left h1, .summary-card .value, .panel li strong, .panel .group-h, .works-table .title { color:#000 !important; }
-  .hero-left p, .summary-card .label, .summary-card .sub, .panel li, .works-table td, .works-table th, .disclaimer p { color:#444 !important; }
-  .score-circle { background:#fff !important; }
-  .pre-tag { background:#fff !important; }
-}
+  footer.foot { color:#8f9bb3; font-size:12px; padding-top:1.5rem; margin-top:1.5rem; border-top:1px solid #1b2233; }
 </style>
 </head>
 <body>
 <div class="container">
 
   <header class="topnav">
-    <div class="brand">{{PartnerBrand}} · Metadatahälsorapport</div>
-    <div>
-      <div class="meta">Katalog: ${escapeHtml(titles.length)} verk · ${escapeHtml(totalContribs)} upphovsposteringar</div>
-      <div class="meta">Scan-ID: ${escapeHtml(scanId)} · Genererad ${escapeHtml(date)}</div>
-      <button class="print-btn" onclick="window.print()" style="margin-top:8px;">🖨 Skriv ut / Spara som PDF</button>
+    <div class="brand">
+      <span class="brand-mark"></span>
+      <a href="index.html"><span class="brand-text">{{PartnerBrand}}</span></a>
     </div>
+    <nav class="primary">
+      <a href="scan-catalog.html" class="active">Validering</a>
+      <a href="portal.html">Historik</a>
+      <a href="pricing-kataloghub.html">Priser</a>
+      <a href="faq.html">Vanliga frågor</a>
+      <a href="contact.html">Kontakt</a>
+    </nav>
   </header>
 
-  <div class="hero">
-    <div class="hero-left">
-      <span class="pre-tag">${tagText}</span>
-      <h1>${heroH1}</h1>
-      <p>${titles.length} verk analyserade · ${total} ${total === 1 ? 'avvikelse' : 'avvikelser'} identifierade · ${blocking} blockerande · ${resolvable} åtgärdbara · för-rensningsdiagnostik.</p>
-    </div>
-    <div class="score-circle">
-      <div class="score-num">${score}</div>
-      <div class="score-label">/ 100</div>
-    </div>
-  </div>
+  <section class="hero">
+    <h1>Validering av katalog</h1>
+    <p>Ladda upp exporterad katalogfil enligt specificerad struktur. {{PartnerBrand}} genomför validering och genererar PDF-rapport och CSV-underlag.</p>
+  </section>
 
-  <div class="summary-row">
-    <div class="summary-card gray"><div class="label">Analyserade verk</div><div class="value">${titles.length}</div><div class="sub">${totalContribs} upphovsposteringar</div></div>
-    <div class="summary-card gray"><div class="label">Totala avvikelser</div><div class="value">${total}</div><div class="sub">i hela katalogen</div></div>
-    <div class="summary-card red"><div class="label">Blockerande</div><div class="value">${blocking}</div><div class="sub">hindrar CWR-inlämning</div></div>
-    <div class="summary-card amber"><div class="label">Åtgärdbara</div><div class="value">${resolvable}</div><div class="sub">kan korrigeras med bekräftelse</div></div>
-  </div>
-
-  <div class="section">
-    <h2>${sSummary}. Översikt</h2>
-    <p class="lede">För-rensningsdiagnostik. Inga antaganden, inga automatiska korrigeringar. Alla ändringar kräver uttrycklig bekräftelse från förlaget.</p>
-    <div class="panel">
-      <div class="group-h">Vanligaste avvikelserna</div>
-      <ul>${mostCommon || '<li class="green">Inga avvikelser — katalogen är i gott skick.</li>'}</ul>
+  <div class="limit-card">
+    <h3>Valideringsbegränsningar</h3>
+    <p>Validering genomförs enligt avtalad nivå.</p>
+    <div class="limits">
+      <span>Verk per validering: <span id="lmtWorks">—</span></span>
+      <span>Valideringar denna period: <span id="lmtValPeriod">—</span></span>
+      <span>Kataloger denna period: <span id="lmtCatPeriod">—</span></span>
     </div>
   </div>
 
-  <div class="section">
-    <h2>${sCoverage}. Identifierartäckning</h2>
-    <div class="panel">
-      <div class="group-h">ISWC</div>
-      <ul>
-        <li class="${iswcMissing === 0 ? 'green' : 'amber'}">${iswcCovered} / ${titles.length} verk har giltig ISWC</li>
-        ${iswcMissing > 0 ? `<li>${iswcMissing} ${iswcMissing === 1 ? 'verk' : 'verk'} flaggat som "Oregistrerat verk — ingen ISWC hittad"</li>` : ''}
-      </ul>
-      <div class="group-h">ISRC</div>
-      <ul>
-        <li class="${isrcMissing === 0 ? 'green' : 'amber'}">${isrcCovered} / ${titles.length} verk har giltig ISRC</li>
-      </ul>
-      ${ipiIssues ? `<div class="group-h">IPI</div><ul>${ipiIssues}</ul>` : ''}
-      ${societyIssues ? `<div class="group-h">Sällskap</div><ul>${societyIssues}</ul>` : ''}
+  <div class="upload-card">
+    <label for="file">Katalogfil (CSV)</label>
+    <input id="file" type="file" accept=".csv">
+    <div class="filename" id="filename"></div>
+    <div class="row">
+      <button class="btn btn-primary" id="start" disabled>Starta validering</button>
     </div>
   </div>
 
-  ${splitIssues ? `<div class="section">
-    <h2>${sSplit}. Andelsvalidering</h2>
-    <p class="lede">Felaktiga andelsummor (blockerande):</p>
-    <div class="panel">
-      <ul>${splitIssues}</ul>
-      <p class="impact-note">Konsekvens: dessa verk kan inte skickas till STIM/ICE förrän andelarna är exakt 100 %.</p>
-    </div>
-  </div>` : ''}
+  <div class="status" id="status">Ladda upp en katalogfil för att börja.</div>
 
-  ${(roleIssues || nameVariants || foreignWriter) ? `<div class="section">
-    <h2>${sRoleWriter}. Validering av roller och upphovspersoner</h2>
-    <div class="panel">
-      ${roleIssues ? `<div class="group-h">Ogiltig roll</div><ul>${roleIssues}</ul>` : ''}
-      ${nameVariants ? `<div class="group-h">Namnvarianter</div><ul>${nameVariants}</ul>` : ''}
-      ${foreignWriter ? `<div class="group-h">Utländsk upphovsperson utan avtal</div><ul>${foreignWriter}</ul>` : ''}
-    </div>
-  </div>` : ''}
-
-  <div class="section">
-    <h2>${sPerWork}. Status per verk</h2>
-    <div class="works-table">
-      <table>
-        <thead><tr><th>Verk</th><th>Status</th><th>Nyckelavvikelser</th></tr></thead>
-        <tbody>${workRows}</tbody>
-      </table>
-    </div>
+  <div class="actions" id="actions" style="display:none;">
+    <button class="btn btn-secondary" id="downloadCsv">Ladda ner CSV-underlag</button>
+    <button class="btn btn-secondary" id="downloadPdf">Generera hälsorapport (PDF)</button>
   </div>
 
-  <div class="disclaimer">
-    <div class="label">Förlagsbekräftelse krävs</div>
-    <p>Externa metadatakällor används endast för att validera identifierare. Alla slutliga beslut och kataloguppdateringar ligger hos förlaget.</p>
+  <div class="preview" id="preview" style="display:none;">
+    <div class="preview-header">
+      <h3>Inläst katalog</h3>
+      <span class="count" id="previewCount"></span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>work_id</th><th>title</th><th>writer_name</th><th>writer_ipi</th>
+          <th>role_code</th><th>share</th><th>agreement_type</th><th>iswc</th><th>isrc</th>
+        </tr>
+      </thead>
+      <tbody id="previewBody"></tbody>
+    </table>
   </div>
 
-  <p style="font-size:11px;color:#8f9bb3;text-align:center;margin-top:24px;">
-    {{PartnerBrand}} · Metadataefterlevnad · {{PartnerContact}}
-  </p>
+  <footer class="foot">
+    Valideringsbegränsningar gäller enligt avtalad nivå.
+  </footer>
 
 </div>
-</body>
-</html>`;
+
+<script>
+// Tier configuration. Backend may override window.KATALOGHUB_TIER_CONFIG and
+// window.KATALOGHUB_USAGE_STATE via an inline script before this one runs.
+window.KATALOGHUB_TIER_CONFIG = window.KATALOGHUB_TIER_CONFIG || {
+  maxWorksPerValidation:   1000,
+  maxValidationsPerPeriod: 1,
+  maxCatalogsPerPeriod:    1
+};
+window.KATALOGHUB_USAGE_STATE = window.KATALOGHUB_USAGE_STATE || {
+  validationsThisPeriod: 0,
+  catalogsThisPeriod:    0,
+  userId:                null
+};
+
+var TIER_MESSAGES = {
+  OK:                'Validering kan genomföras.',
+  LIMIT_WORKS:       'Valideringen kan inte genomföras. Antalet verk överstiger avtalad nivå.',
+  LIMIT_VALIDATIONS: 'Valideringsgränsen för perioden är uppnådd. Uppdatering av avtal krävs.',
+  LIMIT_CATALOGS:    'Antalet kataloger överstiger avtalad nivå. Kontakta HeyRoya för justering.'
+};
+
+(function showLimits(){
+  var c = window.KATALOGHUB_TIER_CONFIG, u = window.KATALOGHUB_USAGE_STATE;
+  document.getElementById('lmtWorks').textContent = c.maxWorksPerValidation;
+  document.getElementById('lmtValPeriod').textContent = (u.validationsThisPeriod || 0) + ' / ' + c.maxValidationsPerPeriod;
+  document.getElementById('lmtCatPeriod').textContent = (u.catalogsThisPeriod || 0) + ' / ' + c.maxCatalogsPerPeriod;
+})();
+
+function $(id) { return document.getElementById(id); }
+function setStatus(msg, cls) { var s = $('status'); s.className = 'status' + (cls ? ' ' + cls : ''); s.innerHTML = msg; }
+function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
+function csvEscape(v) { v = (v == null) ? '' : String(v); if (/[",\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"'; return v; }
+
+// CSV parser — supports RFC-4180 quoting + comma/semicolon separator.
+function parseCsv(text) {
+  var rows = [];
+  var lines = text.replace(/\r\n/g, '\n').split('\n');
+  for (var li = 0; li < lines.length; li++) {
+    var line = lines[li];
+    if (!line.trim()) continue;
+    var cells = []; var cur = ''; var inQ = false;
+    for (var i = 0; i < line.length; i++) {
+      var c = line[i];
+      if (inQ) {
+        if (c === '"' && line[i+1] === '"') { cur += '"'; i++; }
+        else if (c === '"') inQ = false;
+        else cur += c;
+      } else {
+        if (c === '"') inQ = true;
+        else if (c === ',' || c === ';') { cells.push(cur); cur = ''; }
+        else cur += c;
+      }
+    }
+    cells.push(cur);
+    rows.push(cells);
+  }
+  if (rows.length === 0) throw new Error('Filen saknar data.');
+  var header = rows[0].map(function(h){ return h.trim().toLowerCase(); });
+  var required = ['work_id','title','writer_name','writer_ipi','role_code','share','agreement_type','iswc','isrc'];
+  for (var ri = 0; ri < required.length; ri++) {
+    if (header.indexOf(required[ri]) < 0) throw new Error('Saknar kolumn: ' + required[ri]);
+  }
+  return rows.slice(1).map(function(cols){
+    var obj = {};
+    for (var hi = 0; hi < header.length; hi++) obj[header[hi]] = (cols[hi] != null ? cols[hi] : '').trim();
+    return obj;
+  });
 }
+
+// Per-row validation rules per spec. Carina-tone, validation-only, no suggestions.
+function validateRow(row) {
+  var issues = [];
+  if (!row.work_id) {
+    issues.push(['work_id', '', '', 'missing', 'Saknar work_id']);
+  }
+  if (!row.writer_ipi || row.writer_ipi.length < 9) {
+    issues.push(['writer_ipi', row.writer_ipi, '', 'invalid', 'Ogiltigt IPI-format']);
+  }
+  if (['C','CA','A'].indexOf(row.role_code) < 0) {
+    issues.push(['role_code', row.role_code, '', 'invalid', 'Ogiltig rollkod']);
+  }
+  var shareNum = Number(row.share);
+  if (!(shareNum > 0) || shareNum > 100) {
+    issues.push(['share', row.share, '', 'invalid', 'Ogiltig delning']);
+  }
+  if (['E','SE','AM'].indexOf(row.agreement_type) < 0) {
+    issues.push(['agreement_type', row.agreement_type, '', 'invalid', 'Ogiltig avtalstyp']);
+  }
+  return issues.map(function(arr){
+    return {
+      work_id:         row.work_id,
+      field:           arr[0],
+      original_value:  arr[1],
+      validated_value: arr[2],
+      status:          arr[3],
+      comment:         arr[4]
+    };
+  });
+}
+
+// Tier-limit gate. Authoritative enforcement is server-side (lib/tierLimits.ts).
+function tierGate(works) {
+  var cfg = window.KATALOGHUB_TIER_CONFIG, u = window.KATALOGHUB_USAGE_STATE;
+  var ts = new Date().toISOString();
+  var uid = u.userId || null;
+  function log(reason) {
+    if (window.console && console.warn) console.warn(JSON.stringify({ timestamp: ts, userId: uid, numberOfWorks: works, reasonCode: reason }));
+  }
+  if (typeof cfg.maxWorksPerValidation === 'number' && works > cfg.maxWorksPerValidation) {
+    log('LIMIT_WORKS');
+    return { status: 'blocked', reason: TIER_MESSAGES.LIMIT_WORKS, code: 'LIMIT_WORKS' };
+  }
+  if (typeof cfg.maxValidationsPerPeriod === 'number' && (u.validationsThisPeriod || 0) >= cfg.maxValidationsPerPeriod) {
+    log('LIMIT_VALIDATIONS');
+    return { status: 'blocked', reason: TIER_MESSAGES.LIMIT_VALIDATIONS, code: 'LIMIT_VALIDATIONS' };
+  }
+  if (typeof cfg.maxCatalogsPerPeriod === 'number' && (u.catalogsThisPeriod || 0) >= cfg.maxCatalogsPerPeriod) {
+    log('LIMIT_CATALOGS');
+    return { status: 'blocked', reason: TIER_MESSAGES.LIMIT_CATALOGS, code: 'LIMIT_CATALOGS' };
+  }
+  return { status: 'allowed', reason: TIER_MESSAGES.OK, code: 'OK' };
+}
+
+function countDistinctWorks(rows) {
+  var seen = {};
+  var n = 0;
+  for (var i = 0; i < rows.length; i++) {
+    var w = rows[i].work_id;
+    if (w && !seen[w]) { seen[w] = 1; n++; }
+  }
+  return n;
+}
+
+var catalogText = null;
+var inputRows = null;
+var lastResult = null;
+
+$('file').addEventListener('change', function(e){
+  var f = e.target.files[0]; if (!f) return;
+  $('filename').textContent = f.name;
+  var r = new FileReader();
+  r.onload = function(ev){
+    catalogText = ev.target.result;
+    try {
+      inputRows = parseCsv(catalogText);
+    } catch (err) {
+      inputRows = null;
+      $('start').disabled = true;
+      $('preview').style.display = 'none';
+      setStatus('<strong>Fel:</strong> ' + err.message, 'error');
+      return;
+    }
+    renderInputPreview(inputRows);
+    $('start').disabled = false;
+    setStatus('Fil inläst. Klicka <strong>Starta validering</strong>.');
+  };
+  r.readAsText(f);
+});
+
+function renderInputPreview(rows) {
+  var tbody = $('previewBody'); tbody.innerHTML = '';
+  var maxRows = 50;
+  for (var i = 0; i < Math.min(rows.length, maxRows); i++) {
+    var r = rows[i];
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td class="wid">' + escapeHtml(r.work_id) + '</td>'
+      + '<td>' + escapeHtml(r.title) + '</td>'
+      + '<td>' + escapeHtml(r.writer_name) + '</td>'
+      + '<td>' + escapeHtml(r.writer_ipi) + '</td>'
+      + '<td>' + escapeHtml(r.role_code) + '</td>'
+      + '<td>' + escapeHtml(r.share) + '</td>'
+      + '<td>' + escapeHtml(r.agreement_type) + '</td>'
+      + '<td>' + escapeHtml(r.iswc) + '</td>'
+      + '<td>' + escapeHtml(r.isrc) + '</td>';
+    tbody.appendChild(tr);
+  }
+  $('preview').style.display = 'block';
+  var distinct = countDistinctWorks(rows);
+  var label = rows.length + ' rader · ' + distinct + ' verk';
+  if (rows.length > maxRows) label += ' · visar de första ' + maxRows;
+  $('previewCount').textContent = label;
+}
+
+$('start').addEventListener('click', function(){
+  if (!inputRows) return;
+
+  var distinct = countDistinctWorks(inputRows);
+
+  var gate = tierGate(distinct);
+  if (gate.status === 'blocked') {
+    setStatus('<strong>' + gate.reason + '</strong><span class="code">' + gate.code + '</span>', 'blocked');
+    $('actions').style.display = 'none';
+    return;
+  }
+
+  var allIssues = [];
+  for (var i = 0; i < inputRows.length; i++) {
+    var rowIssues = validateRow(inputRows[i]);
+    for (var j = 0; j < rowIssues.length; j++) allIssues.push(rowIssues[j]);
+  }
+
+  var blocking   = 0;
+  var resolvable = 0;
+  for (var k = 0; k < allIssues.length; k++) {
+    var st = allIssues[k].status;
+    if (st === 'invalid' || st === 'missing') blocking++;
+    else resolvable++;
+  }
+
+  var scanDate = new Date().toISOString().slice(0, 10);
+  var scanId = 'HR-' + scanDate.replace(/-/g, '') + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+  lastResult = {
+    scanId: scanId, scanDate: scanDate,
+    rows: inputRows, issues: allIssues,
+    distinctWorks: distinct, blocking: blocking, resolvable: resolvable
+  };
+
+  $('actions').style.display = 'flex';
+  setStatus(
+    '<div class="row"><span>Status</span><strong>Validering klar</strong></div>'+
+    '<div class="row"><span>Verk analyserade</span><strong>' + distinct + '</strong></div>'+
+    '<div class="row"><span>Avvikelser</span><strong>' + allIssues.length + '</strong></div>'+
+    '<div class="row"><span>Scan-ID</span><strong>' + scanId + '</strong></div>',
+    'success'
+  );
+});
+
+function downloadFile(content, filename, mime) {
+  var blob = new Blob([content], { type: mime + ';charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+$('downloadCsv').addEventListener('click', function(){
+  if (!lastResult) return;
+  var rowsOut = ['work_id,field,original_value,validated_value,status,comment'];
+  for (var i = 0; i < lastResult.issues.length; i++) {
+    var x = lastResult.issues[i];
+    rowsOut.push([x.work_id, x.field, x.original_value, x.validated_value, x.status, x.comment].map(csvEscape).join(','));
+  }
+  downloadFile(rowsOut.join('\n'), '{{PartnerBrand}}-CSV-underlag-' + lastResult.scanId + '.csv', 'text/csv');
+});
+
+$('downloadPdf').addEventListener('click', function(){
+  if (!lastResult) return;
+  var html = buildHealthReport(lastResult);
+  var w = window.open('', '_blank');
+  if (!w) { alert('Pop-up blockerad — tillåt pop-ups för denna sida.'); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+});
+
+function buildHealthReport(res) {
+  var date = res.scanDate;
+  var byWorkId = {}, byField = {};
+  for (var bi = 0; bi < res.issues.length; bi++) {
+    var x = res.issues[bi];
+    (byWorkId[x.work_id] = byWorkId[x.work_id] || []).push(x);
+    (byField[x.field] = byField[x.field] || []).push(x);
+  }
+  var fieldLabel = {
+    work_id:        'Saknar work_id',
+    writer_ipi:     'Ogiltigt IPI-format',
+    role_code:      'Ogiltig rollkod',
+    share:          'Ogiltig delning',
+    agreement_type: 'Ogiltig avtalstyp'
+  };
+  var fieldEntries = [];
+  for (var fk in byField) fieldEntries.push([fk, byField[fk]]);
+  fieldEntries.sort(function(a,b){ return b[1].length - a[1].length; });
+  var mostCommon = fieldEntries.slice(0, 8).map(function(e){
+    return '<li><strong>' + escapeHtml(fieldLabel[e[0]] || e[0]) + ':</strong> ' + e[1].length + ' rader</li>';
+  }).join('');
+
+  // Per-work status
+  var seenWid = {}; var workOrder = [];
+  for (var i = 0; i < res.rows.length; i++) {
+    var wid = res.rows[i].work_id;
+    if (wid && !seenWid[wid]) { seenWid[wid] = res.rows[i].title; workOrder.push(wid); }
+  }
+  var workRows = '';
+  for (var wi = 0; wi < workOrder.length; wi++) {
+    var wid2 = workOrder[wi];
+    var titl = seenWid[wid2];
+    var wis = byWorkId[wid2] || [];
+    var stxt = wis.length === 0 ? 'Ren' : 'Avvikelser';
+    var pillClass = wis.length === 0 ? 'pill clean' : 'pill major';
+    workRows += '<tr><td class="wid">' + escapeHtml(wid2) + '</td><td class="title">' + escapeHtml(titl) + '</td><td><span class="' + pillClass + '">' + escapeHtml(stxt) + '</span></td><td>' + wis.length + '</td></tr>';
+  }
+
+  var total = res.issues.length;
+  var blocking = res.blocking, resolvable = res.resolvable;
+
+  return '<!DOCTYPE html>\n<html lang="sv">\n<head>\n<meta charset="UTF-8">\n<title>Hälsorapport — {{PartnerBrand}}</title>\n<style>\n'
+    + '* { box-sizing: border-box; margin: 0; padding: 0; }\n'
+    + 'body { background:#fff; color:#111; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; padding:32px 28px 64px; }\n'
+    + '.container { max-width:1080px; margin:0 auto; }\n'
+    + 'h1, h2, h3 { font-weight:600; }\n'
+    + 'header { display:flex; align-items:center; justify-content:space-between; padding:0 0 18px; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #e5e5e5; margin-bottom:24px; }\n'
+    + 'header h1 { font-size:18px; color:#0f6657; }\n'
+    + '.meta { font-size:12px; color:#555; text-align:right; }\n'
+    + '.print-btn { background:#0f6657; color:#fff; border:0; border-radius:999px; padding:8px 16px; font-weight:600; cursor:pointer; font-size:12px; font-family:inherit; }\n'
+    + '.summary { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:24px; }\n'
+    + '.summary .card { border:1px solid #e5e5e5; border-radius:8px; padding:14px 16px; }\n'
+    + '.summary .label { font-size:11px; color:#777; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }\n'
+    + '.summary .value { font-size:22px; font-weight:700; }\n'
+    + '.summary .red    { color:#c43838; }\n'
+    + '.summary .amber  { color:#a86c20; }\n'
+    + 'h2.section { font-size:13px; text-transform:uppercase; letter-spacing:0.08em; color:#0f6657; margin:24px 0 10px; }\n'
+    + '.panel { border:1px solid #e5e5e5; border-radius:8px; padding:14px 18px; }\n'
+    + '.panel ul { list-style:none; padding:0; margin:0; }\n'
+    + '.panel li { padding:5px 0 5px 20px; position:relative; font-size:13px; color:#333; }\n'
+    + '.panel li::before { content:"•"; position:absolute; left:0; color:#0f6657; font-weight:700; }\n'
+    + 'table.works { width:100%; border-collapse:collapse; font-size:12px; border:1px solid #e5e5e5; border-radius:8px; overflow:hidden; }\n'
+    + 'table.works th, table.works td { padding:10px 14px; text-align:left; border-bottom:1px solid #e5e5e5; }\n'
+    + 'table.works th { background:#f5f5f5; font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:#555; }\n'
+    + 'table.works tr:last-child td { border-bottom:0; }\n'
+    + 'table.works .wid { font-family:monospace; color:#0f6657; }\n'
+    + 'table.works .title { font-weight:500; }\n'
+    + '.pill { display:inline-block; padding:2px 10px; border-radius:999px; font-size:10px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; }\n'
+    + '.pill.major { background:#fdeaea; color:#c43838; border:1px solid #f3c7c7; }\n'
+    + '.pill.clean { background:#e7f7f1; color:#0f6657; border:1px solid #b5dccb; }\n'
+    + '.disclaimer { border:1px solid #e5e5e5; border-radius:8px; padding:14px 18px; margin-top:18px; }\n'
+    + '.disclaimer .label { font-size:11px; font-weight:700; color:#0f6657; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; }\n'
+    + '.disclaimer p { font-size:12px; color:#444; margin-bottom:4px; }\n'
+    + '.disclaimer p:last-child { margin-bottom:0; }\n'
+    + '@media print { .print-btn { display:none; } body { padding:20px; } }\n'
+    + '</style>\n</head>\n<body>\n<div class="container">\n'
+    + '  <header>\n'
+    + '    <h1>{{PartnerBrand}} · Hälsorapport</h1>\n'
+    + '    <div>\n'
+    + '      <div class="meta">Katalog: ' + res.distinctWorks + ' verk · ' + res.rows.length + ' rader</div>\n'
+    + '      <div class="meta">Scan-ID: ' + escapeHtml(res.scanId) + ' · Genererad ' + escapeHtml(date) + '</div>\n'
+    + '      <button class="print-btn" onclick="window.print()" style="margin-top:8px;">Skriv ut / Spara som PDF</button>\n'
+    + '    </div>\n'
+    + '  </header>\n'
+    + '  <div class="summary">\n'
+    + '    <div class="card"><div class="label">Verk</div><div class="value">' + res.distinctWorks + '</div></div>\n'
+    + '    <div class="card"><div class="label">Avvikelser</div><div class="value">' + total + '</div></div>\n'
+    + '    <div class="card"><div class="label">Blockerande</div><div class="value red">' + blocking + '</div></div>\n'
+    + '    <div class="card"><div class="label">Åtgärdbara</div><div class="value amber">' + resolvable + '</div></div>\n'
+    + '  </div>\n'
+    + '  <h2 class="section">Vanligaste avvikelser</h2>\n'
+    + '  <div class="panel"><ul>' + (mostCommon || '<li>Inga avvikelser identifierade.</li>') + '</ul></div>\n'
+    + '  <h2 class="section">Status per verk</h2>\n'
+    + '  <table class="works"><thead><tr><th>work_id</th><th>title</th><th>Status</th><th>Antal avvikelser</th></tr></thead><tbody>' + workRows + '</tbody></table>\n'
+    + '  <div class="disclaimer">\n'
+    + '    <div class="label">Valideringsbegränsningar</div>\n'
+    + '    <p>{{PartnerBrand}} genomför validering enligt avtalad nivå. Om inlämnad katalog överstiger volymgränsen kan valideringen inte genomföras.</p>\n'
+    + '    <p>Korrigering av metadata ingår inte. Korrigering erbjuds separat via HeyRoya.</p>\n'
+    + '  </div>\n'
+    + '</div>\n</body>\n</html>';
+}
+</script>
+<!-- src-guard:v1 -->
+<script>
+(function(){
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, false);
+  document.addEventListener('keydown', function(e){
+    var k = (e.key || '').toLowerCase();
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && (k === 'u' || k === 's')) { e.preventDefault(); return false; }
+  }, false);
+})();
 </script>
 </body>
 </html>

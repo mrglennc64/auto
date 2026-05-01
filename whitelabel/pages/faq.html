@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="title">{{PartnerBrand}} — FAQ</title>
-<meta name="description" data-i18n-attr="content" data-i18n="meta_desc" content="Common questions from partners and end-clients.">
+<title>{{PartnerBrand}} — Vanliga frågor</title>
+<meta name="description" content="Vanliga frågor från partners och slutkunder.">
 <style>
   :root {
     --bg: #05070b; --bg-card: #0b0f18; --border: #1b2233; --border-strong: #2a3345;
@@ -26,10 +26,6 @@
   nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: var(--dim); }
   nav.primary a:hover, nav.primary a.active { color: var(--accent); }
   nav.primary a.demo { background: var(--amber-soft); color: var(--amber); border: 1px solid rgba(242,179,106,0.4); padding: 6px 12px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 700; }
-  .lang-toggle { display: inline-flex; gap: 4px; padding: 4px; border-radius: var(--radius-pill); border: 1px solid rgba(143,155,179,0.35); }
-  .lang-toggle button { background: transparent; color: var(--dim); border: 0; padding: 3px 9px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: 0.04em; }
-  .lang-toggle button.active { background: var(--accent); color: #020308; }
-  .lang-toggle button:hover:not(.active) { color: var(--text); }
 
   .hero { padding: 3rem 1.5rem 1.5rem; max-width: var(--max-width); margin: 0 auto; text-align: center; }
   .hero h1 { font-size: 2.2rem; margin-bottom: 0.8rem; letter-spacing: -0.01em; }
@@ -66,221 +62,135 @@
 <header class="topnav">
   <div class="brand">
     <span class="brand-mark"></span>
-    <a href="index.html"><span class="brand-text" data-i18n="brand_label">{{PartnerBrand}}</span></a>
+    <a href="index.html"><span class="brand-text">{{PartnerBrand}}</span></a>
   </div>
   <nav class="primary">
-    <a href="how-it-works.html" data-i18n="nav_how">How it works</a>
-    <a href="pricing-kataloghub.html" data-i18n="nav_pricing">Pricing</a>
-    <a href="faq.html" class="active" data-i18n="nav_faq">FAQ</a>
-    <a href="contact.html" data-i18n="nav_contact">Contact</a>
-    <a href="portal.html" class="demo" data-i18n="nav_portal">Portal →</a>
-    <div class="lang-toggle">
-      <button data-lang="en" class="active">EN</button>
-      <button data-lang="sv">SV</button>
-    </div>
+    <a href="scan-catalog.html">Validering</a>
+    <a href="portal.html">Historik</a>
+    <a href="pricing-kataloghub.html">Priser</a>
+    <a href="faq.html" class="active">Vanliga frågor</a>
+    <a href="contact.html">Kontakt</a>
   </nav>
 </header>
 
 <section class="hero">
-  <h1 data-i18n="hero_h1">Frequently asked questions</h1>
-  <p class="lede" data-i18n="hero_lede">Grouped by audience: partners considering the program, partners onboarding, and partners answering their own end-clients.</p>
+  <h1>Vanliga frågor</h1>
+  <p class="lede">Grupperade efter målgrupp: partners som överväger programmet, partners som onboardar, och partners som besvarar sina egna slutkunder.</p>
 </section>
 
 <section class="section">
-  <div class="section-title" data-i18n="cat1">For partners considering {{PartnerBrand}}</div>
+  <div class="section-title">För partners som överväger {{PartnerBrand}}</div>
 
   <details class="qa">
-    <summary data-i18n="q1_q">Do I have to give {{PartnerBrand}} access to my systems?</summary>
-    <div class="answer"><p data-i18n="q1_a">No. The entire workflow is file-based. {{PartnerBrand}} never touches your systems, your end-client's systems, or any third-party platform. Files in, files out.</p></div>
+    <summary>Måste jag ge {{PartnerBrand}} åtkomst till mina system?</summary>
+    <div class="answer"><p>Nej. Hela arbetsflödet är filbaserat. {{PartnerBrand}} berör aldrig era system, era slutkunders system eller någon tredjepartsplattform. Filer in, filer ut.</p></div>
   </details>
 
   <details class="qa">
-    <summary data-i18n="q2_q">Will my end-clients know {{PartnerBrand}} is doing the work?</summary>
-    <div class="answer"><p data-i18n="q2_a">No, unless you tell them. Every deliverable is formatted under your brand. There is no {{PartnerBrand}} logo, mention, or watermark on any output. The contact email shown to end-clients is yours.</p></div>
+    <summary>Kommer mina slutkunder att veta att {{PartnerBrand}} utför arbetet?</summary>
+    <div class="answer"><p>Nej, om ni inte berättar det. Varje leverans formateras under er varumärke. Ingen logo, omnämnande eller vattenstämpel från {{PartnerBrand}} på någon utdata. Kontaktadressen som visas för slutkunderna är er.</p></div>
   </details>
 
   <details class="qa">
-    <summary data-i18n="q3_q">Do I have to commit to a minimum volume?</summary>
-    <div class="answer"><p data-i18n="q3_a">Not on the Starter tier — you pay per scan, no commitment. The Standard and Volume tiers have a 3-month initial term, then month-to-month. See the <a href="pricing-kataloghub.html">pricing page</a> for details.</p></div>
+    <summary>Måste jag åta mig en minsta volym?</summary>
+    <div class="answer"><p>Inte på Bas-nivån — ni betalar per skanning, utan åtagande. Standard- och Volym-nivåerna har en initial period på 3 månader, därefter månad-för-månad. Se <a href="pricing-kataloghub.html">prissidan</a> för detaljer.</p></div>
   </details>
 
   <details class="qa">
-    <summary data-i18n="q4_q">How long does it take to onboard?</summary>
-    <div class="answer"><p data-i18n="q4_a">Two to five business days. The onboarding kit (Standard and Volume tiers) includes sample files and a checklist you walk through internally before sending real client data.</p></div>
+    <summary>Hur lång tid tar onboardingen?</summary>
+    <div class="answer"><p>Två till fem arbetsdagar. Onboarding-paketet (Standard- och Volym-nivåerna) innehåller exempelfiler och en checklista som ni går igenom internt innan riktig kunddata skickas.</p></div>
   </details>
 
-  <div class="section-title" data-i18n="cat2">About the workflow</div>
+  <div class="section-title">Om arbetsflödet</div>
 
   <details class="qa">
-    <summary data-i18n="q5_q">What file formats do you accept?</summary>
-    <div class="answer"><p data-i18n="q5_a">CSV (UTF-8), XLSX (first worksheet), and CWR (v2.1 and v2.2). Full details on the <a href="how-it-works.html">how it works</a> page.</p></div>
-  </details>
-
-  <details class="qa">
-    <summary data-i18n="q6_q">What checks does the scan run?</summary>
-    <div class="answer"><p data-i18n="q6_a">Required identifier fields, valid roles, share-total math, duplicate works, and ownership conflicts between rows. The full rule list is in the reseller documentation (Standard tier and above).</p></div>
+    <summary>Vilka filformat accepterar ni?</summary>
+    <div class="answer"><p>Endast CSV (UTF-8, komma- eller semikolonseparerad). Fullständiga detaljer på sidan <a href="how-it-works.html">Så fungerar det</a>.</p></div>
   </details>
 
   <details class="qa">
-    <summary data-i18n="q7_q">What if my end-client refuses to confirm rows?</summary>
-    <div class="answer"><p data-i18n="q7_a">Nothing happens. The case stays open. {{PartnerBrand}} never applies a correction without an explicit "Accept" or "Edit" mark on the worksheet. A case can sit indefinitely.</p></div>
+    <summary>Vilka kontroller utför skanningen?</summary>
+    <div class="answer"><p>Obligatoriska identifierarfält, giltiga roller, andelssummor, dubblettverk och ägarkonflikter mellan rader. Hela regellistan finns i återförsäljardokumentationen (Standard-nivån och uppåt).</p></div>
   </details>
 
   <details class="qa">
-    <summary data-i18n="q8_q">Can I re-submit a corrected catalog for a free re-scan?</summary>
-    <div class="answer"><p data-i18n="q8_a">Yes — within 30 days of the original scan delivery, re-scans of the same catalog are not billed.</p></div>
-  </details>
-
-  <div class="section-title" data-i18n="cat3">Branding and resale</div>
-
-  <details class="qa">
-    <summary data-i18n="q9_q">Can I set my own retail price?</summary>
-    <div class="answer"><p data-i18n="q9_a">Yes — entirely. {{PartnerBrand}} bills you the wholesale rate and never sees, sets, or audits what you charge your end-clients.</p></div>
+    <summary>Vad levereras efter skanning?</summary>
+    <div class="answer"><p>Två filer per skanning: hälsorapport (PDF) och CSV-mall med identifierade avvikelser. Båda formaterade under {{PartnerBrand}}.</p></div>
   </details>
 
   <details class="qa">
-    <summary data-i18n="q10_q">Can I use my own logo and colors on every deliverable?</summary>
-    <div class="answer"><p data-i18n="q10_a">Yes. The Health Report, Worksheet headers, and export templates all carry your brand. We swap your logo, brand name, contact, and colors during onboarding.</p></div>
+    <summary>Var sker korrigeringarna?</summary>
+    <div class="answer"><p>Korrigeringar utförs via HeyRoya. Ingen ändringslogik finns i {{PartnerBrand}}. CSV-mallen från skanningen används som indata vid korrigering.</p></div>
   </details>
 
   <details class="qa">
-    <summary data-i18n="q11_q">Are there required disclaimers I have to show?</summary>
-    <div class="answer"><p data-i18n="q11_a">Yes — a short brand-neutral disclaimer must appear on every deliverable, stating that the analysis is metadata-only and does not constitute system access or any guarantee of financial outcome. Standard tier and above includes a ready-to-paste pack in your language.</p></div>
+    <summary>Kan jag skicka in en omarbetad katalog för en ny skanning?</summary>
+    <div class="answer"><p>Ja — inom 30 dagar från den ursprungliga skanningens leverans debiteras inga nya skanningar av samma katalog.</p></div>
   </details>
 
-  <div class="section-title" data-i18n="cat4">Boundaries and what {{PartnerBrand}} does not do</div>
+  <div class="section-title">Branding och återförsäljning</div>
 
   <details class="qa">
-    <summary data-i18n="q12_q">Does {{PartnerBrand}} make API calls to STIM, ICE, or MLC?</summary>
-    <div class="answer"><p data-i18n="q12_a">No. {{PartnerBrand}} has no live system access of any kind. The workflow is entirely offline — file in, file out.</p></div>
-  </details>
-
-  <details class="qa">
-    <summary data-i18n="q13_q">Does {{PartnerBrand}} promise royalty recovery or financial outcomes?</summary>
-    <div class="answer"><p data-i18n="q13_a">No. {{PartnerBrand}} validates and corrects metadata. Whether better metadata translates into better royalty outcomes is downstream — and entirely up to the partner's end-clients and the rights organizations they work with.</p></div>
+    <summary>Kan jag sätta mitt eget slutkundspris?</summary>
+    <div class="answer"><p>Ja — helt. {{PartnerBrand}} fakturerar er till grossistpris och ser aldrig, sätter aldrig och granskar aldrig vad ni debiterar era slutkunder.</p></div>
   </details>
 
   <details class="qa">
-    <summary data-i18n="q14_q">Will {{PartnerBrand}} ever change ownership data automatically?</summary>
-    <div class="answer"><p data-i18n="q14_a">No. Every change requires an explicit confirmation on the worksheet. If a row is unmarked or marked Reject, it is left untouched.</p></div>
+    <summary>Kan jag använda min egen logo och färger på varje leverans?</summary>
+    <div class="answer"><p>Ja. Hälsorapport och CSV-mall bär er varumärke. Logo, varumärkesnamn, kontakt och färger sätts under onboardingen.</p></div>
   </details>
 
   <details class="qa">
-    <summary data-i18n="q15_q">What happens to my client's data after a case closes?</summary>
-    <div class="answer"><p data-i18n="q15_a">Catalog files are retained for 90 days for re-scan eligibility, then deleted. Aggregate counts are kept for billing reconciliation. No personal data leaves the {{PartnerBrand}} environment.</p></div>
+    <summary>Finns det obligatoriska friskrivningar jag måste visa?</summary>
+    <div class="answer"><p>Ja — en kort varumärkesneutral friskrivning måste finnas på varje leverans, som anger att analysen är metadata-baserad och inte utgör systemåtkomst eller någon garanti om finansiellt utfall. Standard-nivån och uppåt inkluderar ett färdigt paket på ert språk.</p></div>
+  </details>
+
+  <div class="section-title">Avgränsningar och vad {{PartnerBrand}} inte gör</div>
+
+  <details class="qa">
+    <summary>Anropar {{PartnerBrand}} några API:er hos STIM, ICE eller MLC?</summary>
+    <div class="answer"><p>Nej. {{PartnerBrand}} har ingen live-systemåtkomst av något slag. Arbetsflödet är helt offline — fil in, fil ut.</p></div>
+  </details>
+
+  <details class="qa">
+    <summary>Lovar {{PartnerBrand}} royaltyåtervinning eller finansiella utfall?</summary>
+    <div class="answer"><p>Nej. {{PartnerBrand}} validerar metadata. Korrigeringar utförs via HeyRoya. Huruvida bättre metadata översätts till bättre royaltyutfall är nedströms — och helt upp till partnerns slutkunder och de rättighetsorganisationer de arbetar med.</p></div>
+  </details>
+
+  <details class="qa">
+    <summary>Ändrar {{PartnerBrand}} någonsin ägaruppgifter?</summary>
+    <div class="answer"><p>Nej. {{PartnerBrand}} är en validerande tjänst. Inga ändringar görs i katalogen i tjänsten. Korrigeringar utförs via HeyRoya, separat.</p></div>
+  </details>
+
+  <details class="qa">
+    <summary>Vad händer med min kunds data efter att ett fall avslutas?</summary>
+    <div class="answer"><p>Katalogfiler behålls i 90 dagar för möjlighet till ny skanning, sedan raderas de. Aggregerade räknare behålls för fakturaavstämning. Ingen personlig data lämnar {{PartnerBrand}}-miljön.</p></div>
   </details>
 </section>
 
 <section class="cta">
-  <h2 data-i18n="cta_h2">Question not answered?</h2>
-  <p data-i18n="cta_p">Send the question to {{PartnerContact}} and we'll respond within one business day.</p>
-  <a href="mailto:{{PartnerContact}}?subject=FAQ%20question" class="btn-primary" data-i18n="cta_btn">Ask {{PartnerContact}}</a>
+  <h2>Fick ni inte svar?</h2>
+  <p>Skicka frågan till {{PartnerContact}} så svarar vi inom en arbetsdag.</p>
+  <a href="mailto:{{PartnerContact}}?subject=FAQ-fr%C3%A5ga" class="btn-primary">Fråga {{PartnerContact}}</a>
 </section>
 
 <footer>
-  <p data-i18n="footer_brand">{{PartnerBrand}} · Catalog metadata validation, file-based</p>
+  <p>{{PartnerBrand}} · Validering av katalogmetadata, filbaserat</p>
   <p><a href="mailto:{{PartnerContact}}">{{PartnerContact}}</a> · {{PartnerDomain}}</p>
-  <p data-i18n="footer_copy">© 2026 {{PartnerBrand}} · All rights reserved</p>
+  <p>© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna</p>
 </footer>
 
+<!-- src-guard:v1 -->
 <script>
-window.TRANSLATIONS = {
-  en: {
-    title: "{{PartnerBrand}} — FAQ",
-    meta_desc: "Common questions from partners and end-clients.",
-    brand_label: "{{PartnerBrand}}",
-    nav_how: "How it works", nav_pricing: "Pricing", nav_faq: "FAQ", nav_contact: "Contact", nav_portal: "Portal →",
-    hero_h1: "Frequently asked questions",
-    hero_lede: "Grouped by audience: partners considering the program, partners onboarding, and partners answering their own end-clients.",
-    cat1: "For partners considering {{PartnerBrand}}",
-    cat2: "About the workflow",
-    cat3: "Branding and resale",
-    cat4: "Boundaries and what {{PartnerBrand}} does not do",
-    q1_q: "Do I have to give {{PartnerBrand}} access to my systems?",
-    q1_a: "No. The entire workflow is file-based. {{PartnerBrand}} never touches your systems, your end-client's systems, or any third-party platform. Files in, files out.",
-    q2_q: "Will my end-clients know {{PartnerBrand}} is doing the work?",
-    q2_a: "No, unless you tell them. Every deliverable is formatted under your brand. There is no {{PartnerBrand}} logo, mention, or watermark on any output. The contact email shown to end-clients is yours.",
-    q3_q: "Do I have to commit to a minimum volume?",
-    q3_a: "Not on the Starter tier — you pay per scan, no commitment. The Standard and Volume tiers have a 3-month initial term, then month-to-month. See the pricing page for details.",
-    q4_q: "How long does it take to onboard?",
-    q4_a: "Two to five business days. The onboarding kit (Standard and Volume tiers) includes sample files and a checklist you walk through internally before sending real client data.",
-    q5_q: "What file formats do you accept?",
-    q5_a: "CSV (UTF-8), XLSX (first worksheet), and CWR (v2.1 and v2.2). Full details on the how-it-works page.",
-    q6_q: "What checks does the scan run?",
-    q6_a: "Required identifier fields, valid roles, share-total math, duplicate works, and ownership conflicts between rows. The full rule list is in the reseller documentation (Standard tier and above).",
-    q7_q: "What if my end-client refuses to confirm rows?",
-    q7_a: "Nothing happens. The case stays open. {{PartnerBrand}} never applies a correction without an explicit 'Accept' or 'Edit' mark on the worksheet. A case can sit indefinitely.",
-    q8_q: "Can I re-submit a corrected catalog for a free re-scan?",
-    q8_a: "Yes — within 30 days of the original scan delivery, re-scans of the same catalog are not billed.",
-    q9_q: "Can I set my own retail price?",
-    q9_a: "Yes — entirely. {{PartnerBrand}} bills you the wholesale rate and never sees, sets, or audits what you charge your end-clients.",
-    q10_q: "Can I use my own logo and colors on every deliverable?",
-    q10_a: "Yes. The Health Report, Worksheet headers, and export templates all carry your brand. We swap your logo, brand name, contact, and colors during onboarding.",
-    q11_q: "Are there required disclaimers I have to show?",
-    q11_a: "Yes — a short brand-neutral disclaimer must appear on every deliverable, stating that the analysis is metadata-only and does not constitute system access or any guarantee of financial outcome. Standard tier and above includes a ready-to-paste pack in your language.",
-    q12_q: "Does {{PartnerBrand}} make API calls to STIM, ICE, or MLC?",
-    q12_a: "No. {{PartnerBrand}} has no live system access of any kind. The workflow is entirely offline — file in, file out.",
-    q13_q: "Does {{PartnerBrand}} promise royalty recovery or financial outcomes?",
-    q13_a: "No. {{PartnerBrand}} validates and corrects metadata. Whether better metadata translates into better royalty outcomes is downstream — and entirely up to the partner's end-clients and the rights organizations they work with.",
-    q14_q: "Will {{PartnerBrand}} ever change ownership data automatically?",
-    q14_a: "No. Every change requires an explicit confirmation on the worksheet. If a row is unmarked or marked Reject, it is left untouched.",
-    q15_q: "What happens to my client's data after a case closes?",
-    q15_a: "Catalog files are retained for 90 days for re-scan eligibility, then deleted. Aggregate counts are kept for billing reconciliation. No personal data leaves the {{PartnerBrand}} environment.",
-    cta_h2: "Question not answered?",
-    cta_p: "Send the question to {{PartnerContact}} and we'll respond within one business day.",
-    cta_btn: "Ask {{PartnerContact}}",
-    footer_brand: "{{PartnerBrand}} · Catalog metadata validation, file-based",
-    footer_copy: "© 2026 {{PartnerBrand}} · All rights reserved"
-  },
-  sv: {
-    title: "{{PartnerBrand}} — Vanliga frågor",
-    meta_desc: "Vanliga frågor från partners och slutkunder.",
-    brand_label: "{{PartnerBrand}}",
-    nav_how: "Så fungerar det", nav_pricing: "Priser", nav_faq: "Vanliga frågor", nav_contact: "Kontakt", nav_portal: "Portal →",
-    hero_h1: "Vanliga frågor",
-    hero_lede: "Grupperade efter målgrupp: partners som överväger programmet, partners som onboardar, och partners som besvarar sina egna slutkunder.",
-    cat1: "För partners som överväger {{PartnerBrand}}",
-    cat2: "Om arbetsflödet",
-    cat3: "Branding och återförsäljning",
-    cat4: "Avgränsningar och vad {{PartnerBrand}} inte gör",
-    q1_q: "Måste jag ge {{PartnerBrand}} åtkomst till mina system?",
-    q1_a: "Nej. Hela arbetsflödet är filbaserat. {{PartnerBrand}} berör aldrig era system, era slutkunders system eller någon tredjepartsplattform. Filer in, filer ut.",
-    q2_q: "Kommer mina slutkunder att veta att {{PartnerBrand}} utför arbetet?",
-    q2_a: "Nej, om ni inte berättar det. Varje leverans formateras under er varumärke. Det finns ingen {{PartnerBrand}}-logo, omnämnande eller vattenstämpel på någon utdata. Kontaktadressen som visas för slutkunderna är er.",
-    q3_q: "Måste jag åta mig en minsta volym?",
-    q3_a: "Inte på Bas-nivån — ni betalar per skanning, utan åtagande. Standard- och Volym-nivåerna har en initial period på 3 månader, därefter månad-för-månad. Se prissidan för detaljer.",
-    q4_q: "Hur lång tid tar onboardingen?",
-    q4_a: "Två till fem arbetsdagar. Onboarding-paketet (Standard- och Volym-nivåerna) innehåller exempelfiler och en checklista som ni går igenom internt innan riktig kunddata skickas.",
-    q5_q: "Vilka filformat accepterar ni?",
-    q5_a: "CSV (UTF-8), XLSX (första arbetsbladet) och CWR (v2.1 och v2.2). Fullständiga detaljer på sidan Så fungerar det.",
-    q6_q: "Vilka kontroller utför skanningen?",
-    q6_a: "Obligatoriska identifierarfält, giltiga roller, andelssummor, dubblettverk och ägarkonflikter mellan rader. Hela regellistan finns i återförsäljardokumentationen (Standard-nivån och uppåt).",
-    q7_q: "Vad händer om min slutkund vägrar bekräfta rader?",
-    q7_a: "Ingenting. Fallet förblir öppet. {{PartnerBrand}} tillämpar aldrig en korrigering utan en uttrycklig 'Godkänn' eller 'Ändra'-markering på arbetsbladet. Ett fall kan ligga öppet på obestämd tid.",
-    q8_q: "Kan jag skicka in en korrigerad katalog för en gratis ny skanning?",
-    q8_a: "Ja — inom 30 dagar från den ursprungliga skanningens leverans debiteras inga nya skanningar av samma katalog.",
-    q9_q: "Kan jag sätta mitt eget slutkundspris?",
-    q9_a: "Ja — helt. {{PartnerBrand}} fakturerar er till grossistpris och ser aldrig, sätter aldrig och granskar aldrig vad ni debiterar era slutkunder.",
-    q10_q: "Kan jag använda min egen logo och färger på varje leverans?",
-    q10_a: "Ja. Hälsorapporten, arbetsbladens rubriker och exportmallarna bär alla er varumärke. Vi byter er logo, ert varumärkesnamn, er kontakt och era färger under onboardingen.",
-    q11_q: "Finns det obligatoriska friskrivningar jag måste visa?",
-    q11_a: "Ja — en kort varumärkesneutral friskrivning måste finnas på varje leverans, som anger att analysen är metadata-baserad och inte utgör systemåtkomst eller någon garanti om finansiellt utfall. Standard-nivån och uppåt inkluderar ett färdigt paket på ert språk.",
-    q12_q: "Anropar {{PartnerBrand}} några API:er hos STIM, ICE eller MLC?",
-    q12_a: "Nej. {{PartnerBrand}} har ingen live-systemåtkomst av något slag. Arbetsflödet är helt offline — fil in, fil ut.",
-    q13_q: "Lovar {{PartnerBrand}} royaltyåtervinning eller finansiella utfall?",
-    q13_a: "Nej. {{PartnerBrand}} validerar och korrigerar metadata. Huruvida bättre metadata översätts till bättre royaltyutfall är nedströms — och helt upp till partnerns slutkunder och de rättighetsorganisationer de arbetar med.",
-    q14_q: "Ändrar {{PartnerBrand}} någonsin ägaruppgifter automatiskt?",
-    q14_a: "Nej. Varje ändring kräver en uttrycklig bekräftelse på arbetsbladet. Om en rad är omarkerad eller markerad Avvisa lämnas den oförändrad.",
-    q15_q: "Vad händer med min kunds data efter att ett fall avslutas?",
-    q15_a: "Katalogfiler behålls i 90 dagar för möjlighet till ny skanning, sedan raderas de. Aggregerade räknare behålls för fakturaavstämning. Ingen personlig data lämnar {{PartnerBrand}}-miljön.",
-    cta_h2: "Fick ni inte svar?",
-    cta_p: "Skicka frågan till {{PartnerContact}} så svarar vi inom en arbetsdag.",
-    cta_btn: "Fråga {{PartnerContact}}",
-    footer_brand: "{{PartnerBrand}} · Validering av katalogmetadata, filbaserat",
-    footer_copy: "© 2026 {{PartnerBrand}} · Alla rättigheter förbehållna"
-  }
-};
-(function(){function apply(lang){var d=window.TRANSLATIONS[lang]||window.TRANSLATIONS.en;document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');var a=el.getAttribute('data-i18n-attr');if(d[k]===undefined)return;if(a)el.setAttribute(a,d[k]);else el.textContent=d[k];});document.querySelectorAll('.lang-toggle button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-lang')===lang);});try{localStorage.setItem('wl_lang',lang);}catch(e){}}var s=null;try{s=localStorage.getItem('wl_lang');}catch(e){}apply(s||'en');document.querySelectorAll('.lang-toggle button').forEach(function(b){b.addEventListener('click',function(){apply(b.getAttribute('data-lang'));});});})();
+(function(){
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, false);
+  document.addEventListener('keydown', function(e){
+    var k = (e.key || '').toLowerCase();
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) { e.preventDefault(); return false; }
+    if ((e.ctrlKey || e.metaKey) && (k === 'u' || k === 's')) { e.preventDefault(); return false; }
+  }, false);
+})();
 </script>
 </body>
 </html>
