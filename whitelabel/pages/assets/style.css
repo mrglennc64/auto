@@ -23,6 +23,11 @@ nav a {
 nav a:hover { color: #4ecdc4; }
 nav a.active { font-weight: bold; color: #4ecdc4; }
 
+.lang-toggle { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; border: 1px solid #2a2a2a; margin-left: 12px; }
+.lang-toggle a { color: #aaaaaa; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; text-decoration: none; margin: 0; }
+.lang-toggle a.active { background: #4ecdc4; color: #000000; }
+.lang-toggle a:hover:not(.active) { color: #ffffff; }
+
 main { display: block; }
 
 .hero {

@@ -4,67 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kataloghub — Priser</title>
-<meta name="description" content="Validering av musikförlagskataloger. PDF-rapport och CSV-underlag. Ingen korrigering, ingen CWR-generering.">
+<meta name="description" content="Validering av katalogfil i CSV-format. Fast pris baserat på katalogstorlek. Inga korrigeringar i tjänsten.">
 <style>
-  :root {
-    --bg: #05070b; --bg-card: #0b0f18; --border: #1b2233; --border-strong: #2a3345;
-    --text: #f5f7fb; --text-strong: #ffffff; --muted: #c3cad8; --dim: #8f9bb3;
-    --accent: #1dd4b7; --accent-hover: #18bfa5; --accent-soft: rgba(29,212,183,0.12);
-    --accent-border: rgba(29,212,183,0.4);
-    --pill: 999px;
-    --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  body { background: #050505; color: #f5f5f5; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; line-height: 1.55; }
   a { color: inherit; text-decoration: none; }
-  ul { list-style: none; }
-  h1, h2, h3 { font-weight: 600; line-height: 1.25; }
 
-  header.topnav { max-width: 1120px; margin: 0 auto; padding: 1.4rem 1.5rem 0.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  header.topnav { max-width: 1100px; margin: 0 auto; padding: 18px 24px 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid #222; }
   .brand { display: flex; align-items: center; gap: 0.65rem; }
-  .brand-mark { width: 28px; height: 28px; border-radius: var(--pill); background: radial-gradient(circle at 30% 20%, #b0fbe9 0, var(--accent) 40%, #0f6657 100%); }
-  .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: var(--text-strong); }
-  nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: var(--dim); }
-  nav.primary a:hover, nav.primary a.active { color: var(--accent); }
+  .brand-mark { width: 24px; height: 24px; border-radius: 999px; background: radial-gradient(circle at 30% 20%, #cfeed9 0, #1f7a3a 40%, #0c3f1d 100%); }
+  .brand-text { font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; color: #aaaaaa; }
+  nav.primary { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; font-size: 13px; color: #aaaaaa; }
+  nav.primary a:hover, nav.primary a.active { color: #ffffff; }
+  .lang-toggle { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; border: 1px solid #2a2a2a; margin-left: 12px; }
+  .lang-toggle a { color: #aaaaaa; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; text-decoration: none; margin: 0; }
+  .lang-toggle a.active { background: #1f7a3a; color: #ffffff; }
+  .lang-toggle a:hover:not(.active) { color: #ffffff; }
 
-  .hero { padding: 3rem 1.5rem 1rem; max-width: 880px; margin: 0 auto; text-align: center; }
-  .hero h1 { font-size: 2.2rem; margin-bottom: 14px; letter-spacing: -0.01em; font-family: var(--font-mono); color: var(--text-strong); }
-  .hero p.lede { color: var(--muted); max-width: 720px; margin: 0 auto 8px; font-size: 1rem; }
-  .hero p.note { color: var(--dim); font-size: 13px; margin-top: 14px; }
+  main { max-width: 880px; margin: 0 auto; padding: 0 24px 64px; }
+  section.hero { padding: 56px 0 24px; }
+  section.hero h1 { font-size: 28px; font-weight: 600; margin: 0 0 12px; letter-spacing: -0.01em; }
+  section.hero p { color: #cccccc; font-size: 15px; margin: 0; }
 
-  .section { margin: 2.5rem auto; max-width: 1080px; padding: 0 1.5rem; }
-  .section h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 700; margin-bottom: 12px; }
+  section { padding: 24px 0; }
+  section.divider { border-top: 1px solid #222; }
+  section h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: #1f7a3a; font-weight: 700; margin: 0 0 12px; }
+  section p.intro { color: #cccccc; font-size: 14px; margin: 0 0 16px; max-width: 720px; }
 
-  .pricing-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13px; }
-  .pricing-table th { text-align: left; padding: 14px 18px; background: rgba(29,212,183,0.06); color: var(--accent); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; border-bottom: 1px solid var(--border); }
-  .pricing-table td { padding: 18px; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
-  .pricing-table tbody tr:last-child td { border-bottom: 0; }
-  .pricing-table .tier { font-weight: 700; color: var(--text-strong); font-family: var(--font-mono); font-size: 14px; }
-  .pricing-table .audience { color: var(--text); }
-  .pricing-table .price { font-family: var(--font-mono); font-weight: 700; color: var(--accent); white-space: nowrap; }
-  .pricing-table .desc { color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+  table.pricing { width: 100%; border-collapse: collapse; background: #101010; border: 1px solid #222; border-radius: 6px; overflow: hidden; font-size: 14px; }
+  table.pricing th, table.pricing td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #222; }
+  table.pricing th { background: #0a0a0a; font-size: 11px; color: #8f9bb3; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+  table.pricing tr:last-child td { border-bottom: 0; }
+  table.pricing td.tier { font-weight: 600; color: #ffffff; }
+  table.pricing td.range { color: #aaaaaa; font-family: monospace; font-size: 13px; }
+  table.pricing td.price { font-weight: 700; color: #6dbe85; font-family: monospace; white-space: nowrap; text-align: right; }
 
-  .limits-card { background: var(--bg-card); border: 1px solid var(--border); border-left: 2px solid var(--accent); border-radius: 0 12px 12px 0; padding: 18px 22px; }
-  .limits-card h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
-  .limits-card p { color: var(--muted); font-size: 13.5px; margin-bottom: 8px; }
-  .limits-card p:last-child { margin-bottom: 0; }
-  .limits-card ul { margin-top: 10px; }
-  .limits-card ul li { color: var(--muted); font-size: 13px; padding: 5px 0 5px 18px; position: relative; }
-  .limits-card ul li::before { content: '·'; color: var(--accent); position: absolute; left: 6px; font-weight: 700; }
+  .info-card { background: #101010; border: 1px solid #222; border-radius: 6px; padding: 18px 22px; }
+  .info-card p { color: #cccccc; font-size: 14px; margin: 0 0 6px; }
+  .info-card p:last-child { margin-bottom: 0; }
 
-  .billing-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; }
-  .billing-card p { color: var(--muted); font-size: 13.5px; margin-bottom: 6px; }
-  .billing-card p:last-child { margin-bottom: 0; }
-
-  .cta { text-align: center; padding: 3rem 1.5rem 4rem; border-top: 1px solid var(--border); margin-top: 3rem; }
-  .cta h2 { font-size: 1.4rem; color: var(--text-strong); margin-bottom: 8px; font-family: var(--font); text-transform: none; letter-spacing: 0; }
-  .cta p { color: var(--muted); max-width: 580px; margin: 0 auto 1.2rem; font-size: 14px; }
-  .btn-primary { display: inline-block; background: var(--accent); color: #020308; padding: 11px 26px; border-radius: var(--pill); font-weight: 700; font-size: 13px; transition: 0.15s ease; }
-  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
-
-  footer { color: var(--dim); font-size: 11px; text-align: center; padding: 2rem 1.5rem 3rem; border-top: 1px solid var(--border); }
-  footer p { margin: 0.3rem 0; }
+  footer.foot { color: #888; font-size: 12px; text-align: center; padding: 24px; border-top: 1px solid #222; margin-top: 32px; }
+  footer.foot p { margin: 4px 0; }
+  footer.foot a { color: #aaaaaa; }
 </style>
 </head>
 <body>
@@ -75,81 +56,63 @@
     <a href="index.html"><span class="brand-text">Kataloghub</span></a>
   </div>
   <nav class="primary">
-    <a href="how-it-works.html">Validering</a>
-    <a href="portal.html">Historik</a>
+    <a href="index.html">Start</a>
+    <a href="validera.html">Validering</a>
+    <a href="faq.html">FAQ</a>
     <a href="pricing-kataloghub.html" class="active">Priser</a>
-    <a href="faq.html">Vanliga frågor</a>
     <a href="contact.html">Kontakt</a>
+    <span class="lang-toggle">
+      <a href="pricing-kataloghub.html" class="active">SV</a>
+      <a href="pricing.en.html">EN</a>
+    </span>
   </nav>
 </header>
 
-<section class="hero">
-  <h1>Kataloghub — validering av musikförlagskataloger</h1>
-  <p class="lede">Kataloghub validerar exporterade katalogfiler och levererar avvikelserapporter och CSV-underlag. Ingen korrigering, ingen CWR-generering.</p>
-  <p class="note">Korrigering av metadata erbjuds separat via HeyRoya.</p>
-</section>
+<main>
 
-<section class="section">
-  <h2>Månadslicens</h2>
-  <table class="pricing-table">
-    <thead>
-      <tr><th>Tier</th><th>Partnerkategori</th><th>Månadsavgift</th><th>Innehåll</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="tier">Lite</td>
-        <td class="audience">Mindre förlag / administratör</td>
-        <td class="price">2 000 SEK</td>
-        <td class="desc">Validering av kataloger upp till ca 1 000 verk per inlämning. PDF-rapport och CSV-underlag.</td>
-      </tr>
-      <tr>
-        <td class="tier">Standard</td>
-        <td class="audience">Medelstort förlag / distributör</td>
-        <td class="price">3 500 SEK</td>
-        <td class="desc">Högre volymgräns, flera kataloger per period, prioriterad validering. PDF-rapport och CSV-underlag.</td>
-      </tr>
-      <tr>
-        <td class="tier">Enterprise</td>
-        <td class="audience">Större förlag / flera kataloger</td>
-        <td class="price">5 000 SEK</td>
-        <td class="desc">Anpassad volym, schemalagd validering, prioriterad kö och administrativ kontakt.</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+  <section class="hero">
+    <h1>Priser</h1>
+    <p>Validering av katalogfil i CSV-format. Fast pris baserat på katalogstorlek.</p>
+  </section>
 
-<section class="section">
-  <h2>Valideringsbegränsningar</h2>
-  <div class="limits-card">
-    <p>Kataloghub genomför validering enligt avtalad nivå.</p>
-    <p>Om inlämnad katalog överstiger volymgränsen kan valideringen inte genomföras. Volymen avser:</p>
-    <ul>
-      <li>Antal verk per validering</li>
-      <li>Antal valideringar per period</li>
-      <li>Antal kataloger per period</li>
-    </ul>
-    <p style="margin-top:12px;">Vid överskridande avbryts valideringen. Förlaget informeras om behov av avtalsjustering. Ingen automatisk uppgradering, inga delvalideringar.</p>
-  </div>
-</section>
+  <section class="divider">
+    <h2>Kataloggranskning (fast pris)</h2>
+    <p class="intro">Validering av katalogfil i CSV-format. PDF-rapport och CSV-underlag ingår.</p>
+    <table class="pricing">
+      <thead>
+        <tr><th>Nivå</th><th>Volym</th><th style="text-align:right;">Pris</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="tier">Liten katalog</td><td class="range">0 – 500 verk</td><td class="price">999 SEK</td></tr>
+        <tr><td class="tier">Mellan katalog</td><td class="range">501 – 2 000 verk</td><td class="price">2 499 SEK</td></tr>
+        <tr><td class="tier">Stor katalog</td><td class="range">2 001 – 10 000 verk</td><td class="price">7 999 SEK</td></tr>
+        <tr><td class="tier">Enterprise</td><td class="range">10 000+ verk</td><td class="price">Offert</td></tr>
+      </tbody>
+    </table>
+  </section>
 
-<section class="section">
-  <h2>Fakturering</h2>
-  <div class="billing-card">
-    <p>Licensen faktureras månadsvis i efterskott. 30 dagar netto.</p>
-    <p>Korrigering ingår inte. Korrigering faktureras separat av HeyRoya.</p>
-    <p>Ändring av nivå sker endast efter skriftlig överenskommelse. Valideringsvolymen återställs vid varje periodskifte.</p>
-  </div>
-</section>
+  <section class="divider">
+    <h2>Om modellen</h2>
+    <div class="info-card">
+      <p>Priserna baseras på katalogstorlek och omfattning av valideringen.</p>
+      <p>Ingen integration. Ingen automatisering. Ingen systemåtkomst.</p>
+    </div>
+  </section>
 
-<section class="cta">
-  <h2>Aktivering</h2>
-  <p>Kontakta {{PartnerContact}} för aktivering av licens och domänkonfiguration.</p>
-  <a href="mailto:{{PartnerContact}}?subject=Kataloghub%20licens" class="btn-primary">Kontakta {{PartnerContact}}</a>
-</section>
+  <section class="divider">
+    <h2>Korrigering</h2>
+    <div class="info-card">
+      <p>Korrigering utförs via HeyRoya.</p>
+      <p>Se separat sida för priser.</p>
+    </div>
+  </section>
 
-<footer>
-  <p>Kataloghub · Validering av musikförlagskataloger</p>
-  <p><a href="mailto:{{PartnerContact}}" style="color:var(--dim);">{{PartnerContact}}</a></p>
+</main>
+
+<footer class="foot">
+  <p>Kataloghub – Filbaserad validering av katalogmetadata</p>
+  <p><a href="mailto:{{PartnerContact}}">{{PartnerContact}}</a> · {{PartnerDomain}}</p>
+  <p>© 2026 Kataloghub · Alla rättigheter förbehållna</p>
 </footer>
 
 <!-- src-guard:v1 -->
