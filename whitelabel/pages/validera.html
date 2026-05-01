@@ -57,6 +57,20 @@
   .status .code { display: inline-block; font-family: monospace; font-size: 11px; color: #aaaaaa; margin-left: 0.5rem; padding: 1px 8px; border: 1px solid #2f2f2f; border-radius: 999px; }
 
   .actions { margin-top: 14px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .issues-table { margin-top: 16px; background: #101010; border: 1px solid #222; border-radius: 6px; overflow: hidden; }
+  .issues-table .issues-header { padding: 12px 16px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #1f7a3a; font-weight: 700; }
+  .issues-table .issues-header .count { color: #aaaaaa; font-family: monospace; }
+  .issues-table table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .issues-table th, .issues-table td { text-align: left; padding: 8px 14px; border-bottom: 1px solid #222; color: #cccccc; }
+  .issues-table tr:last-child td { border-bottom: 0; }
+  .issues-table th { background: #0a0a0a; font-size: 10px; color: #8f9bb3; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+  .issues-table td.wid { color: #6dbe85; font-family: monospace; font-size: 12px; }
+  .issues-table td.field { color: #6dbe85; font-family: monospace; font-size: 12px; }
+  .issues-table td.original { font-family: monospace; font-size: 12px; color: #aaaaaa; }
+  .issues-table .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-family: monospace; }
+  .issues-table .pill.invalid { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.4); }
+  .issues-table .pill.missing { background: rgba(242,179,106,0.12); color: #f2b36a; border: 1px solid rgba(242,179,106,0.4); }
   .btn-secondary { display: inline-block; padding: 10px 18px; border-radius: 4px; background: transparent; border: 1px solid #2f2f2f; color: #f5f5f5; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; }
   .btn-secondary:hover { border-color: #444; }
 
@@ -103,6 +117,18 @@
     <div class="actions" id="actions" style="display:none;">
       <button id="download-pdf" class="btn-secondary">Ladda ner PDF-rapport</button>
       <button id="download-csv" class="btn-secondary">Ladda ner CSV-underlag</button>
+    </div>
+    <div class="issues-table" id="issues-table" style="display:none;">
+      <div class="issues-header">
+        <span>Avvikelser</span>
+        <span class="count" id="issues-count"></span>
+      </div>
+      <table>
+        <thead>
+          <tr><th>work_id</th><th>fält</th><th>nuvarande</th><th>status</th><th>kommentar</th></tr>
+        </thead>
+        <tbody id="issues-body"></tbody>
+      </table>
     </div>
   </section>
 
@@ -292,7 +318,7 @@ $('file').addEventListener('change', function(e){
   $('file-name').textContent = f.name;
   var r = new FileReader();
   r.onload = function(ev){
-    try { parsed = parseCsv(ev.target.result); $('start').disabled = false; $('status').style.display = 'none'; $('actions').style.display = 'none'; }
+    try { parsed = parseCsv(ev.target.result); $('start').disabled = false; $('status').style.display = 'none'; $('actions').style.display = 'none'; $('issues-table').style.display = 'none'; }
     catch (err) { parsed = null; $('start').disabled = true; setStatus('<strong>Fel:</strong> ' + escapeHtml(err.message), 'error'); }
   };
   r.readAsText(f, 'UTF-8');
@@ -321,6 +347,25 @@ $('start').addEventListener('click', function(){
     'success'
   );
   $('actions').style.display = 'flex';
+
+  // Render inline issues table
+  var tbody = $('issues-body'); tbody.innerHTML = '';
+  for (var ii = 0; ii < allIssues.length; ii++) {
+    var x = allIssues[ii];
+    var tr = document.createElement('tr');
+    var orig = x.original_value === '' ? '—' : x.original_value;
+    tr.innerHTML = '<td class="wid">' + escapeHtml(x.work_id || '—') + '</td>'
+      + '<td class="field">' + escapeHtml(x.field) + '</td>'
+      + '<td class="original">' + escapeHtml(orig) + '</td>'
+      + '<td><span class="pill ' + escapeHtml(x.status) + '">' + escapeHtml(x.status) + '</span></td>'
+      + '<td>' + escapeHtml(x.comment) + '</td>';
+    tbody.appendChild(tr);
+  }
+  if (allIssues.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#6dbe85;padding:18px;">Inga avvikelser identifierade.</td></tr>';
+  }
+  $('issues-count').textContent = allIssues.length + ' rader';
+  $('issues-table').style.display = 'block';
 });
 
 function downloadFile(content, filename, mime) { var blob = new Blob([content], { type: mime + ';charset=utf-8' }); var url = URL.createObjectURL(blob); var a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
