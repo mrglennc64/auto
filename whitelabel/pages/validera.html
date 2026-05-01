@@ -379,10 +379,92 @@ $('download-csv').addEventListener('click', function(){
 
 $('download-pdf').addEventListener('click', function(){
   if (!lastResult) return;
-  var byField = {}; for (var bi = 0; bi < lastResult.issues.length; bi++) { var x = lastResult.issues[bi]; (byField[x.field] = byField[x.field] || []).push(x); }
+  var rows = lastResult.rows;
+  var issues = lastResult.issues;
+  var totalRows = rows.length;
+  var distinctWorks = lastResult.distinctWorks;
+
+  var byField = {}, byWorkId = {};
+  for (var bi = 0; bi < issues.length; bi++) {
+    var x = issues[bi];
+    (byField[x.field] = byField[x.field] || []).push(x);
+    (byWorkId[x.work_id || ''] = byWorkId[x.work_id || ''] || []).push(x);
+  }
   var labels = { work_id: 'Saknar work_id', writer_ipi: 'Ogiltigt IPI-format', role_code: 'Ogiltig rollkod', share: 'Ogiltig delning', agreement_type: 'Ogiltig avtalstyp', duplicate: 'Dubbletter (work_id + writer_ipi)' };
-  var entries = []; for (var fk in byField) entries.push([fk, byField[fk]]); entries.sort(function(a,b){ return b[1].length - a[1].length; });
-  var list = entries.map(function(e){ return '<li><strong>' + escapeHtml(labels[e[0]] || e[0]) + ':</strong> ' + e[1].length + ' rader</li>'; }).join('');
+
+  var workTitles = {}, workHasISWC = {}, workHasISRC = {};
+  for (var ri = 0; ri < rows.length; ri++) {
+    var r = rows[ri], w = r.work_id || '';
+    if (!workTitles[w]) workTitles[w] = r.title || '';
+    if ((r.iswc || '').trim() !== '') workHasISWC[w] = true;
+    if ((r.isrc || '').trim() !== '') workHasISRC[w] = true;
+  }
+  var workIds = Object.keys(workTitles);
+  var iswcOK = 0, isrcOK = 0;
+  for (var wi = 0; wi < workIds.length; wi++) {
+    if (workHasISWC[workIds[wi]]) iswcOK++;
+    if (workHasISRC[workIds[wi]]) isrcOK++;
+  }
+
+  var ipiOK = 0, roleOK = 0, shareOK = 0, agrOK = 0;
+  for (var pj = 0; pj < rows.length; pj++) {
+    var pr = rows[pj];
+    if ((pr.writer_ipi || '').length >= 9) ipiOK++;
+    if (['C','CA','A'].indexOf(pr.role_code) >= 0) roleOK++;
+    var s = Number(pr.share); if (s > 0 && s <= 100) shareOK++;
+    if (['E','SE','AM'].indexOf(pr.agreement_type) >= 0) agrOK++;
+  }
+  function pct(n, total) { return total ? Math.round(100 * n / total) + '%' : '0%'; }
+
+  var entries = []; for (var fk in byField) entries.push([fk, byField[fk]]);
+  entries.sort(function(a,b){ return b[1].length - a[1].length; });
+  var commonList = entries.map(function(e){ return '<li><strong>' + escapeHtml(labels[e[0]] || e[0]) + ':</strong> ' + e[1].length + ' ' + (e[1].length === 1 ? 'rad' : 'rader') + '</li>'; }).join('');
+
+  var coverage = '<div class="cov-grid">'
+    + '<div class="cov"><div class="cov-label">ISWC per verk</div><div class="cov-bar"><div class="cov-fill" style="width:' + pct(iswcOK, distinctWorks) + ';"></div></div><div class="cov-text">' + iswcOK + ' / ' + distinctWorks + ' (' + pct(iswcOK, distinctWorks) + ')</div></div>'
+    + '<div class="cov"><div class="cov-label">ISRC per verk</div><div class="cov-bar"><div class="cov-fill" style="width:' + pct(isrcOK, distinctWorks) + ';"></div></div><div class="cov-text">' + isrcOK + ' / ' + distinctWorks + ' (' + pct(isrcOK, distinctWorks) + ')</div></div>'
+    + '<div class="cov"><div class="cov-label">writer_ipi (rader)</div><div class="cov-bar"><div class="cov-fill" style="width:' + pct(ipiOK, totalRows) + ';"></div></div><div class="cov-text">' + ipiOK + ' / ' + totalRows + ' (' + pct(ipiOK, totalRows) + ')</div></div>'
+    + '<div class="cov"><div class="cov-label">role_code (rader)</div><div class="cov-bar"><div class="cov-fill" style="width:' + pct(roleOK, totalRows) + ';"></div></div><div class="cov-text">' + roleOK + ' / ' + totalRows + ' (' + pct(roleOK, totalRows) + ')</div></div>'
+    + '<div class="cov"><div class="cov-label">share (rader)</div><div class="cov-bar"><div class="cov-fill" style="width:' + pct(shareOK, totalRows) + ';"></div></div><div class="cov-text">' + shareOK + ' / ' + totalRows + ' (' + pct(shareOK, totalRows) + ')</div></div>'
+    + '<div class="cov"><div class="cov-label">agreement_type (rader)</div><div class="cov-bar"><div class="cov-fill" style="width:' + pct(agrOK, totalRows) + ';"></div></div><div class="cov-text">' + agrOK + ' / ' + totalRows + ' (' + pct(agrOK, totalRows) + ')</div></div>'
+    + '</div>';
+
+  function detailSection(heading, items) { return items ? '<h2>' + heading + '</h2><div class="panel">' + items + '</div>' : ''; }
+  function bullets(arr, fmt) { return (arr || []).map(fmt).join(''); }
+
+  var idSec = '';
+  var ipiItems  = bullets(byField.writer_ipi, function(i){ return '<li>' + escapeHtml(i.work_id || '(tom)') + ' · ipi <code>' + escapeHtml(i.original_value || '(tom)') + '</code> — ' + escapeHtml(i.comment) + '</li>'; });
+  var widItems  = bullets(byField.work_id,    function(i){ return '<li>Rad utan work_id — ' + escapeHtml(i.comment) + '</li>'; });
+  var dupItems  = bullets(byField.duplicate,  function(i){ return '<li>' + escapeHtml(i.work_id) + ' · ipi <code>' + escapeHtml(i.original_value) + '</code> — ' + escapeHtml(i.comment) + '</li>'; });
+  if (widItems || ipiItems || dupItems) {
+    idSec = '<h2>Identifierar- och dubblettvalidering</h2><div class="panel">'
+      + (widItems ? '<div class="group-h">Saknad work_id</div><ul>' + widItems + '</ul>' : '')
+      + (ipiItems ? '<div class="group-h">Ogiltigt writer_ipi</div><ul>' + ipiItems + '</ul>' : '')
+      + (dupItems ? '<div class="group-h">Dubbletter</div><ul>' + dupItems + '</ul>' : '')
+      + '</div>';
+  }
+  var roleItems = bullets(byField.role_code,      function(i){ return '<li>' + escapeHtml(i.work_id) + ' · <code>' + escapeHtml(i.original_value || '(tom)') + '</code> — ' + escapeHtml(i.comment) + '</li>'; });
+  var agrItems  = bullets(byField.agreement_type, function(i){ return '<li>' + escapeHtml(i.work_id) + ' · <code>' + escapeHtml(i.original_value || '(tom)') + '</code> — ' + escapeHtml(i.comment) + '</li>'; });
+  var roleSec = '';
+  if (roleItems || agrItems) {
+    roleSec = '<h2>Roll- och avtalsvalidering</h2><div class="panel">'
+      + (roleItems ? '<div class="group-h">Ogiltig rollkod</div><ul>' + roleItems + '</ul>' : '')
+      + (agrItems ? '<div class="group-h">Ogiltig avtalstyp</div><ul>' + agrItems + '</ul>' : '')
+      + '</div>';
+  }
+  var shareSec = detailSection('Andelsvalidering', bullets(byField.share, function(i){ return '<li>' + escapeHtml(i.work_id) + ' · share = <strong>' + escapeHtml(i.original_value) + '</strong> — ' + escapeHtml(i.comment) + '</li>'; }) ? '<ul>' + bullets(byField.share, function(i){ return '<li>' + escapeHtml(i.work_id) + ' · share = <strong>' + escapeHtml(i.original_value) + '</strong> — ' + escapeHtml(i.comment) + '</li>'; }) + '</ul>' : '');
+
+  var workRowsHtml = '';
+  for (var wj = 0; wj < workIds.length; wj++) {
+    var wid = workIds[wj]; if (!wid) continue;
+    var t = workTitles[wid] || '';
+    var w_iss = byWorkId[wid] || [];
+    var pill = w_iss.length === 0 ? '<span class="pill clean">Ren</span>' : '<span class="pill major">Avvikelser</span>';
+    var keyIssues = w_iss.length ? w_iss.map(function(i){ return i.field; }).join(', ') : '—';
+    workRowsHtml += '<tr><td class="wid">' + escapeHtml(wid) + '</td><td>' + escapeHtml(t) + '</td><td>' + pill + '</td><td>' + escapeHtml(keyIssues) + '</td></tr>';
+  }
+  var worksWithIssues = Object.keys(byWorkId).filter(function(k){ return k; }).length;
+
   var html = '<!DOCTYPE html>\n<html lang="sv">\n<head>\n<meta charset="UTF-8">\n<title>Valideringsrapport — Kataloghub</title>\n<style>\n'
     + 'body { background:#fff; color:#111; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; line-height:1.55; padding:32px 28px 64px; }\n'
     + '.container { max-width:1080px; margin:0 auto; }\n'
@@ -398,23 +480,55 @@ $('download-pdf').addEventListener('click', function(){
     + '.panel ul { margin:0; padding-left:20px; } .panel li { font-size:13px; color:#333; padding:4px 0; }\n'
     + '.disclaimer { border:1px solid #e5e5e5; border-radius:6px; padding:12px 16px; margin-top:18px; font-size:12px; color:#444; }\n'
     + '.disclaimer p { margin-bottom:4px; }\n'
-    + '@media print { .print-btn { display:none; } }\n'
+    + 'header { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; padding-bottom:16px; border-bottom:1px solid #e5e5e5; margin-bottom:18px; }\n'
+    + '.card .sub { font-size:11px; color:#777; margin-top:2px; }\n'
+    + '.card.red .value { color:#c43838; } .card.amber .value { color:#a86c20; }\n'
+    + '.panel li code { background:#f6f6f6; border:1px solid #e5e5e5; border-radius:3px; padding:1px 5px; font-size:12px; color:#1f7a3a; }\n'
+    + '.panel .group-h { font-weight:700; color:#111; margin-top:10px; margin-bottom:4px; font-size:11px; text-transform:uppercase; letter-spacing:0.04em; }\n'
+    + '.panel .group-h:first-child { margin-top:0; }\n'
+    + '.cov-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:14px; }\n'
+    + '.cov { border:1px solid #e5e5e5; border-radius:6px; padding:12px 14px; }\n'
+    + '.cov-label { font-size:11px; color:#777; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }\n'
+    + '.cov-bar { height:6px; background:#f0f0f0; border-radius:3px; overflow:hidden; margin-bottom:6px; }\n'
+    + '.cov-fill { height:6px; background:#1f7a3a; border-radius:3px; }\n'
+    + '.cov-text { font-size:12px; color:#444; font-family:monospace; }\n'
+    + 'table.works { width:100%; border-collapse:collapse; font-size:12px; border:1px solid #e5e5e5; border-radius:6px; overflow:hidden; margin-top:8px; }\n'
+    + 'table.works th, table.works td { padding:10px 14px; text-align:left; border-bottom:1px solid #e5e5e5; }\n'
+    + 'table.works th { background:#f5f5f5; font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:#555; font-weight:700; }\n'
+    + 'table.works tr:last-child td { border-bottom:0; }\n'
+    + 'table.works .wid { font-family:monospace; color:#1f7a3a; }\n'
+    + '.pill { display:inline-block; padding:2px 10px; border-radius:999px; font-size:10px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; }\n'
+    + '.pill.major { background:#fdeaea; color:#c43838; border:1px solid #f3c7c7; }\n'
+    + '.pill.clean { background:#e7f7f1; color:#0f6657; border:1px solid #b5dccb; }\n'
+    + '@media print { .print-btn { display:none; } body { padding:20px; } }\n'
     + '</style>\n</head>\n<body>\n<div class="container">\n'
-    + '  <h1>Kataloghub · Valideringsrapport</h1>\n'
-    + '  <div class="meta">Scan-ID: ' + escapeHtml(lastResult.scanId) + ' · Genererad ' + escapeHtml(lastResult.scanDate) + ' · Verk: ' + lastResult.distinctWorks + ' · Rader: ' + lastResult.rows.length + '</div>\n'
+    + '<header>\n'
+    + '  <div>\n'
+    + '    <h1>Kataloghub · Valideringsrapport</h1>\n'
+    + '    <div class="meta">Scan-ID: ' + escapeHtml(lastResult.scanId) + ' · Genererad ' + escapeHtml(lastResult.scanDate) + '</div>\n'
+    + '    <div class="meta">Verk: ' + distinctWorks + ' · Rader: ' + totalRows + ' · Avvikelser: ' + issues.length + '</div>\n'
+    + '  </div>\n'
     + '  <button class="print-btn" onclick="window.print()">Skriv ut / Spara som PDF</button>\n'
-    + '  <div class="summary">\n'
-    + '    <div class="card"><div class="label">Verk</div><div class="value">' + lastResult.distinctWorks + '</div></div>\n'
-    + '    <div class="card"><div class="label">Rader</div><div class="value">' + lastResult.rows.length + '</div></div>\n'
-    + '    <div class="card"><div class="label">Avvikelser</div><div class="value">' + lastResult.issues.length + '</div></div>\n'
-    + '    <div class="card"><div class="label">Fälttyper</div><div class="value">' + Object.keys(byField).length + '</div></div>\n'
-    + '  </div>\n'
-    + '  <h2>Avvikelser per kategori</h2>\n'
-    + '  <div class="panel"><ul>' + (list || '<li>Inga avvikelser identifierade.</li>') + '</ul></div>\n'
-    + '  <div class="disclaimer">\n'
-    + '    <p><strong>Valideringsbegränsningar.</strong> Kataloghub genomför validering enligt avtalad nivå.</p>\n'
-    + '    <p>Korrigering av metadata ingår inte. Korrigering erbjuds separat via HeyRoya.</p>\n'
-    + '  </div>\n'
+    + '</header>\n'
+    + '<div class="summary">\n'
+    + '  <div class="card"><div class="label">Verk analyserade</div><div class="value">' + distinctWorks + '</div><div class="sub">unika work_id</div></div>\n'
+    + '  <div class="card"><div class="label">Rader</div><div class="value">' + totalRows + '</div><div class="sub">upphovsposteringar</div></div>\n'
+    + '  <div class="card ' + (issues.length ? 'red' : '') + '"><div class="label">Avvikelser</div><div class="value">' + issues.length + '</div><div class="sub">i hela katalogen</div></div>\n'
+    + '  <div class="card ' + (worksWithIssues ? 'amber' : '') + '"><div class="label">Verk med avvikelser</div><div class="value">' + worksWithIssues + '</div><div class="sub">av ' + distinctWorks + '</div></div>\n'
+    + '</div>\n'
+    + '<h2>Vanligaste avvikelser</h2>\n'
+    + '<div class="panel"><ul>' + (commonList || '<li>Inga avvikelser identifierade.</li>') + '</ul></div>\n'
+    + '<h2>Identifierartäckning</h2>\n'
+    + coverage
+    + idSec
+    + shareSec
+    + roleSec
+    + '<h2>Status per verk</h2>\n'
+    + '<table class="works"><thead><tr><th>work_id</th><th>title</th><th>Status</th><th>Avvikelsefält</th></tr></thead><tbody>' + workRowsHtml + '</tbody></table>\n'
+    + '<div class="disclaimer">\n'
+    + '  <p><strong>Valideringsbegränsningar.</strong> Kataloghub genomför validering enligt avtalad nivå.</p>\n'
+    + '  <p>Korrigering av metadata ingår inte. Korrigering erbjuds separat via HeyRoya.</p>\n'
+    + '</div>\n'
     + '</div>\n</body>\n</html>';
   var w = window.open('', '_blank');
   if (!w) { alert('Pop-up blockerad — tillåt pop-ups för denna sida.'); return; }
